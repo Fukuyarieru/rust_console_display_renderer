@@ -1,7 +1,9 @@
-#[allow(dead_code)]
+#![allow(dead_code)]
+use rand::{thread_rng, Rng};
 use text_io::*;
 fn main() {
     // std::allocenv::set_var("RUST_BACKTRACE", "1");
+
     println!("Width and height ratio should 4:1, giving lower values will run everything faster");
     print!("Width (120 recommended): ");
     let width: i32 = read!();
@@ -11,25 +13,54 @@ fn main() {
     let height: usize = height as usize;
 
     let mut display = Display::new(width, height); // 104,27
-    display.fill_screen_with('A');
-    display.print();
-    display.pixel(3, 3, 'c');
-    display.print();
-    for i in 'a'..='z' {
-        load_animation(&mut display, ' ');
-        load_animation(&mut display, i);
+
+    let mut input = String::from("");
+    while input != "random" && input != "loading" {
+        println!("options: random, loading");
+        input = read!();
     }
-    for i in 'A'..='Z' {
-        load_animation(&mut display, ' ');
-        load_animation(&mut display, i);
-    }
-    loop {
-        load_animation(&mut display, '`');
-        load_animation(&mut display, '#');
+    let input: &str = &input;
+    match input {
+        "random" => loop {
+            display.random_line(random_char(50.0));
+            println!("{}", display);
+        },
+        "loading" => {
+            for i in 'a'..='z' {
+                load_animation(&mut display, ' ');
+                load_animation(&mut display, i);
+            }
+            for i in 'A'..='Z' {
+                load_animation(&mut display, ' ');
+                load_animation(&mut display, i);
+            }
+            loop {
+                load_animation(&mut display, '`');
+                load_animation(&mut display, '#');
+            }
+        }
+        _ => (),
     }
 }
 
-#[allow(dead_code)]
+fn random_char(blank_percentage: f32) -> char {
+    // Define the character set (can be customized as needed)
+    let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    // Create a random number generator
+    let mut rng = thread_rng();
+
+    // Get a random index within the range of the characters
+    let index = rng.gen_range(0..chars.len());
+
+    // Return the character at the random index
+    if (rng.gen_range(0..100) as f32) < blank_percentage {
+        ' '
+    } else {
+        chars.chars().nth(index).unwrap()
+    }
+}
+
 fn clear_console_screen() {
     crossterm::execute!(
         std::io::stdout(),
@@ -50,13 +81,13 @@ fn load_animation(display: &mut Display, thing: char) {
 
     let (cx, cy) = display.get_center();
 
-    while x < display.get_width() {
+    while x < display.width {
         display.draw_line(x, y, cx, cy, thing);
         x += 1;
         println!("{}", display);
     }
 
-    while y < display.get_height() {
+    while y < display.height {
         display.draw_line(x, y, cx, cy, thing);
         y += 1;
         println!("{}", display);
@@ -159,12 +190,23 @@ impl Display {
     fn get_center(&self) -> (usize, usize) {
         (self.width / 2, self.height / 2)
     }
-    fn get_width(&self) -> usize {
-        self.width
+    fn randomize_screen(&mut self, thing: char, percentage: f32) {
+        let screen_area = self.get_area();
+        let mut area_to_change: f32 = screen_area as f32 * percentage / 100.0;
+        while area_to_change > 0.0 {
+            let (x1, y1, x2, y2) = self.random_line(thing);
+            let line_length: f32 = calc_distance(x1, y1, x2, y2) as f32; // Assuming calc_distance takes coordinates and returns distance
+            area_to_change -= line_length;
+        }
     }
-
-    fn get_height(&self) -> usize {
-        self.height
+    fn random_line(&mut self, thing: char) -> (usize, usize, usize, usize) {
+        let mut rng = rand::thread_rng();
+        let rx1 = rng.gen_range(0..=self.width);
+        let ry1 = rng.gen_range(0..=self.height);
+        let rx2 = rng.gen_range(0..=self.width);
+        let ry2 = rng.gen_range(0..=self.height);
+        self.draw_line(rx1, ry1, rx2, ry2, thing);
+        (rx1, ry1, rx2, ry2)
     }
 }
 fn make_a_screen(width: usize, height: usize, thing: char) -> String {
@@ -175,4 +217,8 @@ fn make_a_screen(width: usize, height: usize, thing: char) -> String {
         .map(|_| new_line.clone()) // Repeat this for each line of height
         .collect::<Vec<_>>() // Collect it into a vector of lines
         .join("\n")
+}
+// fn randomize_screen(things: [char], probabilities: [i8]) {}
+fn calc_distance(x1: usize, y1: usize, x2: usize, y2: usize) -> f64 {
+    (((x2 - x1) + (y2 - y1)) as f64).sqrt()
 }
