@@ -1,11 +1,15 @@
 #![allow(dead_code)]
 
+mod shapes;
+use rand::{thread_rng, Rng};
+#[allow(unused_imports)]
+use shapes::*;
 use std::io::Write;
-
-use rand::{distributions, thread_rng, Rng};
 use text_io::*;
+
 fn main() {
-    std::env::set_var("RUST_BACKTRACE", "1");
+    // std::env::set_var("RUST_BACKTRACE", "1");
+    // let circle: Circle;
 
     println!("Width and height ratio should 4:1, giving lower values will run everything faster");
     print!("Width (120 recommended): ");
@@ -13,7 +17,7 @@ fn main() {
     let width: usize = read!();
     print!("Height (30 recommended): ");
     let height: usize = read!();
-    let mut display = Display::new(width, height); // 104,27
+    let display = Display::new(width, height); // 104,27
 
     let mut input: String;
     let options = vec![
@@ -47,78 +51,7 @@ fn main() {
         _ => println!("No animation was loaded, for some reason? heh???"),
     }
 }
-// struct Shape {
-//     points: Vec<(usize, usize)>,
-// }
-pub trait Shape {
-    // fn get_area(&self) -> f64;
-    fn get_perimeter(&self) -> usize;
-    fn get_center(&self) -> (usize, usize);
-    // fn get_center(&self) -> (usize, usize) {
-    //     let cx = self
-    //         .points
-    //         .iter()
-    //         .map(|(first, _second)| *first as f64)
-    //         .sum::<f64>()
-    //         / self.points.len() as f64;
-    //     let cy = self
-    //         .points
-    //         .iter()
-    //         .map(|(_first, second)| *second as f64)
-    //         .sum::<f64>()
-    //         / self.points.len() as f64;
-    //     (cx as usize, cy as usize)
-    // }
-    // #[allow(unused_variables)]
-    // fn rotate(&self, degrees: usize) {
-    //     let (cx, cy) = self.get_center();
-    //     todo!("MATH FOR ROTATION");
-    // }
-    // fn get_degree_sum(&self) -> usize {
-    //     180 * (self.points.len() - 2)
-    // }
-}
-pub struct Polygon {
-    points: Vec<(usize, usize)>,
-}
-impl Shape for Polygon {
-    fn get_center(&self) -> (usize, usize) {
-        let cx = self
-            .points
-            .iter()
-            .map(|(first, _second)| *first as f64)
-            .sum::<f64>()
-            / self.points.len() as f64;
-        let cy = self
-            .points
-            .iter()
-            .map(|(_first, second)| *second as f64)
-            .sum::<f64>()
-            / self.points.len() as f64;
-        (cx as usize, cy as usize)
-    }
-    fn get_area(&self) -> usize {
-        todo!()
-    }
-    fn get_perimeter(&self) -> usize {
-        todo!()
-    }
-}
-pub struct Circle {
-    center: (usize, usize),
-    radius: f64,
-}
-impl Shape for Circle {
-    fn get_area(&self) -> f64 {
-        todo!()
-    }
-    fn get_center(&self) -> f64 {
-        todo!()
-    }
-    fn get_perimeter(&self) -> f64 {
-        todo!()
-    }
-}
+
 fn randomize_screen_animation(mut display: Display) {
     loop {
         display.randomize_screen(random_char(50.0), 50.0);
