@@ -2,7 +2,7 @@
 
 use std::io::Write;
 
-use rand::{thread_rng, Rng};
+use rand::{distributions, thread_rng, Rng};
 use text_io::*;
 fn main() {
     std::env::set_var("RUST_BACKTRACE", "1");
@@ -41,32 +41,40 @@ fn main() {
     }
     println!("{}", input);
     match input.as_str() {
-        "random-screen" => loop {
-            display.randomize_screen(random_char(50.0), 50.0);
-            // display.random_line(random_char(50.0));
-            print!("{}", display);
-        },
-        "random-lines" => loop {
-            display.random_line(random_char(50.0));
-            print!("{}", display);
-        },
-        "loading" => {
-            for i in 'a'..='z' {
-                load_animation(&mut display, ' ');
-                load_animation(&mut display, i);
-            }
-            for i in 'A'..='Z' {
-                load_animation(&mut display, ' ');
-                load_animation(&mut display, i);
-            }
-            loop {
-                load_animation(&mut display, '`');
-                load_animation(&mut display, '#');
-            }
-        }
+        "random-screen" => randomize_screen_animation(display),
+        "random-lines" => random_lines_animation(display),
+        "loading" => circle_animation(display),
         _ => println!("No animation was loaded, for some reason? heh???"),
     }
 }
+fn randomize_screen_animation(mut display: Display) {
+    loop {
+        display.randomize_screen(random_char(50.0), 50.0);
+        // display.random_line(random_char(50.0));
+        print!("{}", display);
+    }
+}
+fn random_lines_animation(mut display: Display) {
+    loop {
+        display.random_line(random_char(50.0));
+        print!("{}", display);
+    }
+}
+fn circle_animation(mut display: Display) {
+    for i in 'a'..='z' {
+        load_animation(&mut display, ' ');
+        load_animation(&mut display, i);
+    }
+    for i in 'A'..='Z' {
+        load_animation(&mut display, ' ');
+        load_animation(&mut display, i);
+    }
+    loop {
+        load_animation(&mut display, '`');
+        load_animation(&mut display, '#');
+    }
+}
+fn option_loader() {}
 fn random_char(blank_percentage: f32) -> char {
     // Define the character set (can be customized as needed)
     let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -219,7 +227,7 @@ fn make_a_screen(width: usize, height: usize, thing: char) -> Vec<u8> {
         screen.extend(vec![thing as u8; width]); // Add the characters for each row
         screen.push(b'\n'); // Add newline after each row
     }
-    screen.pop();
+    // screen.pop();
     screen
 }
 // fn randomize_screen(things: [char], probabilities: [i8]) {}
