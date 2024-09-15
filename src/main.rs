@@ -47,6 +47,78 @@ fn main() {
         _ => println!("No animation was loaded, for some reason? heh???"),
     }
 }
+// struct Shape {
+//     points: Vec<(usize, usize)>,
+// }
+pub trait Shape {
+    // fn get_area(&self) -> f64;
+    fn get_perimeter(&self) -> usize;
+    fn get_center(&self) -> (usize, usize);
+    // fn get_center(&self) -> (usize, usize) {
+    //     let cx = self
+    //         .points
+    //         .iter()
+    //         .map(|(first, _second)| *first as f64)
+    //         .sum::<f64>()
+    //         / self.points.len() as f64;
+    //     let cy = self
+    //         .points
+    //         .iter()
+    //         .map(|(_first, second)| *second as f64)
+    //         .sum::<f64>()
+    //         / self.points.len() as f64;
+    //     (cx as usize, cy as usize)
+    // }
+    // #[allow(unused_variables)]
+    // fn rotate(&self, degrees: usize) {
+    //     let (cx, cy) = self.get_center();
+    //     todo!("MATH FOR ROTATION");
+    // }
+    // fn get_degree_sum(&self) -> usize {
+    //     180 * (self.points.len() - 2)
+    // }
+}
+pub struct Polygon {
+    points: Vec<(usize, usize)>,
+}
+impl Shape for Polygon {
+    fn get_center(&self) -> (usize, usize) {
+        let cx = self
+            .points
+            .iter()
+            .map(|(first, _second)| *first as f64)
+            .sum::<f64>()
+            / self.points.len() as f64;
+        let cy = self
+            .points
+            .iter()
+            .map(|(_first, second)| *second as f64)
+            .sum::<f64>()
+            / self.points.len() as f64;
+        (cx as usize, cy as usize)
+    }
+    fn get_area(&self) -> usize {
+        todo!()
+    }
+    fn get_perimeter(&self) -> usize {
+        todo!()
+    }
+}
+pub struct Circle {
+    center: (usize, usize),
+    radius: f64,
+}
+impl Shape for Circle {
+    fn get_area(&self) -> f64 {
+        todo!()
+    }
+    fn get_center(&self) -> f64 {
+        todo!()
+    }
+    fn get_perimeter(&self) -> f64 {
+        todo!()
+    }
+}
 fn randomize_screen_animation(mut display: Display) {
     loop {
         display.randomize_screen(random_char(50.0), 50.0);
