@@ -1,5 +1,10 @@
-pub struct Rectangle {}
-pub struct Circle {}
+pub struct Quadrilateral {
+    pub points: [usize; 4],
+}
+pub struct Circle {
+    center: (usize, usize),
+    radius: usize,
+}
 pub struct Polygon {}
 
 // pub struct Polygon {

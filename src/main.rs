@@ -1,5 +1,6 @@
 #![allow(dead_code, unused_imports)]
 
+mod display_renderers;
 mod functions;
 use functions::*;
 mod animations;
