@@ -43,8 +43,8 @@ impl Shape for Polygon {
     }
 }
 pub struct Circle {
-    start: (usize, usize),
-    radius: usize,
+    pub center: (usize, usize),
+    pub radius: usize,
 }
 impl Shape for Circle {
     fn get_area(&self) -> f64 {
