@@ -1,13 +1,16 @@
-#![allow(dead_code)]
+#![allow(dead_code, unused_imports)]
 
+mod functions;
+use functions::*;
+mod animations;
+use animations::*;
 mod shapes;
-use rand::{thread_rng, Rng};
-#[allow(unused_imports)]
+use rand::*;
 use shapes::*;
 use std::io::Write;
 use text_io::*;
 
-fn main() {
+pub fn main() {
     // std::env::set_var("RUST_BACKTRACE", "1");
     // let circle: Circle;
 
@@ -24,78 +27,11 @@ fn main() {
         String::from("random-lines"),
         String::from("random-screen"),
     ];
-    // loop {
-    //     // Print the available options
-    //     println!("Options: {:?}", options);
-
-    //     // Read user input using text_io
-    //     let mut input = read!();
-
-    //     // Remove any trailing newline or whitespace
-    //     // let input = input.trim();
-
-    //     // Check if the input matches any of the options
-    //     if options.iter().any(|option| *option == input) {
-    //         println!("Valid option selected: {}", input);
-    //         break; // Exit the loop if the input is valid
-    //     } else {
-    //         println!("Invalid option. Please try again.");
-    //     }
-    match screen.{
+    match animations_menu(options).as_str() {
         "random-screen" => randomize_screen_animation(display),
         "random-lines" => random_lines_animation(display),
         "loading" => circle_animation(display),
         _ => println!("No animation was loaded, for some reason? heh???"),
-    }
-}
-
-fn option_loader() {}
-fn random_char(blank_percentage: f32) -> char {
-    // Define the character set (can be customized as needed)
-    let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-    // Create a random number generator
-    let mut rng = thread_rng();
-
-    // Get a random index within the range of the characters
-    let index = rng.gen_range(0..chars.len());
-
-    // Return the character at the random index
-    if (rng.gen_range(0..100) as f32) < blank_percentage {
-        ' '
-    } else {
-        chars.chars().nth(index).unwrap()
-    }
-}
-
-fn load_animation(display: &mut Display, thing: char) {
-    let mut x = 0;
-    let mut y = 0;
-
-    let (cx, cy) = display.get_center();
-
-    while x < display.width {
-        display.draw_line(x, y, cx, cy, thing);
-        x += 1;
-        println!("{}", display);
-    }
-    x -= 1;
-    while y < display.height {
-        display.draw_line(x, y, cx, cy, thing);
-        y += 1;
-        println!("{}", display);
-    }
-    y -= 1;
-    while x > 0 {
-        display.draw_line(x, y, cx, cy, thing);
-        x -= 1;
-        println!("{}", display);
-    }
-
-    while y > 0 {
-        display.draw_line(x, y, cx, cy, thing);
-        y -= 1;
-        println!("{}", display);
     }
 }
 
@@ -195,60 +131,8 @@ impl Display {
         self.draw_line(rx1, ry1, rx2, ry2, thing);
         (rx1, ry1, rx2, ry2)
     }
-    #[allow(unused_variables)]
-    fn render_circle(circle: Circle) {
-        todo!()
-    }
-    fn animations_menu(options: Vec<String>) -> String {
-        let mut input: String;
-        loop {
-            // Print the available options
-            println!("Options: {:?}", options);
-
-            // Read user input using text_io
-            input = read!();
-
-            // Remove any trailing newline or whitespace
-            // let input = input.trim();
-
-            // Check if the input matches any of the options
-            if options.iter().any(|option| *option == input) {
-                println!("Valid option selected: {}", input);
-                break; // Exit the loop if the input is valid
-            } else {
-                println!("Invalid option. Please try again.");
-            }
-        }
-        input
-    }
-    fn randomize_screen_animation(mut display: Display) {
-        loop {
-            display.randomize_screen(random_char(50.0), 50.0);
-            // display.random_line(random_char(50.0));
-            print!("{}", display);
-        }
-    }
-    fn random_lines_animation(mut display: Display) {
-        loop {
-            display.random_line(random_char(50.0));
-            print!("{}", display);
-        }
-    }
-    fn circle_animation(mut display: Display) {
-        for i in 'a'..='z' {
-            load_animation(&mut display, ' ');
-            load_animation(&mut display, i);
-        }
-        for i in 'A'..='Z' {
-            load_animation(&mut display, ' ');
-            load_animation(&mut display, i);
-        }
-        loop {
-            load_animation(&mut display, '`');
-            load_animation(&mut display, '#');
-        }
-    }
 }
+
 fn make_a_screen(width: usize, height: usize, thing: char) -> Vec<u8> {
     let mut screen = Vec::with_capacity((width + 1) * height); // +1 for '\n' at the end of each line
     for _ in 0..=height {
@@ -259,8 +143,3 @@ fn make_a_screen(width: usize, height: usize, thing: char) -> Vec<u8> {
     screen
 }
 // fn randomize_screen(things: [char], probabilities: [i8]) {}
-pub fn calc_distance(x1: usize, y1: usize, x2: usize, y2: usize) -> f32 {
-    let dx = (x2 as i64 - x1 as i64).pow(2);
-    let dy = (y2 as i64 - y1 as i64).pow(2);
-    ((dx + dy) as f32).sqrt()
-}
