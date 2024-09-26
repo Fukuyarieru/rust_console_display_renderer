@@ -1,11 +1,48 @@
+use core::fmt;
+
+// trait DisplayAdapter {}
+enum Shape {
+    Quadrilateral,
+    Circle,
+    Polygon,
+}
+trait ShapeFunctions {
+    fn get_area(self) -> f32;
+    fn get_perimeter(self) -> f32;
+    fn shift_up_by(self, amount: i32);
+    fn shift_down_by(self, amount: i32);
+    fn shift_left_by(self, amount: i32);
+    fn shit_right_by(self, amount: i32);
+    fn rotate_right_by(self, degrees: i32);
+    fn rotate_left_by(self, degrees: i32);
+}
 pub struct Quadrilateral {
-    pub points: [usize; 4],
+    pub points: [(usize, usize); 4],
+}
+impl Quadrilateral {
+    pub fn create(
+        point1: (usize, usize),
+        point2: (usize, usize),
+        point3: (usize, usize),
+        point4: (usize, usize),
+    ) -> Self {
+        Quadrilateral {
+            points: [point1, point2, point3, point4],
+        }
+    }
 }
 pub struct Circle {
     center: (usize, usize),
     radius: usize,
 }
-pub struct Polygon {}
+impl Circle {
+    fn create(center: (usize, usize), radius: usize) -> Self {
+        Circle { center, radius }
+    }
+}
+pub struct Polygon {
+    pub points: Vec<(usize, usize)>,
+}
 
 // pub struct Polygon {
 //     start: (usize, usize),

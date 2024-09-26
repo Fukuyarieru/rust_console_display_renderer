@@ -2,6 +2,7 @@
 
 mod display_renderers;
 mod functions;
+use display_renderers::render_quadrilateral;
 use functions::*;
 mod animations;
 use animations::*;
@@ -21,8 +22,15 @@ pub fn main() {
     let width: usize = read!();
     print!("Height (30 recommended): ");
     let height: usize = read!();
-    let display = Display::new(width, height); // 104,27
-                                               // let mut input: String;
+    let mut display = Display::new(width, height); // 104,27
+
+    // render_quadrilateral(
+    //     &mut display,
+    //     Quadrilateral::new((1, 3), (23, 7), (17, 15), (5, 3)),
+    //     'c',
+    // );
+    // println!("{}", display);
+    // // let mut input: String;
     let options = vec![
         String::from("loading"),
         String::from("random-lines"),
