@@ -1,7 +1,7 @@
 use core::fmt;
 
 // trait DisplayAdapter {}
-enum Shape {
+pub enum Shape {
     Quadrilateral,
     Circle,
     Polygon,

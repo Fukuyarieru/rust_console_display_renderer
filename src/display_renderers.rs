@@ -2,12 +2,12 @@
 
 use std::ops::Index;
 
-use crate::shapes;
+use crate::shapes::*;
 use crate::shapes::*;
 use crate::Display;
 
 trait Renderers {
-    fn render(shape: shapes::)
+    fn render(shape: Shape) {}
 }
 pub fn render_quadrilateral(display: &mut Display, shape: Quadrilateral, thing: char) {
     for i in 0..3 {
