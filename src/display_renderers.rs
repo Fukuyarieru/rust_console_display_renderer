@@ -7,7 +7,7 @@ use crate::shapes::*;
 use crate::Display;
 
 trait Renderers {
-    fn render(shape: Shape) {}
+    fn render(shape: Shapes) {}
 }
 pub fn render_quadrilateral(display: &mut Display, shape: Quadrilateral, thing: char) {
     for i in 0..3 {

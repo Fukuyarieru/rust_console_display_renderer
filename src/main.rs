@@ -23,6 +23,12 @@ pub fn main() {
     print!("Height (30 recommended): ");
     let height: usize = read!();
     let mut display = Display::new(width, height); // 104,27
+    let sh = Shapes::Quadrilateral {
+        point1: (0, 0),
+        point2: (0, 0),
+        point3: (0, 0),
+        point4: (0, 0),
+    };
 
     // render_quadrilateral(
     //     &mut display,
