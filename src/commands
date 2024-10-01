@@ -1,0 +1,6 @@
+pub enum Message {
+    DisplayCreate,
+    DisplayModify,
+    Shapes,
+    AnimationChoose,
+}
