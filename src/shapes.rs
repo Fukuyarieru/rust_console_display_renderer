@@ -56,7 +56,12 @@ impl Circle {
     }
 }
 pub struct Polygon {
-    pub points: Vec<(usize, usize)>,
+    points: Vec<(usize, usize)>,
+}
+impl Polygon {
+    fn create(points: Vec<(usize, usize)>) -> Self {
+        Polygon { points }
+    }
 }
 
 // pub struct Polygon {
