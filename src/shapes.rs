@@ -1,4 +1,8 @@
-trait DisplayAdapter {}
+use crate::Display::*;
+
+trait DisplayAdapter {
+    fn place(&display: Display);
+}
 // pub enum Shapes {
 //     Quadrilateral {
 //         point1: (usize, usize),

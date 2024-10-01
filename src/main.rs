@@ -23,12 +23,7 @@ pub fn main() {
     print!("Height (30 recommended): ");
     let height: usize = read!();
     let mut display = Display::new(width, height); // 104,27
-    let sh = Shapes::Quadrilateral {
-        point1: (0, 0),
-        point2: (0, 0),
-        point3: (0, 0),
-        point4: (0, 0),
-    };
+    let sh = Quadrilateral::create((0,0), (0,0), (0,0), (0,0));
 
     // render_quadrilateral(
     //     &mut display,
@@ -147,6 +142,7 @@ impl Display {
         (rx1, ry1, rx2, ry2)
     }
 }
+impl 
 
 fn make_a_screen(width: usize, height: usize, thing: char) -> Vec<u8> {
     let mut screen = Vec::with_capacity((width + 1) * height); // +1 for '\n' at the end of each line
