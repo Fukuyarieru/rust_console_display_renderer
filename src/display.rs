@@ -1,3 +1,6 @@
+use core::fmt;
+use std::clone;
+
 use crate::animations::Animation;
 const DEFAULT_POINT_HISTORY_SIZE: usize = 3;
 #[derive(Clone)]
@@ -18,33 +21,67 @@ impl Point {
         self.vals_history.remove(self.vals_history.len() - 1);
     }
 }
-struct Vec2 {
-    vec: Vec<Vec<Point>>,
+impl fmt::Display for Point {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.val)
+    }
 }
-impl Vec2 {
-    fn index(&mut self, x: usize, y: usize) -> &mut Point {
+#[derive(Clone)]
+struct Vec2<T> {
+    vec: Vec<Vec<T>>,
+}
+impl<T> Vec2<T> {
+    fn index(&mut self, x: usize, y: usize) -> &mut T {
         &mut self.vec[x][y]
     }
-    fn create(x_size: usize, y_size: usize, ch: char) -> Self {
+    fn create(x_size: usize, y_size: usize, val: T) -> Self
+    where
+        // `T` must implement `Clone` to duplicate `val` across
+        T: Clone,
+    {
         Vec2 {
-            vec: vec![vec![Point::create(ch, DEFAULT_POINT_HISTORY_SIZE); y_size]; x_size],
+            vec: vec![vec![val; y_size]; x_size],
         }
     }
-    fn create_with_history_size(
-        x_size: usize,
-        y_size: usize,
-        ch: char,
-        history_size: usize,
-    ) -> Self {
-        Vec2 {
-            vec: vec![vec![Point::create(ch, history_size); y_size]; x_size],
+    // fn create_with_history_size(
+    //     x_size: usize,
+    //     y_size: usize,
+    //     ch: char,
+    //     history_size: usize,
+    // ) -> Self {
+    //     Vec2 {
+    //         vec: vec![vec![Point::create(ch, history_size); y_size]; x_size],
+    //     }
+    // }
+    // fn to_string(&self) -> String {
+    //     let screen_string = std::str::from_utf8(&self.vec).unwrap_or("[Error displaying screen]");
+    // }
+}
+impl<T> std::fmt::Display for Vec2<T>
+// chatgpt
+where
+    T: fmt::Display,
+{
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        for row in &self.vec {
+            for (i, elem) in row.iter().enumerate() {
+                // Separate elements by a space, except for the last element in the row
+                if i > 0 {
+                    write!(f, " ")?;
+                }
+                write!(f, "{}", elem)?;
+            }
+            // Print a new line after each row
+            writeln!(f)?;
         }
+        Ok(())
     }
 }
 pub struct Display {
-    screen: Vec2,
+    screen: Vec2<Point>,
     // more stuff here later, probably (panels, info, titlebar)
 }
+
 // Question: do i do this in this way? do i need it this way?
 enum DisplayAction {
     DrawLine(Point, Point),
@@ -55,7 +92,11 @@ impl Display {
     // Lets limit for now the use of individual pixels inside of the Display struct
     fn create(width: usize, height: usize) -> Self {
         Display {
-            screen: Vec2::create(width, height, '#'),
+            screen: Vec2::create(
+                width,
+                height,
+                Point::create('#', DEFAULT_POINT_HISTORY_SIZE),
+            ),
         }
     }
     fn pixel(&mut self, point: (usize, usize), new_val: char) {
@@ -98,7 +139,8 @@ impl Display {
     // fn animation_start(&mut self, animation: Animation) {
     //     todo!()
     // }
-    fn copy_screen(&mut self, screen: Vec2) {
+    fn copy_screen(&mut self, screen: Vec2<Point>) {
+        //?????, Vec2<char>? ???
         self.screen = screen;
     }
     fn get_center(&self) -> (usize, usize) {
@@ -111,7 +153,13 @@ impl Display {
         todo!()
     }
 }
-
+// Implement Display for the Display struct
+impl fmt::Display for Display {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        // Delegate to the Display implementation for Vec2<Point>
+        write!(f, "{}", self.screen)
+    }
+}
 /* References
 fn get_center(&self) -> (usize, usize) {
     (self.width / 2, self.height / 2)
