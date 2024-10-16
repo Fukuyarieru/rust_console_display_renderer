@@ -1,5 +1,7 @@
 #![allow(dead_code, unused_imports)]
 
+mod display;
+use display::*;
 mod display_renderers;
 mod functions;
 use display_renderers::render_quadrilateral;
@@ -23,7 +25,7 @@ pub fn main() {
     print!("Height (30 recommended): ");
     let height: usize = read!();
     let mut display = Display::new(width, height); // 104,27
-    let sh = Quadrilateral::create((0,0), (0,0), (0,0), (0,0));
+    let sh = Quadrilateral::create((0, 0), (0, 0), (0, 0), (0, 0));
 
     // render_quadrilateral(
     //     &mut display,
@@ -142,15 +144,14 @@ impl Display {
         (rx1, ry1, rx2, ry2)
     }
 }
-impl 
 
-fn make_a_screen(width: usize, height: usize, thing: char) -> Vec<u8> {
-    let mut screen = Vec::with_capacity((width + 1) * height); // +1 for '\n' at the end of each line
-    for _ in 0..=height {
-        screen.extend(vec![thing as u8; width]); // Add the characters for each row
-        screen.push(b'\n'); // Add newline after each row
-    }
-    // screen.pop();
-    screen
-}
+// fn make_a_screen(width: usize, height: usize, thing: char) -> Vec<u8> {
+//     let mut screen = Vec::with_capacity((width + 1) * height); // +1 for '\n' at the end of each line
+//     for _ in 0..=height {
+//         screen.extend(vec![thing as u8; width]); // Add the characters for each row
+//         screen.push(b'\n'); // Add newline after each row
+//     }
+//     // screen.pop();
+//     screen
+// }
 // fn randomize_screen(things: [char], probabilities: [i8]) {}

@@ -2,6 +2,12 @@ use crate::functions::*;
 use crate::Display;
 use text_io::*;
 
+pub enum Animation {
+    LoadingScreen,
+    RandomLines,
+    RandomScreens,
+}
+
 pub fn animations_menu(options: Vec<String>) -> String {
     let mut input: String;
     loop {
