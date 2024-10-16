@@ -41,7 +41,7 @@ impl Vec2 {
         }
     }
 }
-struct Display {
+pub struct Display {
     screen: Vec2,
     // more stuff here later, probably (panels, info, titlebar)
 }
@@ -61,7 +61,7 @@ impl Display {
     fn pixel(&mut self, point: (usize, usize), new_val: char) {
         self.screen.index(point.0, point.1).update(new_val);
     }
-    fn draw_line(&mut self, point1: (usize, usize), point2: (usize, usize), draw_val: char) {
+    pub fn draw_line(&mut self, point1: (usize, usize), point2: (usize, usize), draw_val: char) {
         // redeclaration
         let x1 = point1.0;
         let x2 = point2.0;

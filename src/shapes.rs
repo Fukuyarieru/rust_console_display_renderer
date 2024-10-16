@@ -1,3 +1,4 @@
+#![allow(unused_variables)]
 use crate::Display;
 
 trait DisplayAdapter {
@@ -28,11 +29,16 @@ trait ShapesFunctions {
     fn rotate_right_by(&mut self, degrees: usize);
     fn rotate_left_by(&mut self, degrees: usize);
 }
+pub enum Shape {
+    Quadrilateral(Quadrilateral),
+    Circle(Circle),
+    Polygon(Polygon),
+}
 pub struct Quadrilateral {
-    point1: (usize, usize),
-    point2: (usize, usize),
-    point3: (usize, usize),
-    point4: (usize, usize),
+    pub point1: (usize, usize),
+    pub point2: (usize, usize),
+    pub point3: (usize, usize),
+    pub point4: (usize, usize),
 }
 
 impl Quadrilateral {
@@ -50,6 +56,32 @@ impl Quadrilateral {
         }
     }
 }
+impl ShapesFunctions for Quadrilateral {
+    fn get_area(&self) -> f64 {
+        todo!()
+    }
+    fn get_perimeter(&self) -> f64 {
+        todo!()
+    }
+    fn rotate_left_by(&mut self, degrees: usize) {
+        todo!()
+    }
+    fn rotate_right_by(&mut self, degrees: usize) {
+        todo!()
+    }
+    fn shift_down_by(&mut self, amount: usize) {
+        todo!()
+    }
+    fn shift_left_by(&mut self, amount: usize) {
+        todo!()
+    }
+    fn shift_up_by(&mut self, amount: usize) {
+        todo!()
+    }
+    fn shit_right_by(&mut self, amount: usize) {
+        todo!()
+    }
+}
 pub struct Circle {
     center_point: (usize, usize),
     radius: usize,
@@ -62,15 +94,66 @@ impl Circle {
         }
     }
 }
+impl ShapesFunctions for Circle {
+    fn get_area(&self) -> f64 {
+        todo!()
+    }
+    fn get_perimeter(&self) -> f64 {
+        todo!()
+    }
+    fn rotate_left_by(&mut self, degrees: usize) {
+        todo!()
+    }
+    fn rotate_right_by(&mut self, degrees: usize) {
+        todo!()
+    }
+    fn shift_down_by(&mut self, amount: usize) {
+        todo!()
+    }
+    fn shift_left_by(&mut self, amount: usize) {
+        todo!()
+    }
+    fn shift_up_by(&mut self, amount: usize) {
+        todo!()
+    }
+    fn shit_right_by(&mut self, amount: usize) {
+        todo!()
+    }
+}
 pub struct Polygon {
-    points: Vec<(usize, usize)>,
+    pub points: Vec<(usize, usize)>,
 }
 impl Polygon {
     fn create(points: Vec<(usize, usize)>) -> Self {
         Polygon { points }
     }
 }
-
+impl ShapesFunctions for Polygon {
+    fn get_area(&self) -> f64 {
+        todo!()
+    }
+    fn get_perimeter(&self) -> f64 {
+        todo!()
+    }
+    fn rotate_left_by(&mut self, degrees: usize) {
+        todo!()
+    }
+    fn rotate_right_by(&mut self, degrees: usize) {
+        todo!()
+    }
+    fn shift_down_by(&mut self, amount: usize) {
+        todo!()
+    }
+    fn shift_left_by(&mut self, amount: usize) {
+        todo!()
+    }
+    fn shift_up_by(&mut self, amount: usize) {
+        todo!()
+    }
+    fn shit_right_by(&mut self, amount: usize) {
+        todo!()
+    }
+}
 // TODO
 
 // pub struct Polygon {

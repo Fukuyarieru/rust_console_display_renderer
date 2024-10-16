@@ -1,36 +1,29 @@
 #![allow(unused_variables)]
-
-use std::ops::Index;
-
+use crate::display::Display;
 use crate::shapes::*;
-use crate::shapes::*;
-use crate::Display;
 
-trait Renderers {
-    fn render(shape: Shapes) {}
+// thing about this trait
+trait Renderer {
+    fn render_shape(shape: Shape) {}
 }
-pub fn render_quadrilateral(display: &mut Display, shape: Quadrilateral, thing: char) {
-    for i in 0..3 {
-        display.draw_line(
-            shape.points.index(i).0,
-            shape.points.index(i).1,
-            shape.points.index(i + 1).0,
-            shape.points.index(i + 1).1,
-            thing,
-        );
-        // println!("RENDERING");
-    }
+
+// experimental
+// also im not sure if these work, untested
+pub fn render_quadrilateral(display: &mut Display, quadrilateral: Quadrilateral, thing: char) {
+    display.draw_line(quadrilateral.point1, quadrilateral.point2, thing);
+    display.draw_line(quadrilateral.point2, quadrilateral.point3, thing);
+    display.draw_line(quadrilateral.point3, quadrilateral.point4, thing);
+    display.draw_line(quadrilateral.point4, quadrilateral.point1, thing);
 }
-pub fn render_polygon(display: &mut Display, shape: Polygon, thing: char) {
-    for i in 0..shape.points.len() {
-        display.draw_line(
-            shape.points.index(i).0,
-            shape.points.index(i).1,
-            shape.points.index(i + 1).0,
-            shape.points.index(i + 1).1,
-            thing,
-        );
+pub fn render_polygon(display: &mut Display, polygon: Polygon, thing: char) {
+    for i in 0..polygon.points.len() - 1 {
+        display.draw_line(polygon.points[i], polygon.points[i + 1], thing);
     }
+    display.draw_line(
+        polygon.points[polygon.points.len() - 1],
+        polygon.points[0],
+        thing,
+    );
 }
 pub fn render_circle(display: Display, circle: Circle) {
     todo!()
