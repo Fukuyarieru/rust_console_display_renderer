@@ -1,7 +1,7 @@
-use crate::Display::*;
+use crate::Display;
 
 trait DisplayAdapter {
-    fn place(&display: Display);
+    fn place(display: &Display);
 }
 // pub enum Shapes {
 //     Quadrilateral {
@@ -51,12 +51,15 @@ impl Quadrilateral {
     }
 }
 pub struct Circle {
-    center: (usize, usize),
+    center_point: (usize, usize),
     radius: usize,
 }
 impl Circle {
-    fn create(center: (usize, usize), radius: usize) -> Self {
-        Circle { center, radius }
+    fn create(center_point: (usize, usize), radius: usize) -> Self {
+        Circle {
+            center_point,
+            radius,
+        }
     }
 }
 pub struct Polygon {
@@ -67,6 +70,8 @@ impl Polygon {
         Polygon { points }
     }
 }
+
+// TODO
 
 // pub struct Polygon {
 //     start: (usize, usize),
