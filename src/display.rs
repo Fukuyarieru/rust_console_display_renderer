@@ -1,34 +1,38 @@
-use core::fmt;
-use std::clone;
-
+use crate::adapters::DisplayAdapter;
 use crate::animations::Animation;
+use crate::functions::calc_distance;
+use rand::*;
+
 const DEFAULT_POINT_HISTORY_SIZE: usize = 3;
 #[derive(Clone)]
-struct Point {
+struct DataPoint {
     val: char,
     vals_history: Vec<char>,
 }
-impl Point {
+impl DataPoint {
     fn create(ch: char, history_size: usize) -> Self {
-        Point {
+        DataPoint {
             val: ch,
             vals_history: vec![' '; history_size],
         }
     }
     fn update(&mut self, new_ch: char) {
+        // TODO can do this better (right now it does 3 scans from what i understand)
         self.vals_history.push(self.val);
         self.val = new_ch;
         self.vals_history.remove(self.vals_history.len() - 1);
     }
 }
-impl fmt::Display for Point {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+impl std::fmt::Display for DataPoint {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.val)
     }
 }
 #[derive(Clone)]
 struct Vec2<T> {
     vec: Vec<Vec<T>>,
+    max_x: usize,
+    max_y: usize,
 }
 impl<T> Vec2<T> {
     fn index(&mut self, x: usize, y: usize) -> &mut T {
@@ -41,6 +45,8 @@ impl<T> Vec2<T> {
     {
         Vec2 {
             vec: vec![vec![val; y_size]; x_size],
+            max_x: x_size,
+            max_y: y_size,
         }
     }
     // fn create_with_history_size(
@@ -60,9 +66,9 @@ impl<T> Vec2<T> {
 impl<T> std::fmt::Display for Vec2<T>
 // chatgpt
 where
-    T: fmt::Display,
+    T: std::fmt::Display,
 {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         for row in &self.vec {
             for (i, elem) in row.iter().enumerate() {
                 // Separate elements by a space, except for the last element in the row
@@ -78,13 +84,16 @@ where
     }
 }
 pub struct Display {
-    screen: Vec2<Point>,
+    screen: Vec2<DataPoint>,
+    width: usize,
+    height: usize,
+    total_area: usize,
     // more stuff here later, probably (panels, info, titlebar)
 }
 
 // Question: do i do this in this way? do i need it this way?
 enum DisplayAction {
-    DrawLine(Point, Point),
+    DrawLine(DataPoint, DataPoint),
     HashPixels, // get all pixels content told inside a hashmap - wanted to make panel for later
     ClearScreen, // ehh?
 }
@@ -95,12 +104,18 @@ impl Display {
             screen: Vec2::create(
                 width,
                 height,
-                Point::create('#', DEFAULT_POINT_HISTORY_SIZE),
+                DataPoint::create('#', DEFAULT_POINT_HISTORY_SIZE),
             ),
+            width,
+            height,
+            total_area: (width * height),
         }
     }
+    // TODO I should simplify the use of index and entry into Vec2 elements, problems can be seen in draw_line, here, and in the implementation of index()
     fn pixel(&mut self, point: (usize, usize), new_val: char) {
-        self.screen.index(point.0, point.1).update(new_val);
+        // heh i got two implementations ??!! :D??
+        (self.screen.vec[point.0][point.1]).update(new_val);
+        // self.screen.index(point.0, point.1).update(new_val);
     }
     pub fn draw_line(&mut self, point1: (usize, usize), point2: (usize, usize), draw_val: char) {
         // redeclaration
@@ -139,46 +154,37 @@ impl Display {
     // fn animation_start(&mut self, animation: Animation) {
     //     todo!()
     // }
-    fn copy_screen(&mut self, screen: Vec2<Point>) {
+    fn copy_screen(&mut self, screen: Vec2<DataPoint>) {
         //?????, Vec2<char>? ???
         self.screen = screen;
     }
     fn get_center(&self) -> (usize, usize) {
-        todo!()
+        (self.width / 2, self.height / 2)
     }
-    fn randomize_screen(&mut self) {
-        todo!()
+    fn randomize_screen(&mut self, draw_val: char, screen_percentage: f32) {
+        let screen_area = self.total_area as f64;
+        let mut area_to_change: f64 = screen_area * (screen_percentage as f64) / 100.0;
+        while area_to_change > 0.0 {
+            let ((x1, y1), (x2, y2)) = self.random_line(draw_val);
+            let line_length: f32 = calc_distance(x1, y1, x2, y2); // Assuming calc_distance takes coordinates and returns distance
+            area_to_change -= line_length as f64;
+        }
     }
-    fn random_line(&mut self) {
-        todo!()
+    fn random_line(&mut self, draw_val: char) -> ((usize, usize), (usize, usize)) {
+        // returns the random line that was made
+        let mut rng = rand::thread_rng();
+        let rx1 = rng.gen_range(0..self.screen.max_x);
+        let ry1 = rng.gen_range(0..self.screen.max_y);
+        let rx2 = rng.gen_range(0..self.screen.max_x);
+        let ry2 = rng.gen_range(0..self.screen.max_y);
+        self.draw_line((rx1, ry1), (rx2, ry2), draw_val);
+        ((rx1, ry1), (rx2, ry2))
     }
 }
 // Implement Display for the Display struct
-impl fmt::Display for Display {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+impl std::fmt::Display for Display {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         // Delegate to the Display implementation for Vec2<Point>
         write!(f, "{}", self.screen)
     }
 }
-/* References
-fn get_center(&self) -> (usize, usize) {
-    (self.width / 2, self.height / 2)
-}
-fn randomize_screen(&mut self, thing: char, screen_percentage: f32) {
-    let screen_area = self.get_area() as f32;
-    let mut area_to_change: f32 = screen_area * screen_percentage / 100.0;
-    while area_to_change > 0.0 {
-        let (x1, y1, x2, y2) = self.random_line(thing);
-        let line_length: f32 = calc_distance(x1, y1, x2, y2); // Assuming calc_distance takes coordinates and returns distance
-        area_to_change -= line_length;
-    }
-}
-fn random_line(&mut self, thing: char) -> (usize, usize, usize, usize) {
-    let mut rng = rand::thread_rng();
-    let rx1 = rng.gen_range(0..self.width);
-    let ry1 = rng.gen_range(0..self.height);
-    let rx2 = rng.gen_range(0..self.width);
-    let ry2 = rng.gen_range(0..self.height);
-    self.draw_line(rx1, ry1, rx2, ry2, thing);
-    (rx1, ry1, rx2, ry2)
-} */

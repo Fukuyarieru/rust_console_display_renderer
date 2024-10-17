@@ -1,10 +1,12 @@
 #![allow(dead_code, unused_imports)]
 
+mod adapters;
 mod display;
 use display::*;
 mod display_renderers;
+mod menu;
+use display_renderers::*;
 mod functions;
-use display_renderers::render_quadrilateral;
 use functions::*;
 mod animations;
 use animations::*;

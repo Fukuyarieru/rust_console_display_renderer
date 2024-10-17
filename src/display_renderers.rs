@@ -2,6 +2,8 @@
 use crate::display::Display;
 use crate::shapes::*;
 
+// TODO will probably need eventually to use DisplayAdapater, as to not work with stuff directly but through accessable and reorginzed structures for easier uses, maybe???????
+
 // thing about this trait
 trait Renderer {
     fn render_shape(shape: Shape) {}

@@ -1,24 +1,10 @@
 #![allow(unused_variables)]
+use crate::adapters::ShapeAdapter;
 use crate::Display;
 
 trait DisplayAdapter {
     fn place(display: &Display);
 }
-// pub enum Shapes {
-//     Quadrilateral {
-//         point1: (usize, usize),
-//         point2: (usize, usize),
-//         point3: (usize, usize),
-//         point4: (usize, usize),
-//     },
-//     Circle {
-//         point_center: (usize, usize),
-//         radius: usize,
-//     },
-//     Polygon {
-//         points: Vec<(usize, usize)>,
-//     },
-// }
 trait ShapesFunctions {
     fn get_area(&self) -> f64;
     fn get_perimeter(&self) -> f64;
