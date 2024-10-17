@@ -20,7 +20,7 @@ struct MenuStructure {
     window_height_size: usize,
 }
 impl MenuStructure {
-    fn create(
+    fn create_string_from_string(
         title_bar: String,
         title: String,
         borders_ch: char,
@@ -29,13 +29,45 @@ impl MenuStructure {
         window_width_size: usize,
         window_height_size: usize,
     ) -> String {
-        let mut menu: String;
+        // top border setup
+        let mut menu: String = String::from("");
         let mut top_border = String::from(borders_ch).repeat((window_width_size + 1) / 2);
         top_border += " ";
         top_border += &title_bar;
         top_border += " ";
-        top_border += String::from(borders_ch).repeat((window_width_size + 1) / 2);
-        // top_border += String::from(" ") + &title_bar + String::from(" ") + &top_border;
+        top_border += &String::from(borders_ch).repeat((window_width_size + 1) / 2);
+        // add top_border into menu
+        menu += &top_border;
+
+        // idk more logic, we need to center everything correctly
+
+        menu
+    }
+    fn craete_string_from_menu(menu: MenuStructure) -> String {
+        todo!()
+    }
+
+    fn create_menu_from_string(
+        title_bar: String,
+        title: String,
+        borders_ch: char,
+        message: String,
+        options: Vec<String>,
+        window_width_size: usize,
+        window_height_size: usize,
+    ) -> Self {
+        MenuStructure {
+            title_bar,
+            title,
+            borders_ch,
+            message,
+            options,
+            window_width_size,
+            window_height_size,
+        }
+    }
+    fn create_menu_from_menu() -> MenuStructure {
+        todo!()
     }
 }
 
