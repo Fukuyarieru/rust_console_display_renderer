@@ -1,3 +1,4 @@
+#![allow(unused_variables)]
 use crate::adapters::MenuAdapter;
 enum Menu {
     // ALL POSSIBLE MENUS SHOULD BE WRITTEN HERE
@@ -14,6 +15,28 @@ struct MenuStructure {
     borders_ch: char,
     message: String, // main message, can be nothing (to stay cleared or just none)
     options: Vec<String>, // numbered, can be nothing (use for example as in errors)
+    // how high and wide should the blank space inside the menu window be
+    window_width_size: usize,
+    window_height_size: usize,
+}
+impl MenuStructure {
+    fn create(
+        title_bar: String,
+        title: String,
+        borders_ch: char,
+        message: String,
+        options: Vec<String>,
+        window_width_size: usize,
+        window_height_size: usize,
+    ) -> String {
+        let mut menu: String;
+        let mut top_border = String::from(borders_ch).repeat((window_width_size + 1) / 2);
+        top_border += " ";
+        top_border += &title_bar;
+        top_border += " ";
+        top_border += String::from(borders_ch).repeat((window_width_size + 1) / 2);
+        // top_border += String::from(" ") + &title_bar + String::from(" ") + &top_border;
+    }
 }
 
 // border_ch============title_bar======================
