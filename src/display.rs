@@ -92,7 +92,7 @@ pub struct Display {
 }
 
 // Question: do i do this in this way? do i need it this way?
-enum DisplayAction {
+pub enum DisplayAction {
     DrawLine(DataPoint, DataPoint),
     HashPixels, // get all pixels content told inside a hashmap - wanted to make panel for later
     ClearScreen, // ehh?

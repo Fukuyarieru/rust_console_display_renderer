@@ -4,6 +4,7 @@ use text_io::*;
 
 pub enum Animation {
     LoadingScreen,
+    AdvancedLoadingScreen,
     RandomLines,
     RandomScreens,
 }

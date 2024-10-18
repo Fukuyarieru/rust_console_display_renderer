@@ -22,3 +22,10 @@ pub fn calc_distance(x1: usize, y1: usize, x2: usize, y2: usize) -> f32 {
     let dy = (y2 as i64 - y1 as i64).pow(2);
     ((dx + dy) as f32).sqrt()
 }
+
+fn test(vec: Vec<Vec<char>>) {
+    // function to push all chars inside a vec of vectors into a new vector
+    let mut cache: Vec<char> = Vec::new();
+    vec.iter()
+        .for_each(|inner_vec| inner_vec.iter().for_each(|ch| cache.push(*ch)));
+}
