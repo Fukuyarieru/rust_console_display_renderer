@@ -3,7 +3,7 @@ use crate::animations::Animation;
 use crate::functions::calc_distance;
 use rand::*;
 
-const DEFAULT_POINT_HISTORY_SIZE: usize = 3;
+const DEFAULT_DATAPOINT_HISTORY_SIZE: usize = 3;
 #[derive(Clone)]
 struct DataPoint {
     val: char,
@@ -20,7 +20,7 @@ impl DataPoint {
         // TODO can do this better (right now it does 3 scans from what i understand)
         self.vals_history.push(self.val);
         self.val = new_ch;
-        self.vals_history.remove(self.vals_history.len() - 1);
+        self.vals_history.pop();
     }
 }
 impl std::fmt::Display for DataPoint {
@@ -104,7 +104,7 @@ impl Display {
             screen: Vec2::create(
                 width,
                 height,
-                DataPoint::create('#', DEFAULT_POINT_HISTORY_SIZE),
+                DataPoint::create('#', DEFAULT_DATAPOINT_HISTORY_SIZE),
             ),
             width,
             height,
@@ -117,6 +117,15 @@ impl Display {
         (self.screen.vec[point.0][point.1]).update(new_val);
         // self.screen.index(point.0, point.1).update(new_val);
     }
+
+    // IT WORKS! :D
+    // fn test(&mut self) {
+    //     let mut cache: Vec<char> = Vec::new();
+    //     self.screen
+    //         .vec
+    //         .iter()
+    //         .for_each(|vec| vec.iter().for_each(|var| cache.push(var.val)));
+    // }
     pub fn draw_line(&mut self, point1: (usize, usize), point2: (usize, usize), draw_val: char) {
         // redeclaration
         let x1 = point1.0;
