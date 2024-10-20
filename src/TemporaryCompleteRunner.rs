@@ -10,7 +10,7 @@ Open Main Menu: Shows -> ViewTutorial,ViewSummeryOfAbilities,DisplaysManager,Res
 
 ViewTutorial -> My Tutorial for my program, TODO
 ViewSummeryOfAbilities -> ??? TODO
-DisplayManage -> DisplayManagerMenu -> existing_display1,existing_display2...
+DisplayManager -> DisplayManagerMenu -> existing_display1,existing_display2...
 Reset -> Initiate Reset of the program, (probably pub fn RESET())
 
 

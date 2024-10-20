@@ -1,3 +1,5 @@
+use std::ops::Index;
+
 use crate::adapters::DisplayAdapter;
 use crate::animations::Animation;
 use crate::functions::calc_distance;
@@ -21,6 +23,11 @@ impl DataPoint {
         self.vals_history.push(self.val);
         self.val = new_ch;
         self.vals_history.pop();
+    }
+    fn reverse(&mut self) {
+        self.val = *self.vals_history.index(0);
+        self.vals_history.remove(0);
+        self.vals_history.insert(self.vals_history.len(), ' ');
     }
 }
 impl std::fmt::Display for DataPoint {
@@ -93,7 +100,7 @@ pub struct Display {
 
 // Question: do i do this in this way? do i need it this way?
 pub enum DisplayAction {
-    DrawLine(DataPoint, DataPoint),
+    DrawLine((usize, usize), (usize, usize), char),
     HashPixels, // get all pixels content told inside a hashmap - wanted to make panel for later
     ClearScreen, // ehh?
 }
