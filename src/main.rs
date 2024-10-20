@@ -1,7 +1,8 @@
 #![allow(dead_code, unused_imports)]
 
-#[allow(non_snake_case)]
 mod TemporaryCompleteRunner;
+#[allow(non_snake_case)]
+mod adapter;
 mod adapters;
 mod display;
 use display::*;

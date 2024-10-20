@@ -1,5 +1,6 @@
 use std::ops::Index;
 
+use crate::adapter::Adapter;
 use crate::adapters::DisplayAdapter;
 use crate::animations::Animation;
 use crate::functions::calc_distance;
@@ -95,7 +96,8 @@ pub struct Display {
     width: usize,
     height: usize,
     total_area: usize,
-    // more stuff here later, probably (panels, info, titlebar)
+    boxer: Vec<Box<Vec2<DataPoint>>>,
+    adapter: Adapter, // more stuff here later, probably (panels, info, titlebar)
 }
 
 // Question: do i do this in this way? do i need it this way?
@@ -116,6 +118,8 @@ impl Display {
             width,
             height,
             total_area: (width * height),
+            boxer: todo!(),
+            adapter: todo!(),
         }
     }
     // TODO I should simplify the use of index and entry into Vec2 elements, problems can be seen in draw_line, here, and in the implementation of index()
@@ -187,7 +191,7 @@ impl Display {
         }
     }
     fn random_line(&mut self, draw_val: char) -> ((usize, usize), (usize, usize)) {
-        // returns the random line that was made
+        // function returns the random line that was made
         let mut rng = rand::thread_rng();
         let rx1 = rng.gen_range(0..self.screen.max_x);
         let ry1 = rng.gen_range(0..self.screen.max_y);
