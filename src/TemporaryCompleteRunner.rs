@@ -15,4 +15,41 @@ Reset -> Initiate Reset of the program, (probably pub fn RESET())
 
 
 */
-pub fn Runner() {}
+use crate::display::DataPoint;
+use crate::display::Display;
+use crate::display::Vec2;
+
+use crate::object::Object;
+
+use crate::menu::Menu;
+use crate::shape::Shape;
+
+#[allow(non_snake_case)]
+pub fn Runner() {
+    let mut display: Display;
+
+    #[allow(unreachable_code)]
+    display.add(Object::Shape {
+        shape: Shape::Circle { radius: 3.0 },
+        center_point: (0, 0),
+        allocated_box: (),
+        draw_val: '#',
+    });
+
+    #[allow(unreachable_code)]
+    display.add(Object::Menu {
+        menu: Menu {
+            title_bar: todo!(),
+            title: todo!(),
+            borders_ch: todo!(),
+            message: todo!(),
+            options: todo!(),
+            window_width_size: todo!(),
+            window_height_size: todo!(),
+        },
+        center_point: (1, 1),
+        allocated_box: (),
+    });
+
+    display.add(Object::shape(self, Shape::Circle { radius: 3.0 }, (0, 0)));
+}

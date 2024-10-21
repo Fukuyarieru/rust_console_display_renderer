@@ -1,12 +1,12 @@
 pub struct Menu {
-    title_bar: String,
-    title: String,
-    borders_ch: char,
-    message: String, // main message, can be nothing (to stay cleared or just none)
-    options: Vec<String>, // numbered, can be nothing (use for example as in errors)
+    pub title_bar: String,
+    pub title: String,
+    pub borders_ch: char,
+    pub message: String, // main message, can be nothing (to stay cleared or just none)
+    pub options: Vec<String>, // numbered, can be nothing (use for example as in errors)
     // how high and wide should the blank space inside the menu window be
-    window_width_size: usize,
-    window_height_size: usize,
+    pub window_width_size: usize,
+    pub window_height_size: usize,
 }
 
 // #![allow(unused_variables)]

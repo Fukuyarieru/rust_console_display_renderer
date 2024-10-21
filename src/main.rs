@@ -1,21 +1,22 @@
 #![allow(dead_code, unused_imports)]
 
-mod TemporaryCompleteRunner;
 #[allow(non_snake_case)]
-mod adapter;
-mod adapters;
+mod TemporaryCompleteRunner;
+// mod adapters;
 mod display;
+#[allow(non_snake_case)]
+mod object;
 use display::*;
-mod display_renderers;
+// mod display_renderers;
 mod menu;
-use display_renderers::*;
+// use display_renderers::*;
 mod functions;
 use functions::*;
 mod animations;
 use animations::*;
-mod shapes;
+mod shape;
 use rand::*;
-use shapes::*;
+use shape::*;
 use std::io::Write;
 use text_io::*;
 

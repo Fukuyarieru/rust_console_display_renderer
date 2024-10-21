@@ -1,14 +1,14 @@
 use std::ops::Index;
 
-use crate::adapter::Adapter;
-use crate::adapters::DisplayAdapter;
+// use crate::adapters::DisplayAdapter;
 use crate::animations::Animation;
 use crate::functions::calc_distance;
+use crate::object::{self, Object};
 use rand::*;
 
 const DEFAULT_DATAPOINT_HISTORY_SIZE: usize = 3;
 #[derive(Clone)]
-struct DataPoint {
+pub struct DataPoint {
     val: char,
     vals_history: Vec<char>,
 }
@@ -37,7 +37,7 @@ impl std::fmt::Display for DataPoint {
     }
 }
 #[derive(Clone)]
-struct Vec2<T> {
+pub struct Vec2<T> {
     vec: Vec<Vec<T>>,
     max_x: usize,
     max_y: usize,
@@ -96,8 +96,8 @@ pub struct Display {
     width: usize,
     height: usize,
     total_area: usize,
-    boxer: Vec<Box<Vec2<DataPoint>>>,
-    adapter: Adapter, // more stuff here later, probably (panels, info, titlebar)
+    boxer: Vec<Object>,
+    // more stuff here later, probably (panels, info, titlebar)
 }
 
 // Question: do i do this in this way? do i need it this way?
@@ -108,7 +108,7 @@ pub enum DisplayAction {
 }
 impl Display {
     // Lets limit for now the use of individual pixels inside of the Display struct
-    fn create(width: usize, height: usize) -> Self {
+    pub fn create(width: usize, height: usize) -> Self {
         Display {
             screen: Vec2::create(
                 width,
@@ -119,7 +119,6 @@ impl Display {
             height,
             total_area: (width * height),
             boxer: todo!(),
-            adapter: todo!(),
         }
     }
     // TODO I should simplify the use of index and entry into Vec2 elements, problems can be seen in draw_line, here, and in the implementation of index()
@@ -199,6 +198,34 @@ impl Display {
         let ry2 = rng.gen_range(0..self.screen.max_y);
         self.draw_line((rx1, ry1), (rx2, ry2), draw_val);
         ((rx1, ry1), (rx2, ry2))
+    }
+    pub fn add(&self, object: Object) {
+        self.boxer.push(object);
+    }
+    // TODO
+    pub fn render(&self) {
+        let output = self;
+        for object in output.boxer {
+            match object {
+                Object::Shape {
+                    shape,
+                    center_point,
+                    allocated_box,
+                    draw_val,
+                } => {
+                    for vec in allocated_box.vec {
+                        for datapoint in vec {
+                            datapoint.update(draw_val);
+                        }
+                    }
+                }
+                Object::Menu {
+                    menu,
+                    center_point,
+                    allocated_box,
+                } => todo!(),
+            }
+        }
     }
 }
 // Implement Display for the Display struct

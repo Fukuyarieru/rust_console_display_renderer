@@ -28,6 +28,17 @@ impl Shape {
             Shape::Polygon { points_deltas } => todo!(),
         }
     }
+    fn get_perimeter(&self) -> f64 {
+        todo!()
+    }
+    #[allow(unused_variables)]
+    fn rotate_right(&mut self, angle: usize) {
+        todo!()
+    }
+    #[allow(unused_variables)]
+    fn rotate_left(&mut self, angle: usize) {
+        todo!()
+    }
 }
 
 // trait DisplayAdapter {
