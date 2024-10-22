@@ -1,6 +1,5 @@
-use std::path::Display;
-
-use crate::display::{self, Vec2};
+use crate::display::Display;
+use crate::display::Vec2;
 use crate::menu::Menu;
 use crate::shape::Shape;
 use crate::DataPoint;
@@ -20,7 +19,17 @@ pub enum Object<'a> {
 }
 impl Object<'a> {
     pub fn shape(display: &Display, shape: Shape, center_point: (usize, usize)) -> Self {
-        todo!()
+        let mut vec = &display.screen;
+        match shape {
+            Shape::Circle { radius } => {for i in (vec[])}
+            Shape::Polygon { points_deltas } => todo!(),
+            Shape::Quadrilateral {
+                point1_delta,
+                point2_delta,
+                point3_delta,
+                point4_delta,
+            } => todo!(),
+        }
         // display.
     }
 }

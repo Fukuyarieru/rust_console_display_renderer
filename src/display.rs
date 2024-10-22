@@ -91,12 +91,12 @@ where
         Ok(())
     }
 }
-pub struct Display {
-    screen: Vec2<DataPoint>,
+pub struct Display<'a> {
+    pub screen: Vec2<DataPoint>,
     width: usize,
     height: usize,
     total_area: usize,
-    boxer: Vec<Object>,
+    boxer: Vec<Object<'a>>,
     // more stuff here later, probably (panels, info, titlebar)
 }
 
