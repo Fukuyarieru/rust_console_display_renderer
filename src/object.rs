@@ -8,20 +8,20 @@ pub enum Object<'a> {
     Shape {
         shape: Shape,
         center_point: (usize, usize),
-        allocated_box: Vec2<&'a DataPoint>,
+        allocated_box: Vec2<&'a mut DataPoint>, // Change to mutable reference
         draw_val: char,
     },
     Menu {
         menu: Menu,
-        center_point: (usize, usize), // aka preferred point, think of it for now as like open windows
-        allocated_box: Vec2<&'a DataPoint>,
+        center_point: (usize, usize),
+        allocated_box: Vec2<&'a mut DataPoint>, // Change to mutable reference
     },
 }
 impl Object<'a> {
     pub fn shape(display: &Display, shape: Shape, center_point: (usize, usize)) -> Self {
         let mut vec = &display.screen;
         match shape {
-            Shape::Circle { radius } => {for i in (vec[])}
+            Shape::Circle { radius } => {}
             Shape::Polygon { points_deltas } => todo!(),
             Shape::Quadrilateral {
                 point1_delta,

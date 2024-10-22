@@ -106,7 +106,7 @@ pub enum DisplayAction {
     HashPixels, // get all pixels content told inside a hashmap - wanted to make panel for later
     ClearScreen, // ehh?
 }
-impl Display {
+impl<'a> Display<'a> {
     // Lets limit for now the use of individual pixels inside of the Display struct
     pub fn create(width: usize, height: usize) -> Self {
         Display {
@@ -199,13 +199,13 @@ impl Display {
         self.draw_line((rx1, ry1), (rx2, ry2), draw_val);
         ((rx1, ry1), (rx2, ry2))
     }
-    pub fn add(&self, object: Object) {
+    pub fn add(&mut self, object: Object<'a>) {
         self.boxer.push(object);
     }
     // TODO
-    pub fn render(&self) {
-        let output = self;
-        for object in output.boxer {
+    pub fn render(&mut self) {
+        for object in &mut self.boxer {
+            // Iterate mutably over `self.boxer`
             match object {
                 Object::Shape {
                     shape,
@@ -213,9 +213,10 @@ impl Display {
                     allocated_box,
                     draw_val,
                 } => {
-                    for vec in allocated_box.vec {
+                    for vec in &mut allocated_box.vec {
+                        // Iterate mutably over `allocated_box.vec`
                         for datapoint in vec {
-                            datapoint.update(draw_val);
+                            datapoint.update(*draw_val); // Update using mutable `datapoint`
                         }
                     }
                 }
@@ -229,7 +230,7 @@ impl Display {
     }
 }
 // Implement Display for the Display struct
-impl std::fmt::Display for Display {
+impl<'a> std::fmt::Display for Display<'a> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         // Delegate to the Display implementation for Vec2<Point>
         write!(f, "{}", self.screen)
