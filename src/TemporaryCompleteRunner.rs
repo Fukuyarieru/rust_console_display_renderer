@@ -28,28 +28,10 @@ use crate::shape::Shape;
 pub fn Runner() {
     let mut display: Display;
 
-    #[allow(unreachable_code)]
-    display.add(Object::Shape {
-        shape: Shape::Circle { radius: 3.0 },
-        center_point: (0, 0),
-        allocated_box: (),
-        draw_val: '#',
-    });
-
-    #[allow(unreachable_code)]
-    display.add(Object::Menu {
-        menu: Menu {
-            title_bar: todo!(),
-            title: todo!(),
-            borders_ch: todo!(),
-            message: todo!(),
-            options: todo!(),
-            window_width_size: todo!(),
-            window_height_size: todo!(),
-        },
-        center_point: (1, 1),
-        allocated_box: (),
-    });
-
-    display.add(Object::shape(self, Shape::Circle { radius: 3.0 }, (0, 0)));
+    display.add(Object::shape(
+        Shape::Circle { radius: 5.0 },
+        (3, 3),
+        '#',
+        &display,
+    ));
 }

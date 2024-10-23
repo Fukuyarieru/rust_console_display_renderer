@@ -9,23 +9,23 @@ use rand::*;
 const DEFAULT_DATAPOINT_HISTORY_SIZE: usize = 3;
 #[derive(Clone)]
 pub struct DataPoint {
-    val: char,
-    vals_history: Vec<char>,
+    pub val: char,
+    pub vals_history: Vec<char>,
 }
 impl DataPoint {
-    fn create(ch: char, history_size: usize) -> Self {
+    pub fn create(ch: char, history_size: usize) -> Self {
         DataPoint {
             val: ch,
             vals_history: vec![' '; history_size],
         }
     }
-    fn update(&mut self, new_ch: char) {
+    pub fn update(&mut self, new_ch: char) {
         // TODO can do this better (right now it does 3 scans from what i understand)
         self.vals_history.push(self.val);
         self.val = new_ch;
         self.vals_history.pop();
     }
-    fn reverse(&mut self) {
+    pub fn reverse(&mut self) {
         self.val = *self.vals_history.index(0);
         self.vals_history.remove(0);
         self.vals_history.insert(self.vals_history.len(), ' ');
@@ -38,7 +38,7 @@ impl std::fmt::Display for DataPoint {
 }
 #[derive(Clone)]
 pub struct Vec2<T> {
-    vec: Vec<Vec<T>>,
+    pub vec: Vec<Vec<T>>,
     max_x: usize,
     max_y: usize,
 }
@@ -46,7 +46,7 @@ impl<T> Vec2<T> {
     fn index(&mut self, x: usize, y: usize) -> &mut T {
         &mut self.vec[x][y]
     }
-    fn create(x_size: usize, y_size: usize, val: T) -> Self
+    pub fn create(x_size: usize, y_size: usize, val: T) -> Self
     where
         // `T` must implement `Clone` to duplicate `val` across
         T: Clone,
@@ -93,10 +93,9 @@ where
 }
 pub struct Display<'a> {
     pub screen: Vec2<DataPoint>,
-    width: usize,
-    height: usize,
-    total_area: usize,
-    boxer: Vec<Object<'a>>,
+    pub width: usize,
+    pub height: usize,
+    pub boxer: Vec<Object<'a>>,
     // more stuff here later, probably (panels, info, titlebar)
 }
 
@@ -117,8 +116,7 @@ impl<'a> Display<'a> {
             ),
             width,
             height,
-            total_area: (width * height),
-            boxer: todo!(),
+            boxer: Vec::new(),
         }
     }
     // TODO I should simplify the use of index and entry into Vec2 elements, problems can be seen in draw_line, here, and in the implementation of index()
