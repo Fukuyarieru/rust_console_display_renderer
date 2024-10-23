@@ -1,3 +1,4 @@
+use std::collections::btree_set::SymmetricDifference;
 use std::default;
 use std::intrinsics::discriminant_value;
 
@@ -20,7 +21,7 @@ pub enum Object<'a> {
     Menu {
         menu: Menu,
         center_point: (usize, usize),
-        allocated_box: Vec2<&'a mut DataPoint>, // Change to mutable reference
+        allocated_box: Vec2<&'a DataPoint>, // Change to mutable reference
     },
 }
 impl<'a> Object<'a> {
@@ -28,7 +29,7 @@ impl<'a> Object<'a> {
         shape: Shape,
         center_point: (usize, usize),
         draw_val: char,
-        display: &'a Display,
+        screen: &'a Vec2<DataPoint>,
     ) -> Self {
         let mut left;
         let mut right;
@@ -43,24 +44,23 @@ impl<'a> Object<'a> {
                 if left < 0 {
                     left = 0
                 }
-                if right > display.screen.vec[0].len() {
-                    right = display.screen.vec.len() - 1
+                if right >= screen.vec.len() {
+                    right = screen.vec.len() - 1
                 }
-                if top > display.screen.vec.len() {
-                    top = display.screen.vec.len() - 1
+                if top >= screen.vec[0].len() {
+                    top = screen.vec[0].len() - 1
                 }
                 if bottom < 0 {
                     bottom = 0
                 }
 
-                let default_datapoint = &display.screen.vec[0][0];
+                let default_datapoint = &screen.vec[0][0];
                 let mut reference_vec2: Vec2<&'a DataPoint> =
                     Vec2::create(right - left, top - bottom, &default_datapoint);
 
                 for line in top..=bottom {
                     for row in left..=right {
-                        reference_vec2.vec[top - line][right - row] =
-                            &display.screen.vec[line][row];
+                        reference_vec2.vec[top - line][right - row] = &screen.vec[line][row];
                     }
                 }
                 return Object::Shape {

@@ -26,12 +26,12 @@ use crate::shape::Shape;
 
 #[allow(non_snake_case)]
 pub fn Runner() {
-    let mut display: Display;
+    let mut display: Display = Display::create(100, 100);
 
     display.add(Object::shape(
         Shape::Circle { radius: 5.0 },
         (3, 3),
         '#',
-        &display,
+        &display.screen,
     ));
 }

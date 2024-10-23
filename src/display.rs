@@ -6,7 +6,7 @@ use crate::functions::calc_distance;
 use crate::object::{self, Object};
 use rand::*;
 
-const DEFAULT_DATAPOINT_HISTORY_SIZE: usize = 3;
+pub const DEFAULT_DATAPOINT_HISTORY_SIZE: usize = 3;
 #[derive(Clone)]
 pub struct DataPoint {
     pub val: char,
