@@ -1,6 +1,5 @@
 use std::collections::btree_set::SymmetricDifference;
 use std::default;
-use std::intrinsics::discriminant_value;
 
 use clearscreen::ClearScreen;
 

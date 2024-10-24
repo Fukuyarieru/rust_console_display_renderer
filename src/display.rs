@@ -178,8 +178,11 @@ impl<'a> Display<'a> {
     fn get_center(&self) -> (usize, usize) {
         (self.width / 2, self.height / 2)
     }
+    fn total_area(&self) -> usize {
+        self.width * self.height
+    }
     fn randomize_screen(&mut self, draw_val: char, screen_percentage: f32) {
-        let screen_area = self.total_area as f64;
+        let screen_area = self.total_area() as f64;
         let mut area_to_change: f64 = screen_area * (screen_percentage as f64) / 100.0;
         while area_to_change > 0.0 {
             let ((x1, y1), (x2, y2)) = self.random_line(draw_val);
@@ -201,6 +204,7 @@ impl<'a> Display<'a> {
         self.boxer.push(object);
     }
     // TODO
+    #[allow(unused_variables)]
     pub fn render(&mut self) {
         for object in &mut self.boxer {
             // Iterate mutably over `self.boxer`
@@ -211,12 +215,13 @@ impl<'a> Display<'a> {
                     allocated_box,
                     draw_val,
                 } => {
-                    for vec in &mut allocated_box.vec {
-                        // Iterate mutably over `allocated_box.vec`
-                        for datapoint in vec {
-                            datapoint.update(*draw_val); // Update using mutable `datapoint`
-                        }
-                    }
+                    todo!()
+                    // for vec in &mut allocated_box.vec {
+                    //     // Iterate mutably over `allocated_box.vec`
+                    //     for datapoint in vec {
+                    //         datapoint.update(*draw_val); // Update using mutable `datapoint`
+                    //     }
+                    // }
                 }
                 Object::Menu {
                     menu,
