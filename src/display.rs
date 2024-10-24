@@ -1,5 +1,3 @@
-use std::ops::Index;
-
 // use crate::adapters::DisplayAdapter;
 use crate::animations::Animation;
 use crate::functions::calc_distance;
@@ -26,7 +24,7 @@ impl DataPoint {
         self.vals_history.pop();
     }
     pub fn reverse(&mut self) {
-        self.val = *self.vals_history.index(0);
+        self.val = self.vals_history[0];
         self.vals_history.remove(0);
         self.vals_history.insert(self.vals_history.len(), ' ');
     }
@@ -43,9 +41,6 @@ pub struct Vec2<T> {
     max_y: usize,
 }
 impl<T> Vec2<T> {
-    fn index(&mut self, x: usize, y: usize) -> &mut T {
-        &mut self.vec[x][y]
-    }
     pub fn create(x_size: usize, y_size: usize, val: T) -> Self
     where
         // `T` must implement `Clone` to duplicate `val` across
@@ -57,19 +52,6 @@ impl<T> Vec2<T> {
             max_y: y_size,
         }
     }
-    // fn create_with_history_size(
-    //     x_size: usize,
-    //     y_size: usize,
-    //     ch: char,
-    //     history_size: usize,
-    // ) -> Self {
-    //     Vec2 {
-    //         vec: vec![vec![Point::create(ch, history_size); y_size]; x_size],
-    //     }
-    // }
-    // fn to_string(&self) -> String {
-    //     let screen_string = std::str::from_utf8(&self.vec).unwrap_or("[Error displaying screen]");
-    // }
 }
 impl<T> std::fmt::Display for Vec2<T>
 // chatgpt
@@ -99,12 +81,6 @@ pub struct Display<'a> {
     // more stuff here later, probably (panels, info, titlebar)
 }
 
-// Question: do i do this in this way? do i need it this way?
-pub enum DisplayAction {
-    DrawLine((usize, usize), (usize, usize), char),
-    HashPixels, // get all pixels content told inside a hashmap - wanted to make panel for later
-    ClearScreen, // ehh?
-}
 impl<'a> Display<'a> {
     // Lets limit for now the use of individual pixels inside of the Display struct
     pub fn create(width: usize, height: usize) -> Self {
@@ -119,21 +95,10 @@ impl<'a> Display<'a> {
             boxer: Vec::new(),
         }
     }
-    // TODO I should simplify the use of index and entry into Vec2 elements, problems can be seen in draw_line, here, and in the implementation of index()
     fn pixel(&mut self, point: (usize, usize), new_val: char) {
-        // heh i got two implementations ??!! :D??
         (self.screen.vec[point.0][point.1]).update(new_val);
-        // self.screen.index(point.0, point.1).update(new_val);
     }
 
-    // IT WORKS! :D
-    // fn test(&mut self) {
-    //     let mut cache: Vec<char> = Vec::new();
-    //     self.screen
-    //         .vec
-    //         .iter()
-    //         .for_each(|vec| vec.iter().for_each(|var| cache.push(var.val)));
-    // }
     pub fn draw_line(&mut self, point1: (usize, usize), point2: (usize, usize), draw_val: char) {
         // redeclaration
         let x1 = point1.0;
@@ -167,16 +132,11 @@ impl<'a> Display<'a> {
             }
         }
     }
-    // not a good idea to make this, we're executing an animation on a screen, not an animation from a screen
-    // fn animation_start(&mut self, animation: Animation) {
-    //     todo!()
-    // }
-    fn copy_screen(&mut self, screen: Vec2<DataPoint>) {
-        //?????, Vec2<char>? ???
-        self.screen = screen;
-    }
     fn get_center(&self) -> (usize, usize) {
-        (self.width / 2, self.height / 2)
+        (
+            (self.width as f64 / 2.0) as usize,
+            (self.height as f64 / 2.0) as usize,
+        )
     }
     fn total_area(&self) -> usize {
         self.width * self.height
@@ -204,33 +164,40 @@ impl<'a> Display<'a> {
         self.boxer.push(object);
     }
     // TODO
-    #[allow(unused_variables)]
-    pub fn render(&mut self) {
-        for object in &mut self.boxer {
-            // Iterate mutably over `self.boxer`
-            match object {
-                Object::Shape {
-                    shape,
-                    center_point,
-                    allocated_box,
-                    draw_val,
-                } => {
-                    todo!()
-                    // for vec in &mut allocated_box.vec {
-                    //     // Iterate mutably over `allocated_box.vec`
-                    //     for datapoint in vec {
-                    //         datapoint.update(*draw_val); // Update using mutable `datapoint`
-                    //     }
-                    // }
-                }
-                Object::Menu {
-                    menu,
-                    center_point,
-                    allocated_box,
-                } => todo!(),
-            }
+pub fn allocate(
+    &'a self,
+    left: usize,
+    right: usize,
+    top: usize,
+    bottom: usize,
+) -> Vec2<&'a DataPoint> {
+    let mut left = left;
+    let mut right = right;
+    let mut top = top;
+    let mut bottom = bottom;
+    if left < 0 {
+        left = 0
+    }
+    if right >= self.screen.vec.len() {
+        right = self.screen.vec.len() - 1
+    }
+    if top >= self.screen.vec[0].len() {
+        top = self.screen.vec[0].len() - 1
+    }
+    if bottom < 0 {
+        bottom = 0
+    }
+
+    let default_datapoint = &self.screen.vec[0][0];
+    let mut reference_vec2: Vec2<&'a DataPoint> =
+        Vec2::create(right - left, top - bottom, &default_datapoint);
+
+    for line in top..=bottom {
+        for row in left..=right {
+            reference_vec2.vec[top - line][right - row] = &self.screen.vec[line][row];
         }
     }
+    reference_vec2
 }
 // Implement Display for the Display struct
 impl<'a> std::fmt::Display for Display<'a> {
