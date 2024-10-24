@@ -1,7 +1,7 @@
 // use crate::adapters::DisplayAdapter;
 use crate::animations::Animation;
 use crate::functions::calc_distance;
-use crate::object::{self, Object};
+use crate::object::{self, AllocateBox, Object};
 use rand::*;
 
 pub const DEFAULT_DATAPOINT_HISTORY_SIZE: usize = 3;
@@ -160,44 +160,73 @@ impl<'a> Display<'a> {
         self.draw_line((rx1, ry1), (rx2, ry2), draw_val);
         ((rx1, ry1), (rx2, ry2))
     }
-    pub fn add(&mut self, object: Object<'a>) {
+    #[allow(unused_variables)]
+    pub fn add(&'a mut self, mut object: Object<'a>) {
+        match object {
+            Object::Free {
+                size,
+                center_point,
+                ref mut allocated_box,
+            } => {
+                *allocated_box = AllocateBox::Allocated {
+                    allocated_box: self.allocate(
+                        center_point.0 - size.0,
+                        center_point.0 + size.1,
+                        center_point.1 + size.1,
+                        center_point.1 - size.1,
+                    ),
+                }
+            }
+            Object::Shape {
+                shape,
+                center_point,
+                allocated_box,
+                draw_val,
+            } => todo!(),
+            Object::Menu {
+                menu,
+                center_point,
+                allocated_box,
+            } => todo!(),
+        }
         self.boxer.push(object);
     }
     // TODO
-pub fn allocate(
-    &'a self,
-    left: usize,
-    right: usize,
-    top: usize,
-    bottom: usize,
-) -> Vec2<&'a DataPoint> {
-    let mut left = left;
-    let mut right = right;
-    let mut top = top;
-    let mut bottom = bottom;
-    if left < 0 {
-        left = 0
-    }
-    if right >= self.screen.vec.len() {
-        right = self.screen.vec.len() - 1
-    }
-    if top >= self.screen.vec[0].len() {
-        top = self.screen.vec[0].len() - 1
-    }
-    if bottom < 0 {
-        bottom = 0
-    }
-
-    let default_datapoint = &self.screen.vec[0][0];
-    let mut reference_vec2: Vec2<&'a DataPoint> =
-        Vec2::create(right - left, top - bottom, &default_datapoint);
-
-    for line in top..=bottom {
-        for row in left..=right {
-            reference_vec2.vec[top - line][right - row] = &self.screen.vec[line][row];
+    pub fn allocate(
+        &'a self,
+        left: usize,
+        right: usize,
+        top: usize,
+        bottom: usize,
+    ) -> Vec2<&'a DataPoint> {
+        let mut left = left;
+        let mut right = right;
+        let mut top = top;
+        let mut bottom = bottom;
+        if left < 0 {
+            left = 0
         }
+        if right >= self.screen.vec.len() {
+            right = self.screen.vec.len() - 1
+        }
+        if top >= self.screen.vec[0].len() {
+            top = self.screen.vec[0].len() - 1
+        }
+        if bottom < 0 {
+            bottom = 0
+        }
+
+        let default_datapoint = &self.screen.vec[0][0];
+        let mut reference_vec2: Vec2<&'a DataPoint> =
+            Vec2::create(right - left, top - bottom, &default_datapoint);
+
+        for line in top..=bottom {
+            for row in left..=right {
+                reference_vec2.vec[top - line][right - row] = &self.screen.vec[line][row];
+            }
+        }
+        reference_vec2
     }
-    reference_vec2
 }
 // Implement Display for the Display struct
 impl<'a> std::fmt::Display for Display<'a> {

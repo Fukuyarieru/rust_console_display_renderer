@@ -19,6 +19,7 @@ use crate::display::DataPoint;
 use crate::display::Display;
 use crate::display::Vec2;
 
+use crate::object::AllocateBox;
 use crate::object::Object;
 
 use crate::menu::Menu;
@@ -28,5 +29,9 @@ use crate::shape::Shape;
 pub fn Runner() {
     let mut display: Display = Display::create(100, 100);
 
-    display.add(O);
+    display.add(Object::Free {
+        size: (2, 2),
+        center_point: (3, 3),
+        allocated_box: AllocateBox::AllocateInFunction,
+    });
 }
