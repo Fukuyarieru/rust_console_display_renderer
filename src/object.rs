@@ -8,6 +8,7 @@ use crate::menu::Menu;
 use crate::shape::Shape;
 use crate::DataPoint;
 
+#[derive(Clone)]
 pub enum Object<'a> {
     Free {
         size: (usize, usize),
@@ -26,11 +27,15 @@ pub enum Object<'a> {
         allocated_box: AllocateBox<'a>, // Change to mutable reference
     },
 }
+#[derive(Clone)]
 pub enum AllocateBox<'a> {
     AllocateInFunction,
     Allocated { allocated_box: Vec2<&'a DataPoint> },
 }
 impl<'a> Object<'a> {
+    pub fn allocate(&mut self) -> {
+        self
+    }
     pub fn create_shape(
         shape: Shape,
         center_point: (usize, usize),

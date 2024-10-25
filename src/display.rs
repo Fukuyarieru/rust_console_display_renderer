@@ -166,9 +166,9 @@ impl<'a> Display<'a> {
             Object::Free {
                 size,
                 center_point,
-                ref mut allocated_box,
+                mut allocated_box,
             } => {
-                *allocated_box = AllocateBox::Allocated {
+                allocated_box = AllocateBox::Allocated {
                     allocated_box: self.allocate(
                         center_point.0 - size.0,
                         center_point.0 + size.1,
