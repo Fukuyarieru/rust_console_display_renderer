@@ -1,3 +1,5 @@
+use std::iter::once;
+
 // use crate::adapters::DisplayAdapter;
 use crate::animations::Animation;
 use crate::functions::calc_distance;
@@ -160,37 +162,52 @@ impl<'a> Display<'a> {
         self.draw_line((rx1, ry1), (rx2, ry2), draw_val);
         ((rx1, ry1), (rx2, ry2))
     }
+    // TODO
     #[allow(unused_variables)]
-    pub fn add(&'a mut self, mut object: Object<'a>) {
-        match object {
-            Object::Free {
-                size,
-                center_point,
-                mut allocated_box,
-            } => {
-                allocated_box = AllocateBox::Allocated {
-                    allocated_box: self.allocate(
-                        center_point.0 - size.0,
-                        center_point.0 + size.1,
-                        center_point.1 + size.1,
-                        center_point.1 - size.1,
-                    ),
-                }
-            }
-            Object::Shape {
-                shape,
-                center_point,
-                allocated_box,
-                draw_val,
-            } => todo!(),
-            Object::Menu {
-                menu,
-                center_point,
-                allocated_box,
-            } => todo!(),
+    pub fn add(&'a mut self, object: Object<'a>) {
+        match object.obj_type {
+            object::Type::Free { size } => (),
+            object::Type::Shape { ref shape } => (),
+            object::Type::Menu { ref menu } => (),
         }
+        object.allocate(self.allocate(3, 20, 20, 10));
         self.boxer.push(object);
     }
+    // OLD
+    // #[allow(unused_variables)]
+    // pub fn add(&'a mut self, mut object: Object<'a>) {
+    //     let left=
+    //     object.allocate(self.allocate(left, right, top, bottom));
+    //     // let object = &object;
+    //     // match object {
+    //     //     Object::Free {
+    //     //         size,
+    //     //         center_point,
+    //     //         mut allocated_box,
+    //     //     } => {
+    //     //         allocated_box = AllocateBox::Allocated {
+    //     //             allocated_box: self.allocate(
+    //     //                 center_point.0 - size.0,
+    //     //                 center_point.0 + size.1,
+    //     //                 center_point.1 + size.1,
+    //     //                 center_point.1 - size.1,
+    //     //             ),
+    //     //         }
+    //     //     }
+    //     //     Object::Shape {
+    //     //         shape,
+    //     //         center_point,
+    //     //         allocated_box,
+    //     //         draw_val,
+    //     //     } => todo!(),
+    //     //     Object::Menu {
+    //     //         menu,
+    //     //         center_point,
+    //     //         allocated_box,
+    //     //     } => todo!(),
+    //     // }
+    //     self.boxer.push(object);
+    // }
     // TODO
     pub fn allocate(
         &'a self,

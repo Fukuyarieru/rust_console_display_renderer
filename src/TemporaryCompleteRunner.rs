@@ -21,6 +21,7 @@ use crate::display::Vec2;
 
 use crate::object::AllocateBox;
 use crate::object::Object;
+use crate::object::Type;
 
 use crate::menu::Menu;
 use crate::shape::Shape;
@@ -29,9 +30,15 @@ use crate::shape::Shape;
 pub fn Runner() {
     let mut display: Display = Display::create(100, 100);
 
-    display.add(Object::Free {
-        size: (2, 2),
-        center_point: (3, 3),
+    display.add(Object {
+        center_point: (3, 4),
+        obj_type: Type::Free { size: (3, 7) },
         allocated_box: AllocateBox::AllocateInFunction,
-    });
+    })
+
+    // display.add(Object::Free {
+    //     size: (2, 2),
+    //     center_point: (3, 3),
+    //     allocated_box: AllocateBox::AllocateInFunction,
+    // });
 }
