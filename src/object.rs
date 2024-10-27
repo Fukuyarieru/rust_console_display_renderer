@@ -1,6 +1,3 @@
-use std::collections::btree_set::SymmetricDifference;
-use std::default;
-
 use crate::display;
 use crate::display::Display;
 use crate::display::Vec2;
@@ -20,7 +17,7 @@ pub enum Type {
 }
 
 impl<'a> Object<'a> {
-    pub fn allocate(&mut self, ref_vec2: Vec2<&'a DataPoint>) {
+    pub fn allocate(&mut self, ref_vec2: Vec2<&'a mut DataPoint>) {
         self.allocated_box = AllocateBox::Allocated {
             allocated_box: ref_vec2,
         }
@@ -49,7 +46,9 @@ impl<'a> Object<'a> {
 // #[derive(Clone)]
 pub enum AllocateBox<'a> {
     AllocateInFunction,
-    Allocated { allocated_box: Vec2<&'a DataPoint> },
+    Allocated {
+        allocated_box: Vec2<&'a mut DataPoint>,
+    },
 }
 // impl<'a> Object<'a> {
 //     pub fn allocate(&mut self, given_allocated_box: Vec2<&DataPoint>) {

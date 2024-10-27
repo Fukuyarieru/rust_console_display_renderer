@@ -1,9 +1,8 @@
-use std::iter::once;
-
 // use crate::adapters::DisplayAdapter;
 use crate::animations::Animation;
 use crate::functions::calc_distance;
-use crate::object::{self, AllocateBox, Object};
+use crate::object::Object;
+use crate::object::Type;
 use rand::*;
 
 pub const DEFAULT_DATAPOINT_HISTORY_SIZE: usize = 3;
@@ -79,7 +78,7 @@ pub struct Display<'a> {
     pub screen: Vec2<DataPoint>,
     pub width: usize,
     pub height: usize,
-    pub boxer: Vec<Object<'a>>,
+    pub boxer: Vec<&'a Object<'a>>,
     // more stuff here later, probably (panels, info, titlebar)
 }
 
@@ -164,14 +163,14 @@ impl<'a> Display<'a> {
     }
     // TODO
     #[allow(unused_variables)]
-    pub fn add(&'a mut self, object: Object<'a>) {
+    pub fn add(&'a mut self, mut object: Object<'a>) {
         match object.obj_type {
-            object::Type::Free { size } => (),
-            object::Type::Shape { ref shape } => (),
-            object::Type::Menu { ref menu } => (),
+            Type::Free { size } => (),
+            Type::Shape { ref shape } => (),
+            Type::Menu { ref menu } => (),
         }
         object.allocate(self.allocate(3, 20, 20, 10));
-        self.boxer.push(object);
+        self.boxer.push(&object);
     }
     // OLD
     // #[allow(unused_variables)]
@@ -215,7 +214,7 @@ impl<'a> Display<'a> {
         right: usize,
         top: usize,
         bottom: usize,
-    ) -> Vec2<&'a DataPoint> {
+    ) -> Vec2<&'a mut DataPoint> {
         let mut left = left;
         let mut right = right;
         let mut top = top;
@@ -234,12 +233,12 @@ impl<'a> Display<'a> {
         }
 
         let default_datapoint = &self.screen.vec[0][0];
-        let mut reference_vec2: Vec2<&'a DataPoint> =
-            Vec2::create(right - left, top - bottom, &default_datapoint);
+        let mut reference_vec2: Vec2<&'a mut DataPoint> =
+            Vec2::create(right - left, top - bottom, default_datapoint);
 
         for line in top..=bottom {
             for row in left..=right {
-                reference_vec2.vec[top - line][right - row] = &self.screen.vec[line][row];
+                reference_vec2.vec[top - line][right - row] = &mut self.screen.vec[line][row];
             }
         }
         reference_vec2
