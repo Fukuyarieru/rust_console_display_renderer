@@ -1,14 +1,13 @@
-use crate::display;
 use crate::display::Display;
-use crate::display::Vec2;
 use crate::menu::Menu;
 use crate::shape::Shape;
+use crate::standard::*;
 use crate::DataPoint;
 
 pub struct Object<'a> {
-    pub center_point: (usize, usize),
+    pub center_point: Point,
     pub obj_type: Type,
-    pub allocated_box: AllocateBox<'a>,
+    pub allocated_box: Option<Vec2<&'a mut DataPoint>>,
 }
 pub enum Type {
     Free { size: (usize, usize) },
@@ -17,12 +16,19 @@ pub enum Type {
 }
 
 impl<'a> Object<'a> {
-    pub fn allocate(&mut self, ref_vec2: Vec2<&'a mut DataPoint>) {
-        self.allocated_box = AllocateBox::Allocated {
-            allocated_box: ref_vec2,
-        }
-    }
+    // pub fn allocate(&mut self, ref_vec2: Vec2<&'a mut DataPoint>) {
+    //     self.allocated_box = AllocateBox::Allocated {
+    //         allocated_box: ref_vec2,
+    //     }
+    // }
 }
+// pub enum AllocateBox<'a> {
+//     AllocateInFunction,
+//     Allocated {
+//         allocated_box: Vec2<&'a mut DataPoint>,
+//     },
+// }
+//======================= older stuff down here
 
 // #[derive(Clone)]
 // pub enum Object<'a> {
@@ -44,12 +50,6 @@ impl<'a> Object<'a> {
 //     },
 // }
 // #[derive(Clone)]
-pub enum AllocateBox<'a> {
-    AllocateInFunction,
-    Allocated {
-        allocated_box: Vec2<&'a mut DataPoint>,
-    },
-}
 // impl<'a> Object<'a> {
 //     pub fn allocate(&mut self, given_allocated_box: Vec2<&DataPoint>) {
 //         match self {

@@ -4,6 +4,8 @@
 
 // DO NOT USE ANY KIND OF #ALLOW[] BLOCK
 
+use core::num;
+
 // steps to run:
 /*
 Open Main Menu: Shows -> ViewTutorial,ViewSummeryOfAbilities,DisplaysManager,Reset

@@ -3,14 +3,17 @@ use crate::animations::Animation;
 use crate::functions::calc_distance;
 use crate::object::Object;
 use crate::object::Type;
+use crate::standard::*;
 use rand::*;
 
 pub const DEFAULT_DATAPOINT_HISTORY_SIZE: usize = 3;
+
 #[derive(Clone)]
 pub struct DataPoint {
     pub val: char,
     pub vals_history: Vec<char>,
 }
+
 impl DataPoint {
     pub fn create(ch: char, history_size: usize) -> Self {
         DataPoint {
@@ -35,45 +38,7 @@ impl std::fmt::Display for DataPoint {
         write!(f, "{}", self.val)
     }
 }
-#[derive(Clone)]
-pub struct Vec2<T> {
-    pub vec: Vec<Vec<T>>,
-    max_x: usize,
-    max_y: usize,
-}
-impl<T> Vec2<T> {
-    pub fn create(x_size: usize, y_size: usize, val: T) -> Self
-    where
-        // `T` must implement `Clone` to duplicate `val` across
-        T: Clone,
-    {
-        Vec2 {
-            vec: vec![vec![val; y_size]; x_size],
-            max_x: x_size,
-            max_y: y_size,
-        }
-    }
-}
-impl<T> std::fmt::Display for Vec2<T>
-// chatgpt
-where
-    T: std::fmt::Display,
-{
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        for row in &self.vec {
-            for (i, elem) in row.iter().enumerate() {
-                // Separate elements by a space, except for the last element in the row
-                if i > 0 {
-                    write!(f, " ")?;
-                }
-                write!(f, "{}", elem)?;
-            }
-            // Print a new line after each row
-            writeln!(f)?;
-        }
-        Ok(())
-    }
-}
+
 pub struct Display<'a> {
     pub screen: Vec2<DataPoint>,
     pub width: usize,
@@ -163,14 +128,18 @@ impl<'a> Display<'a> {
     }
     // TODO
     #[allow(unused_variables)]
-    pub fn add(&'a mut self, mut object: Object<'a>) {
+    pub fn add<'b>(&'a self, mut object: Object<'b>)
+    where
+        'a: 'b,
+    {
         match object.obj_type {
             Type::Free { size } => (),
             Type::Shape { ref shape } => (),
             Type::Menu { ref menu } => (),
         }
-        object.allocate(self.allocate(3, 20, 20, 10));
-        self.boxer.push(&object);
+        object.allocated_box = Some(self.allocate(4, 20, 20, 4));
+        let obj_ref = &object;
+        self.boxer.push(obj_ref);
     }
     // OLD
     // #[allow(unused_variables)]
@@ -232,7 +201,7 @@ impl<'a> Display<'a> {
             bottom = 0
         }
 
-        let default_datapoint = &self.screen.vec[0][0];
+        let default_datapoint = &mut self.screen.vec[0][0];
         let mut reference_vec2: Vec2<&'a mut DataPoint> =
             Vec2::create(right - left, top - bottom, default_datapoint);
 
