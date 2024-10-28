@@ -128,18 +128,14 @@ impl<'a> Display<'a> {
     }
     // TODO
     #[allow(unused_variables)]
-    pub fn add<'b>(&'a self, mut object: Object<'b>)
-    where
-        'a: 'b,
-    {
+    pub fn add(&'a self, &mut object: &Object<'a>) -> &Object {
         match object.obj_type {
             Type::Free { size } => (),
             Type::Shape { ref shape } => (),
             Type::Menu { ref menu } => (),
         }
         object.allocated_box = Some(self.allocate(4, 20, 20, 4));
-        let obj_ref = &object;
-        self.boxer.push(obj_ref);
+        &object
     }
     // OLD
     // #[allow(unused_variables)]
@@ -178,12 +174,12 @@ impl<'a> Display<'a> {
     // }
     // TODO
     pub fn allocate(
-        &'a self,
+        &'a mut self,
         left: usize,
         right: usize,
         top: usize,
         bottom: usize,
-    ) -> Vec2<&'a mut DataPoint> {
+    ) -> Vec2<&'a DataPoint> {
         let mut left = left;
         let mut right = right;
         let mut top = top;
@@ -201,8 +197,8 @@ impl<'a> Display<'a> {
             bottom = 0
         }
 
-        let default_datapoint = &mut self.screen.vec[0][0];
-        let mut reference_vec2: Vec2<&'a mut DataPoint> =
+        let default_datapoint = &self.screen.vec[0][0];
+        let mut reference_vec2: Vec2<&DataPoint> =
             Vec2::create(right - left, top - bottom, default_datapoint);
 
         for line in top..=bottom {
