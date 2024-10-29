@@ -20,6 +20,7 @@ use shape::*;
 use std::io::Write;
 use text_io::*;
 mod standard;
+use standard::*;
 
 pub fn main() {
     // std::env::set_var("RUST_BACKTRACE", "1");

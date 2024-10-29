@@ -7,7 +7,7 @@ use crate::DataPoint;
 pub struct Object<'a> {
     pub center_point: Point,
     pub obj_type: Type,
-    pub allocated_box: Option<Vec2<&'a mut DataPoint>>,
+    pub allocated_box: Option<Vec2<&'a DataPoint>>,
 }
 pub enum Type {
     Free { size: (usize, usize) },
