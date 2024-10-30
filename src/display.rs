@@ -164,14 +164,16 @@ impl<'a> Display<'a> {
     }
     // TODO
     #[allow(unused_variables)]
-    pub fn add(&'a mut self, object: Object<'a>) {
+    pub fn add(&'a mut self, mut object: Object<'a>) {
         match object.obj_type {
+            // here we get the sizes -> (left,right,top,bottom)
             object::Type::Free { size } => (),
             object::Type::Shape { ref shape } => (),
             object::Type::Menu { ref menu } => (),
         }
-        object.allocate(self.allocate(3, 20, 20, 10));
+        object.allocate(self.allocate(4, 20, 20, 40));
         self.boxer.push(object);
+        // &self.boxer.last().unwrap()
     }
     // OLD
     // #[allow(unused_variables)]
@@ -210,7 +212,7 @@ impl<'a> Display<'a> {
     // }
     // TODO
     pub fn allocate(
-        &'a self,
+        &'a mut self,
         left: usize,
         right: usize,
         top: usize,

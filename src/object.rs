@@ -26,6 +26,10 @@ impl<'a> Object<'a> {
         }
     }
 }
+pub enum AllocateBox<'a> {
+    AllocateInFunction,
+    Allocated { allocated_box: Vec2<&'a DataPoint> },
+}
 
 // #[derive(Clone)]
 // pub enum Object<'a> {
@@ -47,10 +51,6 @@ impl<'a> Object<'a> {
 //     },
 // }
 // #[derive(Clone)]
-pub enum AllocateBox<'a> {
-    AllocateInFunction,
-    Allocated { allocated_box: Vec2<&'a DataPoint> },
-}
 // impl<'a> Object<'a> {
 //     pub fn allocate(&mut self, given_allocated_box: Vec2<&DataPoint>) {
 //         match self {

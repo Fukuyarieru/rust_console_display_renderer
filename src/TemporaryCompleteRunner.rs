@@ -34,7 +34,7 @@ pub fn Runner() {
         center_point: (3, 4),
         obj_type: Type::Free { size: (3, 7) },
         allocated_box: AllocateBox::AllocateInFunction,
-    })
+    });
 
     // display.add(Object::Free {
     //     size: (2, 2),
