@@ -1,17 +1,20 @@
-use std::iter::once;
-
 // use crate::adapters::DisplayAdapter;
 use crate::animations::Animation;
 use crate::functions::calc_distance;
-use crate::object::{self, AllocateBox, Object};
+use crate::object;
+use crate::object::Object;
+use crate::object::Type;
+use crate::standard::*;
 use rand::*;
 
 pub const DEFAULT_DATAPOINT_HISTORY_SIZE: usize = 3;
+
 #[derive(Clone)]
 pub struct DataPoint {
     pub val: char,
     pub vals_history: Vec<char>,
 }
+
 impl DataPoint {
     pub fn create(ch: char, history_size: usize) -> Self {
         DataPoint {
@@ -36,50 +39,12 @@ impl std::fmt::Display for DataPoint {
         write!(f, "{}", self.val)
     }
 }
-#[derive(Clone)]
-pub struct Vec2<T> {
-    pub vec: Vec<Vec<T>>,
-    max_x: usize,
-    max_y: usize,
-}
-impl<T> Vec2<T> {
-    pub fn create(x_size: usize, y_size: usize, val: T) -> Self
-    where
-        // `T` must implement `Clone` to duplicate `val` across
-        T: Clone,
-    {
-        Vec2 {
-            vec: vec![vec![val; y_size]; x_size],
-            max_x: x_size,
-            max_y: y_size,
-        }
-    }
-}
-impl<T> std::fmt::Display for Vec2<T>
-// chatgpt
-where
-    T: std::fmt::Display,
-{
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        for row in &self.vec {
-            for (i, elem) in row.iter().enumerate() {
-                // Separate elements by a space, except for the last element in the row
-                if i > 0 {
-                    write!(f, " ")?;
-                }
-                write!(f, "{}", elem)?;
-            }
-            // Print a new line after each row
-            writeln!(f)?;
-        }
-        Ok(())
-    }
-}
+
 pub struct Display<'a> {
     pub screen: Vec2<DataPoint>,
     pub width: usize,
     pub height: usize,
-    pub boxer: Vec<Object<'a>>,
+    pub boxer: Vec<&'a Object<'a>>,
     // more stuff here later, probably (panels, info, titlebar)
 }
 
@@ -97,16 +62,17 @@ impl<'a> Display<'a> {
             boxer: Vec::new(),
         }
     }
-    fn pixel(&mut self, point: (usize, usize), new_val: char) {
-        (self.screen.vec[point.0][point.1]).update(new_val);
+    // pixel function should return a Result type to tell if index was out of bounds
+    fn pixel(&mut self, point: Point, new_val: char) {
+        (self.screen.vec[point.x][point.y]).update(new_val);
     }
 
-    pub fn draw_line(&mut self, point1: (usize, usize), point2: (usize, usize), draw_val: char) {
+    pub fn draw_line(&mut self, point1: Point, point2: Point, draw_val: char) {
         // redeclaration
-        let x1 = point1.0;
-        let x2 = point2.0;
-        let y1 = point1.1;
-        let y2 = point2.1;
+        let x1 = point1.x;
+        let x2 = point2.x;
+        let y1 = point1.y;
+        let y2 = point2.y;
 
         let mut x = x1 as isize;
         let mut y = y1 as isize;
@@ -117,7 +83,13 @@ impl<'a> Display<'a> {
         let mut err = dx - dy;
 
         loop {
-            self.pixel((x as usize, y as usize), draw_val); // Set pixel
+            self.pixel(
+                Point {
+                    x: x as usize,
+                    y: y as usize,
+                },
+                draw_val,
+            ); // Set pixel
 
             if x == x2 as isize && y == y2 as isize {
                 break;
@@ -134,11 +106,11 @@ impl<'a> Display<'a> {
             }
         }
     }
-    fn get_center(&self) -> (usize, usize) {
-        (
-            (self.width as f64 / 2.0) as usize,
-            (self.height as f64 / 2.0) as usize,
-        )
+    fn get_center(&self) -> Point {
+        Point {
+            x: self.width / 2,
+            y: self.height / 2,
+        }
     }
     fn total_area(&self) -> usize {
         self.width * self.height
@@ -159,22 +131,29 @@ impl<'a> Display<'a> {
         let ry1 = rng.gen_range(0..self.screen.max_y);
         let rx2 = rng.gen_range(0..self.screen.max_x);
         let ry2 = rng.gen_range(0..self.screen.max_y);
-        self.draw_line((rx1, ry1), (rx2, ry2), draw_val);
+        self.draw_line(Point { x: rx1, y: ry1 }, Point { x: rx2, y: ry2 }, draw_val);
         ((rx1, ry1), (rx2, ry2))
     }
-    // TODO
-    #[allow(unused_variables)]
-    pub fn add(&'a mut self, mut object: Object<'a>) {
-        match object.obj_type {
-            // here we get the sizes -> (left,right,top,bottom)
-            object::Type::Free { size } => (),
-            object::Type::Shape { ref shape } => (),
-            object::Type::Menu { ref menu } => (),
-        }
-        object.allocate(self.allocate(4, 20, 20, 40));
-        self.boxer.push(object);
-        // &self.boxer.last().unwrap()
+    // REDO OF ADD
+    pub fn add(&'a self, mut object: Object<'a>) -> &'a Object {
+        match object.allocated_box {
+            None => object.allocated_box = Some(self.allocate(4, 20, 20, 4)),
+            Some(_) => (),
+        };
+        &object
     }
+
+    // TODO
+    // #[allow(unused_variables)]
+    // pub fn add(&'a self, &mut object: &Object<'a>) -> &Object {
+    //     match object.obj_type {
+    //         Type::Free { size } => (),
+    //         Type::Shape { ref shape } => (),
+    //         Type::Menu { ref menu } => (),
+    //     }
+    //     object.allocated_box = Some(self.allocate(4, 20, 20, 4));
+    //     &object
+    // }
     // OLD
     // #[allow(unused_variables)]
     // pub fn add(&'a mut self, mut object: Object<'a>) {
@@ -212,16 +191,12 @@ impl<'a> Display<'a> {
     // }
     // TODO
     pub fn allocate(
-        &'a mut self,
-        left: usize,
-        right: usize,
-        top: usize,
-        bottom: usize,
-    ) -> Vec2<&'a DataPoint> {
-        let mut left = left;
-        let mut right = right;
-        let mut top = top;
-        let mut bottom = bottom;
+        &self,
+        mut left: usize,
+        mut right: usize,
+        mut top: usize,
+        mut bottom: usize,
+    ) -> Vec2<&DataPoint> {
         if left < 0 {
             left = 0
         }
@@ -236,12 +211,12 @@ impl<'a> Display<'a> {
         }
 
         let default_datapoint = &self.screen.vec[0][0];
-        let mut reference_vec2: Vec2<&'a DataPoint> =
-            Vec2::create(right - left, top - bottom, &default_datapoint);
+        let mut reference_vec2: Vec2<&DataPoint> =
+            Vec2::create(right - left, top - bottom, default_datapoint);
 
-        for line in top..=bottom {
-            for row in left..=right {
-                reference_vec2.vec[top - line][right - row] = &self.screen.vec[line][row];
+        for (line_idx, line) in (top..=bottom).enumerate() {
+            for (row_idx, row) in (left..=right).enumerate() {
+                reference_vec2.vec[line_idx][row_idx] = &self.screen.vec[line][row];
             }
         }
         reference_vec2
