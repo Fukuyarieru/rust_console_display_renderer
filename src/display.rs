@@ -44,7 +44,7 @@ pub struct Display<'a> {
     pub screen: Vec2<DataPoint>,
     pub width: usize,
     pub height: usize,
-    pub boxer: Vec<&'a Object<'a>>,
+    pub boxer: Vec<Object<'a>>,
     // more stuff here later, probably (panels, info, titlebar)
 }
 
@@ -135,15 +135,13 @@ impl<'a> Display<'a> {
         ((rx1, ry1), (rx2, ry2))
     }
     // REDO OF ADD
-    pub fn add(&'a mut self, mut object: Object<'a>) {
+    pub fn add(&'a mut self, mut object: Object<'a>) -> &Vec<Object> {
         match object.allocated_box {
             None => object.allocated_box = Some(self.allocate(4, 20, 20, 4)),
             Some(_) => (),
         };
-        self.add_to_boxer(&object);
-    }
-    pub fn add_to_boxer(&mut self, obj_ref: &'a Object) {
-        self.boxer.push(obj_ref);
+        self.boxer.push(object);
+        &self.boxer
     }
 
     // TODO
