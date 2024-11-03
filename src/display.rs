@@ -135,7 +135,7 @@ impl<'a> Display<'a> {
         ((rx1, ry1), (rx2, ry2))
     }
     // REDO OF ADD
-    pub fn add(&mut self, mut object: Object<'a>) -> &Object<'a> {
+    pub fn add(&mut self, mut object: Object) -> &Object<'a> {
         // match object.allocated_box {
         //     None => object.allocated_box = Some(self.allocate(4, 20, 20, 4)),
         //     Some(_) => (),
@@ -144,7 +144,7 @@ impl<'a> Display<'a> {
         self.boxer.push(object);
         self.boxer.last().unwrap()
     }
-    fn initialize_object(&self, obj: Object) -> Object {
+    fn initialize_object(&'a self, mut obj: Object<'a>) -> Object {
         match obj.allocated_box {
             None => obj.allocated_box = Some(self.allocate(4, 20, 20, 4)),
             Some(_) => (),
