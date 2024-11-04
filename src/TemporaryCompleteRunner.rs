@@ -19,9 +19,10 @@ Reset -> Initiate Reset of the program, (probably pub fn RESET())
 */
 use crate::display::DataPoint;
 use crate::display::Display;
-use crate::display::Vec2;
 
-use crate::object::AllocateBox;
+use crate::standard::Point;
+use crate::standard::Vec2;
+
 use crate::object::Object;
 use crate::object::Type;
 
@@ -30,13 +31,14 @@ use crate::shape::Shape;
 
 #[allow(non_snake_case)]
 pub fn Runner() {
-    let mut display: Display = Display::create(100, 100);
+    let display: Display = Display::create(100, 100);
 
-    display.add(Object {
-        center_point: (3, 4),
-        obj_type: Type::Free { size: (3, 7) },
-        allocated_box: AllocateBox::AllocateInFunction,
+    let mut object = display.add(Object {
+        center_point: Point { x: 3, y: 4 },
+        obj_type: Type::Free { size: (3, 3) },
+        allocated_box: None,
     });
+    object.allocated_box.unwrap().vec[2][2].update('c');
 
     // display.add(Object::Free {
     //     size: (2, 2),

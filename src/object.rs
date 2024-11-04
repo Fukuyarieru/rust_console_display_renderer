@@ -7,20 +7,12 @@ use crate::DataPoint;
 pub struct Object<'a> {
     pub center_point: Point,
     pub obj_type: Type,
-    pub allocated_box: Option<Vec2<&'a DataPoint>>,
+    pub allocated_box: Option<Vec2<&'a mut DataPoint>>,
 }
 pub enum Type {
     Free { size: (usize, usize) },
     Shape { shape: Shape },
     Menu { menu: Menu },
-}
-
-impl<'a> Object<'a> {
-    // pub fn allocate(&mut self, ref_vec2: Vec2<&'a mut DataPoint>) {
-    //     self.allocated_box = AllocateBox::Allocated {
-    //         allocated_box: ref_vec2,
-    //     }
-    // }
 }
 // pub enum AllocateBox<'a> {
 //     AllocateInFunction,
