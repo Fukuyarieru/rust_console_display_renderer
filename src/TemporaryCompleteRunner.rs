@@ -31,7 +31,7 @@ use crate::shape::Shape;
 
 #[allow(non_snake_case)]
 pub fn Runner() {
-    let display: Display = Display::create(100, 100);
+    let mut display: Display = Display::create(100, 100);
 
     let mut object = display.add(Object {
         center_point: Point { x: 3, y: 4 },

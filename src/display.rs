@@ -1,5 +1,5 @@
 // use crate::adapters::DisplayAdapter;
-use crate::animations::Animation;
+// use crate::animations::Animation;
 use crate::functions::calc_distance;
 use crate::object;
 use crate::object::Object;
@@ -135,7 +135,7 @@ impl<'a> Display<'a> {
         ((rx1, ry1), (rx2, ry2))
     }
     // REDO OF ADD
-    pub fn add(&'a self, mut object: Object<'a>) -> Object {
+    pub fn add(&'a mut self, mut object: Object<'a>) -> Object {
         // match object.allocated_box {
         //     None => object.allocated_box = Some(self.allocate(4, 20, 20, 4)),
         //     Some(_) => (),
@@ -199,41 +199,42 @@ impl<'a> Display<'a> {
     // TODO
     pub fn allocate(
         &mut self,
-        mut left: usize,
+        left: usize,
         mut right: usize,
         mut top: usize,
-        mut bottom: usize,
+        bottom: usize,
     ) -> Vec2<&mut DataPoint> {
-        if left < 0 {
-            left = 0
-        }
+        // no need to check for bottom and left as we use usizes and they cant be negative
+
         if right >= self.screen.vec.len() {
             right = self.screen.vec.len() - 1
         }
         if top >= self.screen.vec[0].len() {
             top = self.screen.vec[0].len() - 1
         }
-        if bottom < 0 {
-            bottom = 0
-        }
 
         // let default_datapoint = &mut self.screen.vec[0][0];
         let mut reference_vec2: Vec2<&mut DataPoint> = Vec2 {
-            vec: {
-                Vec::with_capacity(top - bottom)
-                    .iter()
-                    .for_each(|vec| *vec = Vec::with_capacity(right - left))
-            },
+            vec: Vec::new(),
             max_x: right - left,
             max_y: top - bottom,
         };
         // Vec2::create(right - left, top - bottom, default_datapoint);
 
-        for line in (top..=bottom) {
-            for row in (left..=right) {
-                reference_vec2.vec[line][row] = &mut self.screen.vec[line][row]
+        for line in top..=bottom {
+            let mut row_refs: Vec<&mut DataPoint> = Vec::with_capacity(right - left + 1);
+            for row in left..=right {
+                // Get a mutable reference to each DataPoint in this row
+                let data_point = &mut self.screen.vec[line][row] as *mut _; // Cast to a raw pointer
+                row_refs.push(unsafe { &mut *data_point }); // Safely cast back to &mut
             }
+            reference_vec2.vec.push(row_refs);
         }
+        // for line in top..=bottom {
+        //     for row in left..=right {
+        //         reference_vec2.vec[line][row] = &self.screen.vec[line][row];
+        //     }
+        // }
         // for (line_idx, line) in (top..=bottom).enumerate() {
         //     for (row_idx, row) in (left..=right).enumerate() {
         //         reference_vec2.vec[line_idx][row_idx] = &mut self.screen.vec[line][row];

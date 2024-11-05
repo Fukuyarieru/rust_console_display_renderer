@@ -11,11 +11,7 @@ impl<T> Vec2<T> {
         T: Clone,
     {
         Vec2 {
-            vec: {
-                Vec::with_capacity(y_size)
-                    .iter()
-                    .map(|vec| vec = Vec::with_capacity(x_size));
-            },
+            vec: Vec::new(),
             max_x: x_size,
             max_y: y_size,
         }
