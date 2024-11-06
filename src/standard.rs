@@ -17,6 +17,22 @@ impl<T> Vec2<T> {
             max_y: y_size,
         }
     }
+    pub fn index(&mut self, mut x: usize, mut y: usize) -> Result<&mut T, &mut T> {
+        let mut err = false;
+        if x >= self.vec.len() {
+            err = true;
+            x = self.vec.len() - 1;
+        }
+        if y >= self.vec[0].len() {
+            err = true;
+            y = self.vec[0].len() - 1;
+        }
+        if err {
+            Err(&mut self.vec[x][y])
+        } else {
+            Ok(&mut self.vec[x][y])
+        }
+    }
 }
 impl<T> std::fmt::Display for Vec2<T>
 // chatgpt

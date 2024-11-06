@@ -1,10 +1,7 @@
 #![allow(dead_code, unused_imports)]
 
-#[allow(non_snake_case)]
-mod TemporaryCompleteRunner;
 // mod adapters;
 mod display;
-#[allow(non_snake_case)]
 mod object;
 use display::*;
 // mod display_renderers;
@@ -25,8 +22,6 @@ use standard::*;
 
 fn main() {
     std::env::set_var("RUST_BACKTRACE", "1");
-
-    let vec_of_vecs = Vec::with_capacity(10).fill_with(|| Vec::<i128>::with_capacity(10));
 
     let mut display: Display = Display::create(100, 100);
 
