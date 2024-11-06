@@ -5,13 +5,18 @@ pub struct Vec2<T> {
     pub max_y: usize,
 }
 impl<T> Vec2<T> {
-    pub fn create(x_size: usize, y_size: usize, val: T) -> Self
+    pub fn create(x_size: usize, y_size: usize) -> Self
     where
         // `T` must implement `Clone` to duplicate `val` across
         T: Clone,
     {
         Vec2 {
-            vec: Vec::new(),
+            vec: {
+                let vec = Vec::with_capacity(x_size);
+                for inside_vec in vec {
+                    todo!()
+                }
+            },
             max_x: x_size,
             max_y: y_size,
         }

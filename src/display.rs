@@ -53,9 +53,8 @@ impl<'a> Display<'a> {
     pub fn create(width: usize, height: usize) -> Self {
         Display {
             screen: Vec2::create(
-                width,
-                height,
-                DataPoint::create('#', DEFAULT_DATAPOINT_HISTORY_SIZE),
+                width, height,
+                // DataPoint::create('#', DEFAULT_DATAPOINT_HISTORY_SIZE),
             ),
             width,
             height,
@@ -206,10 +205,10 @@ impl<'a> Display<'a> {
     ) -> Vec2<&mut DataPoint> {
         // no need to check for bottom and left as we use usizes and they cant be negative
 
-        if right >= self.screen.vec.len() {
+        if right >= self.width {
             right = self.screen.vec.len() - 1
         }
-        if top >= self.screen.vec[0].len() {
+        if top >= self.height {
             top = self.screen.vec[0].len() - 1
         }
 

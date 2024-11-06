@@ -1,5 +1,7 @@
 use rand::*;
 
+#[allow(dead_code)]
+
 pub fn random_char(blank_percentage: f32) -> char {
     // Define the character set (can be customized as needed)
     let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

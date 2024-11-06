@@ -1,4 +1,4 @@
-// #![allow(dead_code, unused_imports)]
+#![allow(dead_code, unused_imports)]
 
 #[allow(non_snake_case)]
 mod TemporaryCompleteRunner;
@@ -17,13 +17,23 @@ use animations::*;
 mod shape;
 use rand::*;
 use shape::*;
-use std::io::Write;
+use std::{env, io::Write};
 use text_io::*;
 mod standard;
+use object::*;
 use standard::*;
 
 fn main() {
-    TemporaryCompleteRunner::Runner();
+    std::env::set_var("RUST_BACKTRACE", "1");
+
+    let mut display: Display = Display::create(100, 100);
+
+    let object = display.add(Object {
+        center_point: Point { x: 3, y: 4 },
+        obj_type: Type::Free { size: (3, 3) },
+        allocated_box: None,
+    });
+    object.allocated_box.unwrap().vec[2][2].update('c');
 }
 // pub fn main() {
 //     // std::env::set_var("RUST_BACKTRACE", "1");
