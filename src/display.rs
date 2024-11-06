@@ -61,9 +61,13 @@ impl<'a> Display<'a> {
             boxer: Vec::new(),
         }
     }
-    // pixel function should return a Result type to tell if index was out of bounds
-    fn pixel(&mut self, point: Point, new_val: char) {
-        (self.screen.vec[point.x][point.y]).update(new_val);
+    // in the case that the index point is outside the screen, no action would happen
+    pub fn pixel(&mut self, point: Point, new_val: char) {
+        // (self.screen.vec[point.x][point.y]).update(new_val);
+        self.screen
+            .index(point.x, point.y)
+            .unwrap_or_else(|err| err)
+            .update(new_val);
     }
 
     pub fn draw_line(&mut self, point1: Point, point2: Point, draw_val: char) {
@@ -114,16 +118,17 @@ impl<'a> Display<'a> {
     fn total_area(&self) -> usize {
         self.width * self.height
     }
-    fn randomize_screen(&mut self, draw_val: char, screen_percentage: f32) {
-        let screen_area = self.total_area() as f64;
-        let mut area_to_change: f64 = screen_area * (screen_percentage as f64) / 100.0;
-        while area_to_change > 0.0 {
-            let ((x1, y1), (x2, y2)) = self.random_line(draw_val);
-            let line_length: f32 = calc_distance(x1, y1, x2, y2); // Assuming calc_distance takes coordinates and returns distance
-            area_to_change -= line_length as f64;
-        }
-    }
-    fn random_line(&mut self, draw_val: char) -> ((usize, usize), (usize, usize)) {
+    // TODO, need to implement newly using Point s
+    // fn randomize_screen(&mut self, draw_val: char, screen_percentage: f32) {
+    //     let screen_area = self.total_area() as f64;
+    //     let mut area_to_change: f64 = screen_area * (screen_percentage as f64) / 100.0;
+    //     while area_to_change > 0.0 {
+    //         let ((x1, y1), (x2, y2)) = self.random_line(draw_val);
+    //         let line_length: f32 = calc_distance(x1, y1, x2, y2); // Assuming calc_distance takes coordinates and returns distance
+    //         area_to_change -= line_length as f64;
+    //     }
+    // }
+    fn random_line(&mut self, draw_val: char) -> (Point, Point) {
         // function returns the random line that was made
         let mut rng = rand::thread_rng();
         let rx1 = rng.gen_range(0..self.screen.max_x);
@@ -131,7 +136,7 @@ impl<'a> Display<'a> {
         let rx2 = rng.gen_range(0..self.screen.max_x);
         let ry2 = rng.gen_range(0..self.screen.max_y);
         self.draw_line(Point { x: rx1, y: ry1 }, Point { x: rx2, y: ry2 }, draw_val);
-        ((rx1, ry1), (rx2, ry2))
+        (Point { x: rx1, y: ry1 }, Point { x: rx2, y: ry2 })
     }
     // REDO OF ADD
     pub fn add(&'a mut self, mut object: Object<'a>) -> Object {
@@ -213,11 +218,12 @@ impl<'a> Display<'a> {
         }
 
         // let default_datapoint = &mut self.screen.vec[0][0];
-        let mut reference_vec2: Vec2<&mut DataPoint> = Vec2 {
-            vec: Vec::new(),
-            max_x: right - left,
-            max_y: top - bottom,
-        };
+        let mut reference_vec2: Vec2<&mut DataPoint> = Vec2::create(right - left, top - bottom);
+        // {
+        //     vec: Vec::new(),
+        //     max_x: right - left,
+        //     max_y: top - bottom,
+        // };
         // Vec2::create(right - left, top - bottom, default_datapoint);
 
         for line in top..=bottom {
