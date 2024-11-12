@@ -15,12 +15,9 @@ use shape::*;
 use std::{env, io::Write};
 use text_io::*;
 mod standard;
-mod display_objects_holder;
-mod display_renderer;
 
 use object::*;
 use standard::*;
-use crate::display_renderer::DisplayRenderer;
 
 fn main() {
     std::env::set_var("RUST_BACKTRACE", "1");
