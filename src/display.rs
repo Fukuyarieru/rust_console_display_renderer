@@ -40,13 +40,13 @@ impl std::fmt::Display for DataPoint {
     }
 }
 
-pub struct Display<'a> {
+pub struct Display{
     pub screen: Vec2<DataPoint>,
     pub width: usize,
     pub height: usize,
 }
 
-impl<'a> Display<'a> {
+impl<'a> Display{
     // Let's limit for now the use of individual pixels inside of the Display struct
     pub fn new(width: usize, height: usize) -> Self {
         Display {
@@ -123,7 +123,7 @@ impl<'a> Display<'a> {
     //         let ((x1, y1), (x2, y2)) = self.random_line(draw_val);
     //         let line_length: f32 = calc_distance(x1, y1, x2, y2); // Assuming calc_distance takes coordinates and returns distance
     //         area_to_change -= line_length as f64;
-    //     }
+    //    
     // }
     pub fn random_line(&mut self, draw_val: char) -> (Point, Point) {
         // function returns the random line that was made
@@ -183,7 +183,7 @@ impl<'a> Display<'a> {
     }
 }
 // Implement Display for the Display struct
-impl<'a> std::fmt::Display for Display<'a> {
+impl<'a> std::fmt::Display for Display {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         // Delegate to the Display implementation for Vec2<Point>
         write!(f, "{}", self.screen)
