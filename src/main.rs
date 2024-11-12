@@ -20,13 +20,13 @@ mod display_renderer;
 
 use object::*;
 use standard::*;
-use crate::display_renderer::DisplayRenderer;
+use crate::display_renderer::ConsoleDisplayRenderer;
 
 fn main() {
     std::env::set_var("RUST_BACKTRACE", "1");
 
     let display=Display::new(100, 100);
-    let display_renderer =DisplayRenderer::new(display);
+    let display_renderer = ConsoleDisplayRenderer::new(display);
 
     // let mut display: Display = Display::new(100, 100);
     //

@@ -2,12 +2,12 @@ use crate::display::Display;
 use crate::display_objects_holder::DisplayObjectsHolder;
 use crate::menu::Menu;
 
-pub struct DisplayRenderer<'a>{
-    display: Display<'a>,
+pub struct ConsoleDisplayRenderer<'a>{
+    display: Display,
     objects_holder: DisplayObjectsHolder<'a>,
 }
 
-impl<'a> DisplayRenderer<'a> {
+impl<'a> ConsoleDisplayRenderer<'a> {
     pub fn new(display:Display) -> Self {
         let objects_holder=DisplayObjectsHolder::new(&display);
         Self {
