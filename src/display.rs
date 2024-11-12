@@ -3,7 +3,7 @@
 use crate::functions::calc_distance;
 use crate::object;
 use crate::object::Object;
-use crate::object::Type;
+use crate::object::ObjType;
 use crate::standard::*;
 use rand::*;
 
@@ -16,7 +16,7 @@ pub struct DataPoint {
 }
 
 impl DataPoint {
-    pub fn create(ch: char, history_size: usize) -> Self {
+    pub fn new(ch: char, history_size: usize) -> Self {
         DataPoint {
             val: ch,
             vals_history: vec![' '; history_size],
@@ -49,10 +49,10 @@ pub struct Display<'a> {
 }
 
 impl<'a> Display<'a> {
-    // Lets limit for now the use of individual pixels inside of the Display struct
-    pub fn create(width: usize, height: usize) -> Self {
+    // Let's limit for now the use of individual pixels inside of the Display struct
+    pub fn new(width: usize, height: usize) -> Self {
         Display {
-            screen: Vec2::create(
+            screen: Vec2::new(
                 width, height,
                 // DataPoint::create('#', DEFAULT_DATAPOINT_HISTORY_SIZE),
             ),
@@ -218,7 +218,7 @@ impl<'a> Display<'a> {
         }
 
         // let default_datapoint = &mut self.screen.vec[0][0];
-        let mut reference_vec2: Vec2<&mut DataPoint> = Vec2::create(right - left, top - bottom);
+        let mut reference_vec2: Vec2<&mut DataPoint> = Vec2::new(right - left, top - bottom);
         // {
         //     vec: Vec::new(),
         //     max_x: right - left,

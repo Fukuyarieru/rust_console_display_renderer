@@ -5,7 +5,7 @@ pub struct Vec2<T> {
     pub max_y: usize,
 }
 impl<T> Vec2<T> {
-    pub fn create(x_size: usize, y_size: usize) -> Self {
+    pub fn new(x_size: usize, y_size: usize) -> Self {
         Self {
             vec: {
                 let mut vec: Vec<Vec<T>> = Vec::with_capacity(x_size);
@@ -54,6 +54,7 @@ where
         Ok(())
     }
 }
+#[derive(Copy, Clone)]
 pub struct Point {
     pub x: usize,
     pub y: usize,
