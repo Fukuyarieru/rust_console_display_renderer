@@ -40,14 +40,14 @@ impl std::fmt::Display for DataPoint {
     }
 }
 
-pub struct Display<'a> {
+pub struct Display {
     pub screen: Vec2<DataPoint>,
     pub width: usize,
     pub height: usize,
 }
 
-impl<'a> Display<'a> {
-    // Let's limit for now the use of individual pixels inside of the Display struct
+impl<'a> Display {
+    // Let's limit for now the use of individual pixels inside the Display struct
     pub fn new(width: usize, height: usize) -> Self {
         Display {
             screen: Vec2::new(
@@ -183,7 +183,7 @@ impl<'a> Display<'a> {
     }
 }
 // Implement Display for the Display struct
-impl<'a> std::fmt::Display for Display<'a> {
+impl<'a> std::fmt::Display for Display {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         // Delegate to the Display implementation for Vec2<Point>
         write!(f, "{}", self.screen)

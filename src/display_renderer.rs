@@ -15,5 +15,7 @@ impl<'a> DisplayRenderer<'a> {
             objects_holder,
         }
     }
-    pub fn link_objects_holder(&mut self,DisplayObjectsHolder)
+    pub fn set_objects_holder(&mut self, link:DisplayObjectsHolder<'a>) {
+        self.objects_holder=link;
+    }
 }
