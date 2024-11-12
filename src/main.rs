@@ -1,4 +1,4 @@
-#![allow(dead_code, unused_imports)]
+#![allow(dead_code, unused_imports, unused_variables)]
 
 // mod adapters;
 mod display;
@@ -25,6 +25,9 @@ use crate::display_renderer::DisplayRenderer;
 fn main() {
     std::env::set_var("RUST_BACKTRACE", "1");
 
+    let display=Display::new(100, 100);
+    let display_renderer =DisplayRenderer::new(display);
+
     // let mut display: Display = Display::new(100, 100);
     //
     // let object = display.add(Object {
@@ -33,8 +36,6 @@ fn main() {
     //     allocated_box: None,
     // });
     // object.allocated_box.unwrap().vec[2][2].update('c');
-    let DisplayRenderer=DisplayRenderer::new(Display::new(100,100));
-    DisplayRenderer.
 }
 // pub fn main() {
 //     // std::env::set_var("RUST_BACKTRACE", "1");

@@ -17,7 +17,7 @@ pub enum Shape {
 }
 impl Shape {
     #[allow(unused_variables)]
-    fn get_area(&self) -> f64 {
+    pub fn get_area(&self) -> f64 {
         match self {
             Shape::Circle { radius } => std::f64::consts::PI * radius * radius,
             Shape::Quadrilateral {
@@ -29,15 +29,15 @@ impl Shape {
             Shape::Polygon { points_deltas } => todo!(),
         }
     }
-    fn get_perimeter(&self) -> f64 {
+    pub fn get_perimeter(&self) -> f64 {
         todo!()
     }
     #[allow(unused_variables)]
-    fn rotate_right(&mut self, angle: usize) {
+    pub fn rotate_right(&mut self, angle: usize) {
         todo!()
     }
     #[allow(unused_variables)]
-    fn rotate_left(&mut self, angle: usize) {
+    pub fn rotate_left(&mut self, angle: usize) {
         todo!()
     }
 }

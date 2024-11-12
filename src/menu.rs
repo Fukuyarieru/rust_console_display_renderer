@@ -10,6 +10,12 @@ pub struct Menu {
     pub window_height_size: usize,
 }
 
+impl Menu {
+    pub fn new(border_ch: char) -> Self {
+        todo!();
+    }
+}
+
 // #![allow(unused_variables)]
 // use crate::adapters::MenuAdapter;
 // enum Menu {

@@ -2,7 +2,7 @@ use crate::display::Display;
 use crate::object::Object;
 
 pub struct DisplayObjectsHolder<'a>{
-    ref_display: &'a Display<'a>,
+    ref_display: &'a Display<'a>,   // consider removing ref_display, and let display_renderer handle everything regarding that
     objects: Vec<Object<'a>>,
 }
 impl<'a> DisplayObjectsHolder<'a> {

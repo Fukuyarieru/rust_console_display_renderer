@@ -16,17 +16,17 @@ pub enum ObjType {
 }
 
 impl<'a> Object<'a>{
-    fn new(center_point: Point, obj_type: ObjType) -> Self {
+    pub fn new(center_point: Point, obj_type: ObjType) -> Self {
         Self {
             center_point,
             obj_type,
             allocated_box: None,
         }
     }
-    fn allocate_box(&mut self,allocated_box: Vec2<&'a mut DataPoint>) {
+    pub fn allocate_box(&mut self,allocated_box: Vec2<&'a mut DataPoint>) {
         self.allocated_box=Some(allocated_box);
     }
-    fn get_center_point(&self) -> Point {
+    pub fn get_center_point(&self) -> Point {
         self.center_point
     }
 }
