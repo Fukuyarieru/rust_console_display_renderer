@@ -44,8 +44,6 @@ pub struct Display<'a> {
     pub screen: Vec2<DataPoint>,
     pub width: usize,
     pub height: usize,
-    pub boxer: Vec<&'a Object<'a>>,
-    // more stuff here later, probably (panels, info, titlebar)
 }
 
 impl<'a> Display<'a> {
@@ -58,7 +56,6 @@ impl<'a> Display<'a> {
             ),
             width,
             height,
-            boxer: Vec::new(),
         }
     }
     // in the case that the index point is outside the screen, no action would happen
@@ -109,13 +106,13 @@ impl<'a> Display<'a> {
             }
         }
     }
-    fn get_center(&self) -> Point {
+    pub fn get_center(&self) -> Point {
         Point {
             x: self.width / 2,
             y: self.height / 2,
         }
     }
-    fn total_area(&self) -> usize {
+    pub fn total_area(&self) -> usize {
         self.width * self.height
     }
     // TODO, need to implement newly using Point s
@@ -128,7 +125,7 @@ impl<'a> Display<'a> {
     //         area_to_change -= line_length as f64;
     //     }
     // }
-    fn random_line(&mut self, draw_val: char) -> (Point, Point) {
+    pub fn random_line(&mut self, draw_val: char) -> (Point, Point) {
         // function returns the random line that was made
         let mut rng = rand::thread_rng();
         let rx1 = rng.gen_range(0..self.screen.max_x);
@@ -138,69 +135,6 @@ impl<'a> Display<'a> {
         self.draw_line(Point { x: rx1, y: ry1 }, Point { x: rx2, y: ry2 }, draw_val);
         (Point { x: rx1, y: ry1 }, Point { x: rx2, y: ry2 })
     }
-    // REDO OF ADD
-    pub fn add(&'a mut self, mut object: Object<'a>) -> Object {
-        // match object.allocated_box {
-        //     None => object.allocated_box = Some(self.allocate(4, 20, 20, 4)),
-        //     Some(_) => (),
-        // };
-        if object.allocated_box.is_none() {
-            object.allocated_box = Some(self.allocate(4, 20, 20, 4));
-        };
-        object
-
-        // let object = self.initialize_object(object);
-        // self.boxer.push(object);
-        // self.boxer.last().unwrap()
-    }
-
-    // TODO
-    // #[allow(unused_variables)]
-    // pub fn add(&'a self, &mut object: &Object<'a>) -> &Object {
-    //     match object.obj_type {
-    //         Type::Free { size } => (),
-    //         Type::Shape { ref shape } => (),
-    //         Type::Menu { ref menu } => (),
-    //     }
-    //     object.allocated_box = Some(self.allocate(4, 20, 20, 4));
-    //     &object
-    // }
-    // OLD
-    // #[allow(unused_variables)]
-    // pub fn add(&'a mut self, mut object: Object<'a>) {
-    //     let left=
-    //     object.allocate(self.allocate(left, right, top, bottom));
-    //     // let object = &object;
-    //     // match object {
-    //     //     Object::Free {
-    //     //         size,
-    //     //         center_point,
-    //     //         mut allocated_box,
-    //     //     } => {
-    //     //         allocated_box = AllocateBox::Allocated {
-    //     //             allocated_box: self.allocate(
-    //     //                 center_point.0 - size.0,
-    //     //                 center_point.0 + size.1,
-    //     //                 center_point.1 + size.1,
-    //     //                 center_point.1 - size.1,
-    //     //             ),
-    //     //         }
-    //     //     }
-    //     //     Object::Shape {
-    //     //         shape,
-    //     //         center_point,
-    //     //         allocated_box,
-    //     //         draw_val,
-    //     //     } => todo!(),
-    //     //     Object::Menu {
-    //     //         menu,
-    //     //         center_point,
-    //     //         allocated_box,
-    //     //     } => todo!(),
-    //     // }
-    //     self.boxer.push(object);
-    // }
-    // TODO
     pub fn allocate(
         &mut self,
         left: usize,

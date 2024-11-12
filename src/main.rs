@@ -9,27 +9,32 @@ mod menu;
 // use display_renderers::*;
 mod functions;
 use functions::*;
-mod animations;
-use animations::*;
 mod shape;
 use rand::*;
 use shape::*;
 use std::{env, io::Write};
 use text_io::*;
 mod standard;
+mod display_objects_holder;
+mod display_renderer;
+
 use object::*;
 use standard::*;
+use crate::display_renderer::DisplayRenderer;
+
 fn main() {
     std::env::set_var("RUST_BACKTRACE", "1");
 
-    let mut display: Display = Display::new(100, 100);
-
-    let object = display.add(Object {
-        center_point: Point { x: 3, y: 4 },
-        obj_type: ObjType::Free { size: (3, 3) },
-        allocated_box: None,
-    });
-    object.allocated_box.unwrap().vec[2][2].update('c');
+    // let mut display: Display = Display::new(100, 100);
+    //
+    // let object = display.add(Object {
+    //     center_point: Point { x: 3, y: 4 },
+    //     obj_type: ObjType::Free { size: (3, 3) },
+    //     allocated_box: None,
+    // });
+    // object.allocated_box.unwrap().vec[2][2].update('c');
+    let DisplayRenderer=DisplayRenderer::new(Display::new(100,100));
+    DisplayRenderer.
 }
 // pub fn main() {
 //     // std::env::set_var("RUST_BACKTRACE", "1");
