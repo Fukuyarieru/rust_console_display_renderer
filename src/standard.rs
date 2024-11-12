@@ -8,10 +8,11 @@ impl<T> Vec2<T> {
     pub fn new(x_size: usize, y_size: usize) -> Self {
         Self {
             vec: {
-                let mut vec: Vec<Vec<T>> = Vec::with_capacity(x_size);
-                vec.fill_with(|| Vec::<T>::with_capacity(y_size));
-                // Vec::with_capacity(x_size).fill_with(|| Vec::<T>::with_capacity(y_size));
-                vec
+                let mut vec2= Vec::<Vec::<T>>::with_capacity(x_size);
+                for _ in 0..x_size {
+                    vec2.push(Vec::with_capacity(y_size));
+                };
+                vec2
             },
             max_x: x_size,
             max_y: y_size,

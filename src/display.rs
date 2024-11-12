@@ -40,14 +40,15 @@ impl std::fmt::Display for DataPoint {
     }
 }
 
-pub struct Display {
+pub struct Display<'a>{
     pub screen: Vec2<DataPoint>,
     pub width: usize,
     pub height: usize,
+    pub boxer: Vec<Object<'a>>,
 }
 
-impl<'a> Display {
-    // Let's limit for now the use of individual pixels inside the Display struct
+impl<'a> Display<'a>{
+    // Let's limit for now the use of individual pixels inside of the Display struct
     pub fn new(width: usize, height: usize) -> Self {
         Display {
             screen: Vec2::new(
@@ -56,6 +57,7 @@ impl<'a> Display {
             ),
             width,
             height,
+            boxer: Vec::new(),
         }
     }
     // in the case that the index point is outside the screen, no action would happen
@@ -123,7 +125,7 @@ impl<'a> Display {
     //         let ((x1, y1), (x2, y2)) = self.random_line(draw_val);
     //         let line_length: f32 = calc_distance(x1, y1, x2, y2); // Assuming calc_distance takes coordinates and returns distance
     //         area_to_change -= line_length as f64;
-    //     }
+    //    
     // }
     pub fn random_line(&mut self, draw_val: char) -> (Point, Point) {
         // function returns the random line that was made
@@ -181,9 +183,15 @@ impl<'a> Display {
         // }
         reference_vec2
     }
+    pub fn add_object(&mut self,object: Object<'a>) {
+        self.boxer.push(object);
+    }
+    pub fn initialize_object(&mut self, obj_ref: &mut Object<'a>) {
+        obj_ref.allocated_box=Some(self.allocate(2,10,2,10));
+    }
 }
 // Implement Display for the Display struct
-impl<'a> std::fmt::Display for Display {
+impl<'a> std::fmt::Display for Display<'a> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         // Delegate to the Display implementation for Vec2<Point>
         write!(f, "{}", self.screen)
