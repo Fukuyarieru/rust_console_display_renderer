@@ -186,7 +186,7 @@ impl<'a> Display<'a>{
     pub fn add_object(&mut self,object: Object<'a>) {
         self.boxer.push(object);
     }
-    pub fn initialize_object(&mut self, obj_ref: &mut Object<'a>) {
+    pub fn initialize_object<'b>(&'a mut self, obj_ref: &mut Object<'b>) where 'a:'b {
         obj_ref.allocated_box=Some(self.allocate(2,10,2,10));
     }
 }

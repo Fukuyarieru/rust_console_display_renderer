@@ -16,7 +16,7 @@ pub enum ObjType {
 }
 
 impl<'a> Object<'a>{
-    fn new(center_point: Point, obj_type: ObjType) -> Self {
+    pub fn new(center_point: Point, obj_type: ObjType) -> Self {
         Self {
             center_point,
             obj_type,
