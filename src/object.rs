@@ -7,7 +7,7 @@ use crate::DataPoint;
 pub struct Object<'a> {
     pub center_point: Point,
     pub obj_type: ObjType,
-    pub allocated_box: Option<Vec2<&'a mut DataPoint>>,
+    pub allocated_box: Option<Vec2<&'a DataPoint>>,
 }
 pub enum ObjType {
     Free { size: (usize, usize) },
@@ -23,7 +23,7 @@ impl<'a> Object<'a>{
             allocated_box: None,
         }
     }
-    fn allocate_box(&mut self,allocated_box: Vec2<&'a mut DataPoint>) {
+    fn allocate_box(&mut self,allocated_box: Vec2<&'a DataPoint>) {
         self.allocated_box=Some(allocated_box);
     }
     fn get_center_point(&self) -> Point {
