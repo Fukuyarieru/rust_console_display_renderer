@@ -203,8 +203,13 @@ impl<'a> Display<'a>{
     pub fn add_object(&mut self,object: Object<'a>) {
         self.boxer.push(object);
     }
-    pub fn initialize_object<'b>(&'a mut self, obj_ref: &mut Object<'b>) where 'a:'b {
+    fn initialize_object<'b>(&'a self, obj_ref: &mut Object<'b>) where 'a:'b {
         obj_ref.allocated_box=Some(self.allocate(2,10,2,10));
+    }
+    pub fn initialize_boxer<'b>(&mut self) where 'a: 'b {
+        for obj in &mut self.boxer {
+            self.initialize_object(obj);
+        }
     }
 }
 // Implement Display for the Display struct
