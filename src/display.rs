@@ -208,7 +208,7 @@ impl<'a> Display<'a>{
         // obj_ref.allocate_box(self.allocate(2,10,2,10));
     }
     pub fn initialize_boxer<'b>(&mut self) where 'a: 'b {
-        self.boxer.iter().for_each(|mut obj| self.initialize_object(obj));
+        self.boxer.iter_mut().for_each(|mut obj| self.initialize_object(obj));
     }
 }
 // Implement Display for the Display struct
