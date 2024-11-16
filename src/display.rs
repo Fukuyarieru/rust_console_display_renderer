@@ -205,11 +205,10 @@ impl<'a> Display<'a>{
     }
     fn initialize_object<'b>(&'a self, obj_ref: &mut Object<'b>) where 'a:'b {
         obj_ref.allocated_box=Some(self.allocate(2,10,2,10));
+        // obj_ref.allocate_box(self.allocate(2,10,2,10));
     }
     pub fn initialize_boxer<'b>(&mut self) where 'a: 'b {
-        for obj in &mut self.boxer {
-            self.initialize_object(obj);
-        }
+        self.boxer.iter().for_each(|mut obj| self.initialize_object(obj));
     }
 }
 // Implement Display for the Display struct

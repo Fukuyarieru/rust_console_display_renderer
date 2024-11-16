@@ -23,9 +23,9 @@ impl<'a> Object<'a>{
             allocated_box: None,
         }
     }
-    fn allocate_box(&mut self,allocated_box: Vec2<&'a DataPoint>) {
-        self.allocated_box=Some(allocated_box);
-    }
+    // pub fn allocate_box(&mut self,allocated_box: Vec2<&'a DataPoint>) {
+    //     self.allocated_box=Some(allocated_box);
+    // }
     fn get_center_point(&self) -> Point {
         self.center_point
     }
