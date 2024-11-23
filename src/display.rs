@@ -164,7 +164,7 @@ impl Display{
         // no need to check for bottom and left as we use usizes and they cant be negative
 
 
-        // CHECK FOR BOUNDARIES, THIS IS MADE LIKE THIS SO I WON'T NEED TO GET MUTABLE USIZES ON ENTER
+        // CHECK FOR BOUNDARIES, THIS IS MADE LIKE THIS SO I WON'T NEED TO GET MUTABLE USIZES ON ENTERING
         let right = {
             if right >= self.width {
                 self.screen.vec.len() - 1
@@ -205,8 +205,11 @@ impl Display{
         obj_ref.allocated_box=Some(self.allocate(2,10,2,10));
         // obj_ref.allocate_box(self.allocate(2,10,2,10));
     }
-    pub fn initialize_boxer<'b>(&mut self) {
-        self.boxer.iter_mut().for_each(|mut obj| self.initialize_object(obj));
+    pub fn initialize_boxer(&mut self) {
+        let initilized_objs:Vec<Object>=Vec::new();
+        for mut obj in self.boxer {
+            
+        }
     }
 }
 // Implement Display for the Display struct

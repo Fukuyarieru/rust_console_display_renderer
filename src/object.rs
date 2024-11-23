@@ -30,6 +30,10 @@ impl Object{
         self.center_point
     }
 }
+// rename this function below
+pub fn initialize_object(object: &Object, display:&Display) {
+    object=display.allocate();
+}
 // pub enum AllocateBox<'a> {
 //     AllocateInFunction,
 //     Allocated {
