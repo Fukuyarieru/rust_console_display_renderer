@@ -57,15 +57,15 @@ impl std::fmt::Display for DataPoint {
     }
 }
 
-pub struct Display<'a>{
+pub struct Display{
     pub screen: Vec2<DataPoint>,
     pub width: usize,
     pub height: usize,
-    pub boxer: Vec<Object<'a>>,
+    pub boxer: Vec<Object>,
 }
 
-impl<'a> Display<'a>{
-    // Let's limit for now the use of individual pixels inside of the Display struct
+impl Display{
+    // Let's limit for now the use of individual pixels inside the Display struct
     pub fn new(width: usize, height: usize) -> Self {
         Display {
             screen: Vec2::new(
@@ -160,37 +160,22 @@ impl<'a> Display<'a>{
         mut right: usize,
         mut top: usize,
         bottom: usize,
-    ) -> Vec2<&DataPoint> {
+    ) -> Vec2<*mut DataPoint> {
         // no need to check for bottom and left as we use usizes and they cant be negative
 
         if right >= self.width {
-            right = self.screen.vec.len() - 1
+            right = self.screen.vec.len() - 1;
         }
         if top >= self.height {
-            top = self.screen.vec[0].len() - 1
+            top = self.screen.vec[0].len() - 1;
         }
 
         // let default_datapoint = &mut self.screen.vec[0][0];
-        let mut reference_vec2: Vec2<&DataPoint> = Vec2::new(right - left, top - bottom);
-        // {
-        //     vec: Vec::new(),
-        //     max_x: right - left,
-        //     max_y: top - bottom,
-        // };
-        // Vec2::create(right - left, top - bottom, default_datapoint);
-
-        // for line in top..=bottom {
-        //     let mut row_refs: Vec<&mut DataPoint> = Vec::with_capacity(right - left + 1);
-        //     for row in left..=right {
-        //         // Get a mutable reference to each DataPoint in this row
-        //         let data_point = &mut self.screen.vec[line][row] as *mut _; // Cast to a raw pointer
-        //         row_refs.push(unsafe { &mut *data_point }); // Safely cast back to &mut
-        //     }
-        //     reference_vec2.vec.push(row_refs);
-        // }
+        let mut reference_vec2: Vec2<*mut DataPoint> = Vec2::new(right - left, top - bottom);
         for line in top..=bottom {
             for row in left..=right {
-                reference_vec2.vec[line][row] = &self.screen.vec[line][row];
+                let raw_pointer: *mut DataPoint = &self.screen.vec[line][row] as *const DataPoint as *mut DataPoint;
+                reference_vec2.vec[line][row] = raw_pointer;
             }
         }
         // for (line_idx, line) in (top..=bottom).enumerate() {
@@ -200,19 +185,19 @@ impl<'a> Display<'a>{
         // }
         reference_vec2
     }
-    pub fn add_object(&mut self,object: Object<'a>) {
+    pub fn add_object(&mut self,object: Object) {
         self.boxer.push(object);
     }
-    fn initialize_object<'b>(&'a self, obj_ref: &mut Object<'b>) where 'a:'b {
+    fn initialize_object(&self, obj_ref: &mut Object)  {
         obj_ref.allocated_box=Some(self.allocate(2,10,2,10));
         // obj_ref.allocate_box(self.allocate(2,10,2,10));
     }
-    pub fn initialize_boxer<'b>(&mut self) where 'a: 'b {
+    pub fn initialize_boxer<'b>(&mut self) {
         self.boxer.iter_mut().for_each(|mut obj| self.initialize_object(obj));
     }
 }
 // Implement Display for the Display struct
-impl<'a> std::fmt::Display for Display<'a> {
+impl<'a> std::fmt::Display for Display{
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         // Delegate to the Display implementation for Vec2<Point>
         write!(f, "{}", self.screen)

@@ -4,10 +4,10 @@ use crate::shape::Shape;
 use crate::standard::*;
 use crate::DataPoint;
 
-pub struct Object<'a> {
+pub struct Object{
     pub center_point: Point,
     pub obj_type: ObjType,
-    pub allocated_box: Option<Vec2<&'a DataPoint>>,
+    pub allocated_box: Option<Vec2<*mut DataPoint>>,
 }
 pub enum ObjType {
     Free { size: (usize, usize) },
@@ -15,7 +15,7 @@ pub enum ObjType {
     Menu { menu: Menu },
 }
 
-impl<'a> Object<'a>{
+impl Object{
     pub fn new(center_point: Point, obj_type: ObjType) -> Self {
         Self {
             center_point,
