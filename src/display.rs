@@ -157,18 +157,31 @@ impl Display{
     pub fn allocate(
         &self,
         left: usize,
-        mut right: usize,
-        mut top: usize,
+        right: usize,
+        top: usize,
         bottom: usize,
     ) -> Vec2<*mut DataPoint> {
         // no need to check for bottom and left as we use usizes and they cant be negative
 
-        if right >= self.width {
-            right = self.screen.vec.len() - 1;
-        }
-        if top >= self.height {
-            top = self.screen.vec[0].len() - 1;
-        }
+
+        // CHECK FOR BOUNDARIES, THIS IS MADE LIKE THIS SO I WON'T NEED TO GET MUTABLE USIZES ON ENTER
+        let right = {
+            if right >= self.width {
+                self.screen.vec.len() - 1
+            }
+            else {
+                right
+            }
+        };
+        let top = {
+            if top >= self.height {
+                self.screen.vec[0].len() - 1
+            }
+            else {
+                top
+            }
+        };
+
 
         // let default_datapoint = &mut self.screen.vec[0][0];
         let mut reference_vec2: Vec2<*mut DataPoint> = Vec2::new(right - left, top - bottom);
