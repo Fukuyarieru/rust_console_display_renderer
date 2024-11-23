@@ -31,8 +31,8 @@ impl Object{
     }
 }
 // rename this function below
-pub fn initialize_object(object: &Object, display:&Display) {
-    object=display.allocate();
+pub fn initialize_object(object: &mut Object, display:&Display) {
+    object.allocated_box=Some(display.allocate());
 }
 // pub enum AllocateBox<'a> {
 //     AllocateInFunction,
