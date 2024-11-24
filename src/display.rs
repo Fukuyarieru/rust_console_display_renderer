@@ -183,10 +183,13 @@ impl<'a> Display<'a>{
         // }
         reference_vec2
     }
-    pub fn add_object(&mut self,object: Object<'a>) {
-        self.boxer.push(object);
+    pub fn add_object(&'a mut self,object: &mut Object<'a>) {
+        if object.allocated_box.is_none() {
+            self.initialize_object(object);
+        }
+        self.boxer.push(*object);
     }
-    pub fn initialize_object(&mut self, obj_ref: &mut Object<'a>) {
+    pub fn initialize_object(&'a mut self, obj_ref: &mut Object<'a>) {
         obj_ref.allocated_box=Some(self.allocate(2,10,2,10));
     }
 }

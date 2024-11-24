@@ -22,15 +22,8 @@ use standard::*;
 fn main() {
     std::env::set_var("RUST_BACKTRACE", "1");
 
-    let mut display: Display = Display::new(100, 100);
-
-    let object = display.add(Object {
-        center_point: Point { x: 3, y: 4 },
-        obj_type: ObjType::Free { size: (3, 3) },
-        allocated_box: None,
-    });
-    object.allocated_box.unwrap().vec[2][2].update('c');
-
+    let mut display=Display::new(100, 100);
+    display.add_object(Object::new(Point {x:10,y:10}, ObjType::Free {size: (10,10)}));
 }
 // pub fn main() {
 //     // std::env::set_var("RUST_BACKTRACE", "1");
