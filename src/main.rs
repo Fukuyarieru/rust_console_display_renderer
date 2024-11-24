@@ -22,6 +22,9 @@ use standard::*;
 fn main() {
     std::env::set_var("RUST_BACKTRACE", "1");
 
+    let var="e";
+    let ptr=var as *const str;
+
     let mut obj=Object::new(Point{x:3,y:4},ObjType::Free{size:(3,3)});
 
     let mut display: Display = Display::new(100, 100);

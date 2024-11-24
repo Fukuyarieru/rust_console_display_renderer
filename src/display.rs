@@ -206,9 +206,9 @@ impl Display{
         // obj_ref.allocate_box(self.allocate(2,10,2,10));
     }
     pub fn initialize_boxer(&mut self) {
-        let initilized_objs:Vec<Object>=Vec::new();
-        for mut obj in self.boxer {
-            
+        for object in &mut self.boxer {
+            let ptr=&mut object as *mut &mut Object;
+            self.initialize_object(unsafe{*ptr});
         }
     }
 }

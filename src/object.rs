@@ -26,14 +26,14 @@ impl Object{
     // pub fn allocate_box(&mut self,allocated_box: Vec2<&'a DataPoint>) {
     //     self.allocated_box=Some(allocated_box);
     // }
-    fn get_center_point(&self) -> Point {
+    pub fn get_center_point(&self) -> Point {
         self.center_point
     }
+    pub fn allocate_from_display(&mut self, display: &Display) {
+        todo!()
+    }
 }
-// rename this function below
-pub fn initialize_object(object: &mut Object, display:&Display) {
-    object.allocated_box=Some(display.allocate());
-}
+
 // pub enum AllocateBox<'a> {
 //     AllocateInFunction,
 //     Allocated {
