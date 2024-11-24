@@ -1,3 +1,4 @@
+use std::cell::Cell;
 // use crate::adapters::DisplayAdapter;
 // use crate::animations::Animation;
 use crate::functions::calc_distance;
@@ -9,46 +10,62 @@ use rand::*;
 
 pub const DEFAULT_DATAPOINT_HISTORY_SIZE: usize = 3;
 
-#[derive(Clone)]
 pub struct DataPoint {
-    pub val: char,
-    pub vals_history: Vec<char>,
+    // CELLLLLLL
+    pub val: Cell<char>,
+    pub vals_history: Cell<Vec<char>>,
 }
 
 impl DataPoint {
+    // NOTE TO THIS ENTIRE STRUCT: i should remake this later to be more readable
     pub fn new(ch: char, history_size: usize) -> Self {
         DataPoint {
-            val: ch,
-            vals_history: vec![' '; history_size],
+            val: Cell::new(ch),
+            vals_history: Cell::new(vec![' '; history_size]),
         }
     }
-    pub fn update(&mut self, new_ch: char) {
-        // TODO can do this better (right now it does 3 scans from what i understand)
-        self.vals_history.push(self.val);
-        self.val = new_ch;
-        self.vals_history.pop();
+    pub fn update(&self, new_ch: char) {
+        let mut history = self.vals_history.take(); // Take ownership of the Vec
+        history.push(self.val.get());
+        self.val.set(new_ch);
+        history.pop();
+        self.vals_history.set(history); // Set the modified Vec back
+        // my "old" solution, problem was that i had to make 'self' respect borrowchecker rules, meaning, "history variable that wasnt actually self" or something
+        // self.vals_history.get_mut().push(self.val.get());
+        // self.val.set(new_ch);
+        // // Datapoint history size is secured to be the same thanks to the vec! macro we used
+        // self.vals_history.get_mut().pop();
     }
-    pub fn reverse(&mut self) {
-        self.val = self.vals_history[0];
-        self.vals_history.remove(0);
-        self.vals_history.insert(self.vals_history.len(), ' ');
+    pub fn reverse(&self) {
+        // again old code
+        // let history_size=self.vals_history.get_mut().len();
+        // self.val.set(*self.vals_history.get_mut().first().unwrap());
+        // self.vals_history.get_mut().remove(0);
+        // self.vals_history.get_mut().insert(history_size-1,' ');
+        let mut history = self.vals_history.take(); // Take ownership of the Vec
+        if !history.is_empty() {
+            self.val.set(history[0]);
+            history.remove(0);
+            history.push(' ');
+            self.vals_history.set(history); // Set the modified Vec back
+        }
     }
 }
 impl std::fmt::Display for DataPoint {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.val)
+        write!(f, "{}", self.val.get())
     }
 }
 
-pub struct Display<'a>{
+pub struct Display{
     pub screen: Vec2<DataPoint>,
     pub width: usize,
     pub height: usize,
-    pub boxer: Vec<Object<'a>>,
+    pub boxer: Vec<Object>,
 }
 
-impl<'a> Display<'a>{
-    // Let's limit for now the use of individual pixels inside of the Display struct
+impl Display{
+    // Let's limit for now the use of individual pixels inside the Display struct
     pub fn new(width: usize, height: usize) -> Self {
         Display {
             screen: Vec2::new(
@@ -137,45 +154,39 @@ impl<'a> Display<'a>{
         self.draw_line(Point { x: rx1, y: ry1 }, Point { x: rx2, y: ry2 }, draw_val);
         (Point { x: rx1, y: ry1 }, Point { x: rx2, y: ry2 })
     }
+    pub fn fill_screen(&mut self, draw_val:char) {
+        self.screen.vec.iter_mut().for_each(|inner_vec| inner_vec.iter_mut().for_each(|datapoint| datapoint.update(draw_val)));
+    }
     pub fn allocate(
-        &mut self,
+        &self,
         left: usize,
-        mut right: usize,
-        mut top: usize,
+        right: usize,
+        top: usize,
         bottom: usize,
-    ) -> Vec2<&mut DataPoint> {
+    ) -> Vec2<*mut DataPoint> {
         // no need to check for bottom and left as we use usizes and they cant be negative
 
-        if right >= self.width {
-            right = self.screen.vec.len() - 1
+
+        // CHECK FOR BOUNDARIES, THIS IS MADE LIKE THIS SO I WON'T NEED TO GET MUTABLE USIZES ON ENTERING
+        let right = if right >= self.width { self.screen.vec.len() - 1 } else { right };
+        let top = if top >= self.height { self.screen.vec[0].len() - 1 } else { top };
+
+        if right < left || top<bottom {
+            panic!("Invalid allocation region: right < left or top < bottom");
         }
-        if top >= self.height {
-            top = self.screen.vec[0].len() - 1
-        }
+
 
         // let default_datapoint = &mut self.screen.vec[0][0];
-        let mut reference_vec2: Vec2<&mut DataPoint> = Vec2::new(right - left, top - bottom);
-        // {
-        //     vec: Vec::new(),
-        //     max_x: right - left,
-        //     max_y: top - bottom,
-        // };
-        // Vec2::create(right - left, top - bottom, default_datapoint);
+        let width = right - left + 1; // Add 1 to include the last column
+        let height = top-bottom + 1; // Add 1 to include the last row
 
+        let mut reference_vec2: Vec2<*mut DataPoint> = Vec2::new(width, height);
         for line in top..=bottom {
-            let mut row_refs: Vec<&mut DataPoint> = Vec::with_capacity(right - left + 1);
             for row in left..=right {
-                // Get a mutable reference to each DataPoint in this row
-                let data_point = &mut self.screen.vec[line][row] as *mut _; // Cast to a raw pointer
-                row_refs.push(unsafe { &mut *data_point }); // Safely cast back to &mut
+                let raw_pointer: *mut DataPoint = &self.screen.vec[line][row] as *const DataPoint as *mut DataPoint;
+                reference_vec2.vec[line][row] = raw_pointer;
             }
-            reference_vec2.vec.push(row_refs);
         }
-        // for line in top..=bottom {
-        //     for row in left..=right {
-        //         reference_vec2.vec[line][row] = &self.screen.vec[line][row];
-        //     }
-        // }
         // for (line_idx, line) in (top..=bottom).enumerate() {
         //     for (row_idx, row) in (left..=right).enumerate() {
         //         reference_vec2.vec[line_idx][row_idx] = &mut self.screen.vec[line][row];
@@ -183,18 +194,27 @@ impl<'a> Display<'a>{
         // }
         reference_vec2
     }
-    pub fn add_object(&'a mut self,object: &mut Object<'a>) {
-        if object.allocated_box.is_none() {
-            self.initialize_object(object);
-        }
-        self.boxer.push(*object);
+    pub fn add_object(&mut self,object: Object) {
+        self.boxer.push(object);
     }
-    pub fn initialize_object(&'a mut self, obj_ref: &mut Object<'a>) {
-        obj_ref.allocated_box=Some(self.allocate(2,10,2,10));
+    pub fn initialize_object(&self, obj_ref: &mut Object)  {
+        obj_ref.allocated_box=Some(self.allocate(2,10,10,2));
+        // obj_ref.allocate_box(self.allocate(2,10,2,10));
     }
+    // pub fn initialize_boxer(&mut self) {
+    //     for object in &mut self.boxer {
+    //         let ptr=&mut object as *mut &mut Object;
+    //         self.initialize_object(unsafe{*ptr});
+    //     }
+    // }
 }
+// pub fn initialize_display(display: &mut Display) {
+//     for object in display.boxer.iter_mut() {
+//         display.initialize_object(object)
+//     }
+// }
 // Implement Display for the Display struct
-impl<'a> std::fmt::Display for Display<'a> {
+impl<'a> std::fmt::Display for Display{
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         // Delegate to the Display implementation for Vec2<Point>
         write!(f, "{}", self.screen)

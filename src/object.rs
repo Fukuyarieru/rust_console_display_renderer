@@ -4,10 +4,10 @@ use crate::shape::Shape;
 use crate::standard::*;
 use crate::DataPoint;
 
-pub struct Object<'a> {
+pub struct Object{
     pub center_point: Point,
     pub obj_type: ObjType,
-    pub allocated_box: Option<Vec2<&'a mut DataPoint>>,
+    pub allocated_box: Option<Vec2<*mut DataPoint>>,
 }
 pub enum ObjType {
     Free { size: (usize, usize) },
@@ -15,7 +15,7 @@ pub enum ObjType {
     Menu { menu: Menu },
 }
 
-impl<'a> Object<'a>{
+impl Object{
     pub fn new(center_point: Point, obj_type: ObjType) -> Self {
         Self {
             center_point,
@@ -23,13 +23,30 @@ impl<'a> Object<'a>{
             allocated_box: None,
         }
     }
-    pub fn allocate_box(&mut self,allocated_box: Vec2<&'a mut DataPoint>) {
-        self.allocated_box=Some(allocated_box);
-    }
+    // pub fn allocate_box(&mut self,allocated_box: Vec2<&'a DataPoint>) {
+    //     self.allocated_box=Some(allocated_box);
+    // }
     pub fn get_center_point(&self) -> Point {
         self.center_point
     }
+    pub fn allocate_from_display(&mut self, display: &Display) {
+        todo!()
+    }
+    pub fn fill_box(&mut self, new_ch: char) {
+        if let Some(allocated_box) = &mut self.allocated_box {
+            for inner_vec in &allocated_box.vec {
+                for datapoint in inner_vec {
+                    unsafe {
+                        datapoint.as_mut().unwrap().update(new_ch);
+                    }
+                }
+            }
+        } else {
+            panic!("allocated_box is None!");
+        }
+    }
 }
+
 // pub enum AllocateBox<'a> {
 //     AllocateInFunction,
 //     Allocated {
