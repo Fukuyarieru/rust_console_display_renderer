@@ -21,34 +21,24 @@ impl DataPoint {
     pub fn new(ch: char, history_size: usize) -> Self {
         DataPoint {
             val: Cell::new(ch),
-            vals_history: Cell::new(vec![' '; history_size]),
+            vals_history: Cell::new(vec!['#'; history_size]),
         }
     }
     pub fn update(&self, new_ch: char) {
         let mut history = self.vals_history.take(); // Take ownership of the Vec
-        history.push(self.val.get());
-        self.val.set(new_ch);
-        history.pop();
+        history.remove(0); // Remove the oldest value
+        history.push(self.val.get()); // Add current value to history
+        self.val.set(new_ch); // Update the value
         self.vals_history.set(history); // Set the modified Vec back
-        // my "old" solution, problem was that i had to make 'self' respect borrowchecker rules, meaning, "history variable that wasnt actually self" or something
-        // self.vals_history.get_mut().push(self.val.get());
-        // self.val.set(new_ch);
-        // // Datapoint history size is secured to be the same thanks to the vec! macro we used
-        // self.vals_history.get_mut().pop();
     }
     pub fn reverse(&self) {
-        // again old code
-        // let history_size=self.vals_history.get_mut().len();
-        // self.val.set(*self.vals_history.get_mut().first().unwrap());
-        // self.vals_history.get_mut().remove(0);
-        // self.vals_history.get_mut().insert(history_size-1,' ');
         let mut history = self.vals_history.take(); // Take ownership of the Vec
         if !history.is_empty() {
-            self.val.set(history[0]);
-            history.remove(0);
-            history.push(' ');
-            self.vals_history.set(history); // Set the modified Vec back
+            self.val.set(history[0]); // Update value to the first history entry
+            history.remove(0); // Remove the oldest value
+            history.push(' '); // Add a placeholder
         }
+        self.vals_history.set(history); // Set the modified Vec back
     }
 }
 impl std::fmt::Display for DataPoint {
