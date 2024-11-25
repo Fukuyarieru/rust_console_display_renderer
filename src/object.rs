@@ -46,7 +46,22 @@ impl Object{
         }
     }
 }
+impl std::fmt::Display for Object{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        // Delegate to the Display implementation for Vec2<Point>
+        if let Some(allocated_box) = &self.allocated_box {
+            write!(f,"{}",allocated_box)
+        } else {
+            let obj_width=self.allocated_box.unwrap_or()
+            write!(f,Vec2::new(self.allocated_box.))
+        }
+    }
+}
+impl std::fmt::Display for Vec2<*mut DataPoint> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 
+    }
+}>
 // pub enum AllocateBox<'a> {
 //     AllocateInFunction,
 //     Allocated {

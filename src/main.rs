@@ -26,14 +26,18 @@ fn main() {
     println!("{temp_datapoint}"); // this works
 
     let mut obj=Object::new(Point{x:3,y:4},ObjType::Free{size:(3,3)});
-    println!("{}",obj.allocated_box.unwrap().vec);
 
     let mut display: Display = Display::new(30, 30);
     display.fill_screen('a');
 
     println!("{}",display);
 
-    display.initialize_object(&mut obj);
+    // display.initialize_object(&mut obj);
+    // obj.allocated_box.unwrap().vec.iter().for_each(|inner_vec|inner_vec.iter().for_each(|datapoint|unsafe {
+    //     // Dereference the raw pointer to access `val`
+    //     let data_ref: &DataPoint = &**datapoint;
+    //     println!("{}", data_ref.val.get());
+    // }));
     obj.fill_box('c');
 
     display.add_object(obj);
