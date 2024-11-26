@@ -21,7 +21,7 @@ impl DataPoint {
     pub fn new(ch: char, history_size: usize) -> Self {
         DataPoint {
             val: Cell::new(ch),
-            vals_history: Cell::new(vec!['#'; history_size]),
+            vals_history: Cell::new(Vec::with_capacity(history_size).),
         }
     }
     pub fn update(&self, new_ch: char) {
