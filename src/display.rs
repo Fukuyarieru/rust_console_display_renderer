@@ -1,6 +1,4 @@
 use std::cell::Cell;
-// use crate::adapters::DisplayAdapter;
-// use crate::animations::Animation;
 use crate::functions::calc_distance;
 use crate::object;
 use crate::object::Object;
@@ -16,12 +14,13 @@ pub struct DataPoint {
     pub vals_history: Cell<Vec<char>>,
 }
 
+impl NotAPtr for DataPoint {}
 impl DataPoint {
-    // NOTE TO THIS ENTIRE STRUCT: i should remake this later to be more readable
+    // NOTE TO THIS ENTIRE STRUCT: I should remake this later to be more readable
     pub fn new(ch: char, history_size: usize) -> Self {
         DataPoint {
             val: Cell::new(ch),
-            vals_history: Cell::new(Vec::with_capacity(history_size).),
+            vals_history: Cell::new(Vec::with_capacity(history_size)),
         }
     }
     pub fn update(&self, new_ch: char) {

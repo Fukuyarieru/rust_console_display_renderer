@@ -8,7 +8,7 @@ impl<T> Vec2<T> {
     pub fn new(x_size: usize, y_size: usize) -> Self {
         Self {
             vec: {
-                let mut vec2= Vec::<Vec::<T>>::with_capacity(x_size);
+                let mut vec2= Vec::<Vec<T>>::with_capacity(x_size);
                 for _ in 0..x_size {
                     vec2.push(Vec::with_capacity(y_size));
                 };
@@ -35,10 +35,23 @@ impl<T> Vec2<T> {
         }
     }
 }
+
+
+
+pub trait NotAPtr{} 
+/* a trait to make sure to distinguish 
+between the generic implementation of
+ fmt of Vec2 to its other implementation
+  inside the Object code */
+
+
+
+impl<T> NotAPtr for Vec2<T>{}
 impl<T> std::fmt::Display for Vec2<T>
 // chatgpt
 where
-    T: std::fmt::Display,
+    T: std::fmt::Display + NotAPtr,
+
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         for row in &self.vec {

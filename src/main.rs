@@ -20,7 +20,7 @@ use object::*;
 use standard::*;
 
 fn main() {
-    std::env::set_var("RUST_BACKTRACE", "1");
+    env::set_var("RUST_BACKTRACE", "1");
 
     let temp_datapoint=DataPoint::new('c',3);
     println!("{temp_datapoint}"); // this works

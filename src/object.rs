@@ -14,7 +14,6 @@ pub enum ObjType {
     Shape { shape: Shape },
     Menu { menu: Menu },
 }
-
 impl Object{
     pub fn new(center_point: Point, obj_type: ObjType) -> Self {
         Self {
@@ -29,6 +28,7 @@ impl Object{
     pub fn get_center_point(&self) -> Point {
         self.center_point
     }
+    #[allow(unused_variables)]
     pub fn allocate_from_display(&mut self, display: &Display) {
         todo!()
     }
@@ -37,7 +37,13 @@ impl Object{
             for inner_vec in &allocated_box.vec {
                 for datapoint in inner_vec {
                     unsafe {
-                        datapoint.as_mut().unwrap().update(new_ch);
+                        // datapoint.as_mut().unwrap().update(new_ch);
+                        // let datapoint_ref=&mut **datapoint;
+                        // datapoint_ref .update(new_ch);
+                        (**datapoint).update(new_ch);
+
+                        // im not sure what's wrong here, and even if its here,
+                        // although I got a gut feeling its in here
                     }
                 }
             }
@@ -46,22 +52,50 @@ impl Object{
         }
     }
 }
+// pub struct AllocationBox {
+//     pub right: usize,
+//     pub left: usize,
+//     pub top: usize,
+//     pub bottom: usize,
+//     pub allocated_box: Option<Vec2<*mut DataPoint>>,
+// }
 impl std::fmt::Display for Object{
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        // Delegate to the Display implementation for Vec2<Point>
+
         if let Some(allocated_box) = &self.allocated_box {
             write!(f,"{}",allocated_box)
-        } else {
-            let obj_width=self.allocated_box.unwrap_or()
-            write!(f,Vec2::new(self.allocated_box.))
         }
+        else {
+            write!(f, "Object does not have an initilized box")
+        }
+
+
+        // Delegate to the Display implementation for Vec2<Point>
+        // write!(f, "{}", self.allocated_box)
+        //     if let Some(allocated_box) = &self.allocated_box {
+        //         write!(f,"{}",allocated_box)
+        //     } else {
+        //         // what's the point of this?
+        //         let obj_width=self.allocated_box.unwrap_or()
+        //         write!(f,Vec2::new(self.allocated_box.))
+        //     }
+        // }
     }
 }
 impl std::fmt::Display for Vec2<*mut DataPoint> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-
+        for inner_vec in &self.vec {
+            for datapoint in inner_vec {
+                unsafe {
+                    let datapoint_ref = &mut **datapoint;
+                    write!(f,"{}",datapoint_ref.val.get())?;
+                }
+            }
+            writeln!(f)?;
+        }
+        Ok(())
     }
-}>
+}
 // pub enum AllocateBox<'a> {
 //     AllocateInFunction,
 //     Allocated {
