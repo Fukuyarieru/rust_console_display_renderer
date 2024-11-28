@@ -18,17 +18,23 @@ impl NotAPtr for DataPoint {}
 impl DataPoint {
     // NOTE TO THIS ENTIRE STRUCT: I should remake this later to be more readable
     pub fn new(ch: char, history_size: usize) -> Self {
+        println!("Creating new datapoint with {ch}");
         DataPoint {
             val: Cell::new(ch),
             vals_history: Cell::new(Vec::with_capacity(history_size)),
         }
     }
     pub fn update(&self, new_ch: char) {
-        let mut history = self.vals_history.take(); // Take ownership of the Vec
-        history.remove(0); // Remove the oldest value
-        history.push(self.val.get()); // Add current value to history
-        self.val.set(new_ch); // Update the value
-        self.vals_history.set(history); // Set the modified Vec back
+        println!("Updating datapoint to {new_ch}");
+        self.vals_history.take().push(self.val.get());
+        self.val.set(new_ch);
+        self.vals_history.take().pop();
+        println!("{}", self.val.get());
+        // let mut history = self.vals_history.take(); // Take ownership of the Vec
+        // history.remove(0); // Remove the oldest value
+        // history.push(self.val.get()); // Add current value to history
+        // self.val.set(new_ch); // Update the value
+        // self.vals_history.set(history); // Set the modified Vec back
     }
     pub fn reverse(&self) {
         let mut history = self.vals_history.take(); // Take ownership of the Vec
@@ -56,6 +62,7 @@ pub struct Display{
 impl Display{
     // Let's limit for now the use of individual pixels inside the Display struct
     pub fn new(width: usize, height: usize) -> Self {
+        println!("Created new display with the height of {height} and the width of {width}");
         Display {
             screen: Vec2::new(
                 width, height,
@@ -68,6 +75,7 @@ impl Display{
     }
     // in the case that the index point is outside the screen, no action would happen
     pub fn pixel(&mut self, point: Point, new_val: char) {
+        println!("Placing a pixel on {point} on display");
         // (self.screen.vec[point.x][point.y]).update(new_val);
         self.screen
             .index(point.x, point.y)
@@ -76,6 +84,7 @@ impl Display{
     }
 
     pub fn draw_line(&mut self, point1: Point, point2: Point, draw_val: char) {
+        println!("Drawing a line from {point1} to {point2} on display");
         // redeclaration
         let x1 = point1.x;
         let x2 = point2.x;
@@ -115,12 +124,14 @@ impl Display{
         }
     }
     pub fn get_center(&self) -> Point {
+        println!("Getting the center point of display");
         Point {
             x: self.width / 2,
             y: self.height / 2,
         }
     }
     pub fn total_area(&self) -> usize {
+        println!("Getting total area of display");
         self.width * self.height
     }
     // TODO, need to implement newly using Point s
@@ -134,6 +145,7 @@ impl Display{
     //    
     // }
     pub fn random_line(&mut self, draw_val: char) -> (Point, Point) {
+        println!("Drawing a random line on screen");
         // function returns the random line that was made
         let mut rng = rand::thread_rng();
         let rx1 = rng.gen_range(0..self.screen.max_x);
@@ -143,11 +155,12 @@ impl Display{
         self.draw_line(Point { x: rx1, y: ry1 }, Point { x: rx2, y: ry2 }, draw_val);
         (Point { x: rx1, y: ry1 }, Point { x: rx2, y: ry2 })
     }
-    pub fn fill_screen(&mut self, draw_val:char) {
+    pub fn fill_screen(&mut self, new_ch:char) {
+        println!("Filling screen with {}", new_ch);
         // self.screen.vec.iter_mut().for_each(|inner_vec| inner_vec.iter_mut().for_each(|datapoint| datapoint.update(draw_val)));
         for inner_vec in &self.screen.vec {
             for datapoint in inner_vec {
-                datapoint.update(draw_val);
+                datapoint.update(new_ch);
             }
         }
     }
@@ -158,6 +171,7 @@ impl Display{
         top: usize,
         bottom: usize,
     ) -> Vec2<*mut DataPoint> {
+        println!("Allocating box for object from display");
         // no need to check for bottom and left as we use usizes and they cant be negative
 
 
@@ -168,8 +182,8 @@ impl Display{
         if right < left  {
             panic!("Invalid allocation region: right < left");
         }
-        if bottom < top {
-            panic!("Invalid allocation region: bottom < top");
+        if top < bottom {
+            panic!("Invalid allocation region: top < bottom");
         }
 
 
@@ -192,9 +206,11 @@ impl Display{
         reference_vec2
     }
     pub fn add_object(&mut self,object: Object) {
+        println!("Adding object to display");
         self.boxer.push(object);
     }
     pub fn initialize_object(&self, obj_ref: &mut Object)  {
+        println!("Initializing object from display");
         obj_ref.allocated_box=Some(self.allocate(2,10,10,2));
         // obj_ref.allocate_box(self.allocate(2,10,2,10));
     }
@@ -211,7 +227,7 @@ impl Display{
 //     }
 // }
 // Implement Display for the Display struct
-impl<'a> std::fmt::Display for Display{
+impl std::fmt::Display for Display{
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         // Delegate to the Display implementation for Vec2<Point>
         write!(f, "{}", self.screen)

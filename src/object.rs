@@ -4,6 +4,7 @@ use crate::shape::Shape;
 use crate::standard::*;
 use crate::DataPoint;
 
+pub const ERROR_OBJECT_EMPTY_BOX:&str="Object does not have an initialized allocated box";
 pub struct Object{
     pub center_point: Point,
     pub obj_type: ObjType,
@@ -14,8 +15,18 @@ pub enum ObjType {
     Shape { shape: Shape },
     Menu { menu: Menu },
 }
+impl std::fmt::Display for ObjType {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self{
+            ObjType::Free{size: (_,_) } => write!(f, "Free"),
+            ObjType::Shape{shape} => write!(f, "Shape"),
+            ObjType::Menu{menu} => write!(f, "Menu") ,
+        }
+    }
+}
 impl Object{
     pub fn new(center_point: Point, obj_type: ObjType) -> Self {
+        println!("Creating new object of type {obj_type} and center of {center_point}");
         Self {
             center_point,
             obj_type,
@@ -33,13 +44,14 @@ impl Object{
         todo!()
     }
     pub fn fill_box(&mut self, new_ch: char) {
+        println!("Filling allocated box inside object to be {new_ch}");
         if let Some(allocated_box) = &mut self.allocated_box {
             for inner_vec in &allocated_box.vec {
                 for datapoint in inner_vec {
                     unsafe {
                         // datapoint.as_mut().unwrap().update(new_ch);
-                        let datapoint_ref=&mut **datapoint;
-                        datapoint_ref .update(new_ch);
+                        let datapoint_ref=&**datapoint;
+                        datapoint_ref.update(new_ch);
                         // (**datapoint).update(new_ch);
 
                         // im not sure what's wrong here, and even if its here,
@@ -48,7 +60,7 @@ impl Object{
                 }
             }
         } else {
-            panic!("allocated_box is None!");
+            panic!("{}",ERROR_OBJECT_EMPTY_BOX);
         }
     }
 }
@@ -66,7 +78,7 @@ impl std::fmt::Display for Object{
             write!(f,"{}",allocated_box)
         }
         else {
-            write!(f, "Object does not have an initilized box")
+            panic!("{}",ERROR_OBJECT_EMPTY_BOX);
         }
 
 

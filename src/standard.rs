@@ -45,7 +45,8 @@ between the generic implementation of
   inside the Object code */
 
 
-
+// TODO: play around here to fix these trait rules
+impl<T> NotAPtr for T where T: Sized {}
 impl<T> NotAPtr for Vec2<T>{}
 impl<T> std::fmt::Display for Vec2<T>
 // chatgpt
@@ -74,3 +75,8 @@ pub struct Point {
     pub y: usize,
 }
 
+impl std::fmt::Display for Point {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "({}, {})", self.x, self.y)
+    }
+}

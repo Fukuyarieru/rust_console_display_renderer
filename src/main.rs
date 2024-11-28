@@ -39,6 +39,7 @@ fn main() {
     //     println!("{}", data_ref.val.get());
     // }));
     // obj.fill_box('c');
+    display.initialize_object(&mut obj);
     println!("{}",obj);
 
     display.add_object(obj);
