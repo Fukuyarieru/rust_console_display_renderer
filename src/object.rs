@@ -38,9 +38,9 @@ impl Object{
                 for datapoint in inner_vec {
                     unsafe {
                         // datapoint.as_mut().unwrap().update(new_ch);
-                        // let datapoint_ref=&mut **datapoint;
-                        // datapoint_ref .update(new_ch);
-                        (**datapoint).update(new_ch);
+                        let datapoint_ref=&mut **datapoint;
+                        datapoint_ref .update(new_ch);
+                        // (**datapoint).update(new_ch);
 
                         // im not sure what's wrong here, and even if its here,
                         // although I got a gut feeling its in here

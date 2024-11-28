@@ -38,7 +38,8 @@ fn main() {
     //     let data_ref: &DataPoint = &**datapoint;
     //     println!("{}", data_ref.val.get());
     // }));
-    obj.fill_box('c');
+    // obj.fill_box('c');
+    println!("{}",obj);
 
     display.add_object(obj);
 

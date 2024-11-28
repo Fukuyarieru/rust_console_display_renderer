@@ -144,7 +144,12 @@ impl Display{
         (Point { x: rx1, y: ry1 }, Point { x: rx2, y: ry2 })
     }
     pub fn fill_screen(&mut self, draw_val:char) {
-        self.screen.vec.iter_mut().for_each(|inner_vec| inner_vec.iter_mut().for_each(|datapoint| datapoint.update(draw_val)));
+        // self.screen.vec.iter_mut().for_each(|inner_vec| inner_vec.iter_mut().for_each(|datapoint| datapoint.update(draw_val)));
+        for inner_vec in &self.screen.vec {
+            for datapoint in inner_vec {
+                datapoint.update(draw_val);
+            }
+        }
     }
     pub fn allocate(
         &self,
@@ -160,8 +165,11 @@ impl Display{
         let right = if right >= self.width { self.screen.vec.len() - 1 } else { right };
         let top = if top >= self.height { self.screen.vec[0].len() - 1 } else { top };
 
-        if right < left || top<bottom {
-            panic!("Invalid allocation region: right < left or top < bottom");
+        if right < left  {
+            panic!("Invalid allocation region: right < left");
+        }
+        if bottom < top {
+            panic!("Invalid allocation region: bottom < top");
         }
 
 
