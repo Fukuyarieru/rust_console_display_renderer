@@ -13,8 +13,6 @@ pub struct DataPoint {
     pub val: Cell<char>,
     pub vals_history: Cell<Vec<char>>,
 }
-
-impl NotAPtr for DataPoint {}
 impl DataPoint {
     // NOTE TO THIS ENTIRE STRUCT: I should remake this later to be more readable
     pub fn new(ch: char, history_size: usize) -> Self {
@@ -231,5 +229,16 @@ impl std::fmt::Display for Display{
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         // Delegate to the Display implementation for Vec2<Point>
         write!(f, "{}", self.screen)
+    }
+}
+impl std::fmt::Display for Vec2<DataPoint> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        for inenr_vec in &self.vec {
+            for datapoint in inenr_vec {
+                write!(f, "{}", datapoint)?;
+            }
+            writeln!(f)?;
+        }
+        Ok(())
     }
 }

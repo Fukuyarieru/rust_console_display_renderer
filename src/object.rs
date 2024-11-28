@@ -99,7 +99,7 @@ impl std::fmt::Display for Vec2<*mut DataPoint> {
         for inner_vec in &self.vec {
             for datapoint in inner_vec {
                 unsafe {
-                    let datapoint_ref = &mut **datapoint;
+                    let datapoint_ref = &**datapoint;
                     write!(f,"{}",datapoint_ref.val.get())?;
                 }
             }

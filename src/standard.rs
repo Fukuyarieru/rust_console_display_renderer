@@ -38,7 +38,7 @@ impl<T> Vec2<T> {
 
 
 
-pub trait NotAPtr{} 
+pub trait NotAPtr{}
 /* a trait to make sure to distinguish 
 between the generic implementation of
  fmt of Vec2 to its other implementation
@@ -46,29 +46,29 @@ between the generic implementation of
 
 
 // TODO: play around here to fix these trait rules
-impl<T> NotAPtr for T where T: Sized {}
-impl<T> NotAPtr for Vec2<T>{}
-impl<T> std::fmt::Display for Vec2<T>
-// chatgpt
-where
-    T: std::fmt::Display + NotAPtr,
 
-{
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        for row in &self.vec {
-            for (i, elem) in row.iter().enumerate() {
-                // Separate elements by a space, except for the last element in the row
-                if i > 0 {
-                    write!(f, " ")?;
-                }
-                write!(f, "{}", elem)?;
-            }
-            // Print a new line after each row
-            writeln!(f)?;
-        }
-        Ok(())
-    }
-}
+// impl<T> NotAPtr for T{}
+// impl<T> std::fmt::Display for Vec2<T>
+// // chatgpt
+// where
+//     T: std::fmt::Display,
+//
+// {
+//     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+//         for row in &self.vec {
+//             for (i, elem) in row.iter().enumerate() {
+//                 // Separate elements by a space, except for the last element in the row
+//                 if i > 0 {
+//                     write!(f, " ")?;
+//                 }
+//                 write!(f, "{}", elem)?;
+//             }
+//             // Print a new line after each row
+//             writeln!(f)?;
+//         }
+//         Ok(())
+//     }
+// }
 #[derive(Copy, Clone)]
 pub struct Point {
     pub x: usize,
