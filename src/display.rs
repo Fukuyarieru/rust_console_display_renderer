@@ -204,6 +204,14 @@ impl Display{
                 reference_vec2.vec[line][row] = raw_pointer;
             }
         }
+        
+        // for each_line in &self.screen.vec {
+        //     for datapoint in each_line {
+        //         let raw_pointer:*mut DataPoint = datapoint as *const DataPoint as *mut DataPoint;
+        //         reference_vec2.vec[
+        //     }
+        // }
+        
         // for (line_idx, line) in (top..=bottom).enumerate() {
         //     for (row_idx, row) in (left..=right).enumerate() {
         //         reference_vec2.vec[line_idx][row_idx] = &mut self.screen.vec[line][row];
