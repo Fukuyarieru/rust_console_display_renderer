@@ -23,6 +23,9 @@ fn main() {
     env::set_var("RUST_BACKTRACE", "1");
 
     let temp_datapoint=DataPoint::new('c',3);
+    println!("{}",temp_datapoint);
+    temp_datapoint.update('b');
+    // println!("{}", temp_datapoint);
     // println!("{temp_datapoint}"); // this works
 
     let mut obj=Object::new(Point{x:3,y:4},ObjType::Free{size:(3,3)});

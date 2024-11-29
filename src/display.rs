@@ -23,11 +23,19 @@ impl DataPoint {
         }
     }
     pub fn update(&self, new_ch: char) {
-        println!("Updating datapoint to {new_ch}");
-        self.vals_history.take().push(self.val.get());
+
+        let mut history = self.vals_history.take();
+        if history.len() == history.capacity() {
+            history.remove(0); // Remove the oldest element if at capacity
+        }
+        history.push(self.val.get());
         self.val.set(new_ch);
-        self.vals_history.take().pop();
-        println!("{}", self.val.get());
+        self.vals_history.set(history);
+        // println!("Updating datapoint to {new_ch}");
+        // self.vals_history.take().push(self.val.get());
+        // self.val.set(new_ch);
+        // self.vals_history.take().pop();
+
         // let mut history = self.vals_history.take(); // Take ownership of the Vec
         // history.remove(0); // Remove the oldest value
         // history.push(self.val.get()); // Add current value to history
