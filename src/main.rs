@@ -22,6 +22,8 @@ use standard::*;
 fn main() {
     env::set_var("RUST_BACKTRACE", "1");
 
+    let a=std::ptr::from_ref("data");
+
     let temp_datapoint=DataPoint::new('c',3);
     println!("{}",temp_datapoint);
     temp_datapoint.update('b');

@@ -3,12 +3,13 @@ use crate::menu::Menu;
 use crate::shape::Shape;
 use crate::standard::*;
 use crate::DataPoint;
+use crate::standard::Ptr;
 
 pub const ERROR_OBJECT_EMPTY_BOX:&str="Object does not have an initialized allocated box";
 pub struct Object{
     pub center_point: Point,
     pub obj_type: ObjType,
-    pub allocated_box: Option<Vec2<*mut DataPoint>>,
+    pub allocated_box: Option<Vec2<Ptr<DataPoint>>>,
 }
 pub enum ObjType {
     Free { size: (usize, usize) },
@@ -48,15 +49,16 @@ impl Object{
         if let Some(allocated_box) = &mut self.allocated_box {
             for inner_vec in &allocated_box.vec {
                 for datapoint in inner_vec {
-                    unsafe {
-                        // datapoint.as_mut().unwrap().update(new_ch);
-                        let datapoint_ref=&**datapoint;
-                        datapoint_ref.update(new_ch);
-                        // (**datapoint).update(new_ch);
-
-                        // im not sure what's wrong here, and even if its here,
-                        // although I got a gut feeling its in here
-                    }
+                    datapoint.get_ref().update(new_ch);
+                    // unsafe {
+                    //     // datapoint.as_mut().unwrap().update(new_ch);
+                    //     let datapoint_ref=&**datapoint;
+                    //     datapoint_ref.update(new_ch);
+                    //     // (**datapoint).update(new_ch);
+                    //
+                    //     // im not sure what's wrong here, and even if its here,
+                    //     // although I got a gut feeling It's in here
+                    // }
                 }
             }
         } else {
@@ -94,20 +96,20 @@ impl std::fmt::Display for Object{
         // }
     }
 }
-impl std::fmt::Display for Vec2<*mut DataPoint> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        for inner_vec in &self.vec {
-            for datapoint in inner_vec {
-                unsafe {
-                    let datapoint_ref = &**datapoint;
-                    write!(f,"{}",datapoint_ref.val.get())?;
-                }
-            }
-            writeln!(f)?;
-        }
-        Ok(())
-    }
-}
+// impl std::fmt::Display for Vec2<*mut DataPoint> {
+//     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+//         for inner_vec in &self.vec {
+//             for datapoint in inner_vec {
+//                 unsafe {
+//                     let datapoint_ref = &**datapoint;
+//                     write!(f,"{}",datapoint_ref.val.get())?;
+//                 }
+//             }
+//             writeln!(f)?;
+//         }
+//         Ok(())
+//     }
+// }
 // pub enum AllocateBox<'a> {
 //     AllocateInFunction,
 //     Allocated {

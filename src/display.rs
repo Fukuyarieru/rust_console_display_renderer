@@ -176,7 +176,7 @@ impl Display{
         right: usize,
         top: usize,
         bottom: usize,
-    ) -> Vec2<*mut DataPoint> {
+    ) -> Vec2<Ptr<DataPoint>> {
         println!("Allocating box for object from display");
         // no need to check for bottom and left as we use usizes and they cant be negative
 
@@ -197,11 +197,12 @@ impl Display{
         let width = right - left + 1; // Add 1 to include the last column
         let height = top-bottom + 1; // Add 1 to include the last row
 
-        let mut reference_vec2: Vec2<*mut DataPoint> = Vec2::new(width, height);
+        let mut reference_vec2: Vec2<Ptr<DataPoint>> = Vec2::new(width, height);
         for line in top..=bottom {
             for row in left..=right {
-                let raw_pointer: *mut DataPoint = &self.screen.vec[line][row] as *const DataPoint as *mut DataPoint;
-                reference_vec2.vec[line][row] = raw_pointer;
+                reference_vec2.vec[line][row] = Ptr::new_from_ptr(&self.screen.vec[line][row] as *const DataPoint as *mut DataPoint)
+                // let raw_pointer: *mut DataPoint = &self.screen.vec[line][row] as *const DataPoint as *mut DataPoint;
+                // reference_vec2.vec[line][row] = raw_pointer;
             }
         }
         
@@ -247,14 +248,14 @@ impl std::fmt::Display for Display{
         write!(f, "{}", self.screen)
     }
 }
-impl std::fmt::Display for Vec2<DataPoint> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        for inenr_vec in &self.vec {
-            for datapoint in inenr_vec {
-                write!(f, "{}", datapoint)?;
-            }
-            writeln!(f)?;
-        }
-        Ok(())
-    }
-}
+// impl std::fmt::Display for Vec2<DataPoint> {
+//     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+//         for inenr_vec in &self.vec {
+//             for datapoint in inenr_vec {
+//                 write!(f, "{}", datapoint)?;
+//             }
+//             writeln!(f)?;
+//         }
+//         Ok(())
+//     }
+// }
