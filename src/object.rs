@@ -37,32 +37,30 @@ impl Object{
     // pub fn allocate_box(&mut self,allocated_box: Vec2<&'a DataPoint>) {
     //     self.allocated_box=Some(allocated_box);
     // }
-    #[allow(unused_variables)]
     pub fn allocate_from_display(&mut self, display: &Display) {
         println!("Allocating to object from display");
         display.initialize_object(self);
     }
     pub fn fill_box(&mut self, new_ch: char) {
         println!("Filling allocated box inside object to be {new_ch}");
-        if let Some(allocated_box) = self.allocated_box.as_ref() {
-            allocated_box.vec.iter().for_each(|inner_vec| {
-                inner_vec.iter().for_each(|data_point| {
-                    data_point.get_ref().update(new_ch);
-                });
+        self.get_allocated_box().vec.iter().for_each(|inner_vec| {
+            inner_vec.iter().for_each(|data_point| {
+                data_point.get_ref().update(new_ch);
             });
-        } else {
+        });
+    }
+    fn get_allocated_box(&self) -> &Vec2<Ptr<DataPoint>> {
+        if let Some(allocated_box) = &self.allocated_box {
+            allocated_box
+        }
+        else {
             panic!("{}", ERROR_OBJECT_EMPTY_BOX);
         }
     }
 }
 impl std::fmt::Display for Object{
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        if let Some(allocated_box) = &self.allocated_box {
-            write!(f,"{}",allocated_box)
-        }
-        else {
-            panic!("{}",ERROR_OBJECT_EMPTY_BOX);
-        }
+        write!(f, "{}",self.get_allocated_box())
     }
 }
 // impl std::fmt::Display for Vec2<*mut DataPoint> {
