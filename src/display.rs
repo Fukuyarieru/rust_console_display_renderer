@@ -223,7 +223,7 @@ impl Display{
     }
     pub fn initialize_object(&self, obj_ref: &mut Object)  {
         println!("Initializing object from display");
-        obj_ref.allocated_box=Some(self.allocate(2,10,10,2));
+        obj_ref.set_allocated_box(self.allocate(2,10,10,2));
         // obj_ref.allocate_box(self.allocate(2,10,2,10));
     }
     // pub fn initialize_boxer(&mut self) {

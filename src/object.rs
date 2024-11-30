@@ -9,7 +9,7 @@ pub const ERROR_OBJECT_EMPTY_BOX:&str="Object does not have an initialized alloc
 pub struct Object {
     pub center_point: Point,
     pub obj_type: ObjType,
-    pub allocated_box: Option<Vec2<Ptr<DataPoint>>>,
+    allocated_box: Option<Vec2<Ptr<DataPoint>>>,
 }
 pub enum ObjType {
     Free { size: (usize, usize) },
@@ -49,13 +49,16 @@ impl Object{
             });
         });
     }
-    fn get_allocated_box(&self) -> &Vec2<Ptr<DataPoint>> {
+    pub fn get_allocated_box(&self) -> &Vec2<Ptr<DataPoint>> {
         if let Some(allocated_box) = &self.allocated_box {
             allocated_box
         }
         else {
             panic!("{}", ERROR_OBJECT_EMPTY_BOX);
         }
+    }
+    pub fn set_allocated_box(&mut self, new_box: Vec2<Ptr<DataPoint>>) {
+        self.allocated_box = Some(new_box);
     }
 }
 impl std::fmt::Display for Object{
