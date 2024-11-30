@@ -13,6 +13,7 @@ mod shape;
 use rand::*;
 use shape::*;
 use std::{env, io::Write};
+use std::path::Iter;
 use text_io::*;
 mod standard;
 
@@ -35,7 +36,7 @@ fn main() {
     let mut display: Display = Display::new(30, 30);
     display.fill_screen('a');
 
-    // println!("{}",display);
+    println!("{}",display);
 
     // display.initialize_object(&mut obj);
     // obj.allocated_box.unwrap().vec.iter().for_each(|inner_vec|inner_vec.iter().for_each(|datapoint|unsafe {

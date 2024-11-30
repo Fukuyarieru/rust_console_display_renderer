@@ -6,7 +6,7 @@ use crate::DataPoint;
 use crate::standard::Ptr;
 
 pub const ERROR_OBJECT_EMPTY_BOX:&str="Object does not have an initialized allocated box";
-pub struct Object{
+pub struct Object {
     pub center_point: Point,
     pub obj_type: ObjType,
     pub allocated_box: Option<Vec2<Ptr<DataPoint>>>,
@@ -19,9 +19,9 @@ pub enum ObjType {
 impl std::fmt::Display for ObjType {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self{
-            ObjType::Free{size: (_,_) } => write!(f, "Free"),
-            ObjType::Shape{shape} => write!(f, "Shape"),
-            ObjType::Menu{menu} => write!(f, "Menu") ,
+            ObjType::Free{size: (_width,_height) } => write!(f, "Free"),
+            ObjType::Shape{ shape: _shape } => write!(f, "Shape"),
+            ObjType::Menu{ menu: _menu } => write!(f, "Menu") ,
         }
     }
 }
@@ -37,63 +37,32 @@ impl Object{
     // pub fn allocate_box(&mut self,allocated_box: Vec2<&'a DataPoint>) {
     //     self.allocated_box=Some(allocated_box);
     // }
-    pub fn get_center_point(&self) -> Point {
-        self.center_point
-    }
     #[allow(unused_variables)]
     pub fn allocate_from_display(&mut self, display: &Display) {
-        todo!()
+        println!("Allocating to object from display");
+        display.initialize_object(self);
     }
     pub fn fill_box(&mut self, new_ch: char) {
         println!("Filling allocated box inside object to be {new_ch}");
-        if let Some(allocated_box) = &mut self.allocated_box {
-            for inner_vec in &allocated_box.vec {
-                for datapoint in inner_vec {
-                    datapoint.get_ref().update(new_ch);
-                    // unsafe {
-                    //     // datapoint.as_mut().unwrap().update(new_ch);
-                    //     let datapoint_ref=&**datapoint;
-                    //     datapoint_ref.update(new_ch);
-                    //     // (**datapoint).update(new_ch);
-                    //
-                    //     // im not sure what's wrong here, and even if its here,
-                    //     // although I got a gut feeling It's in here
-                    // }
-                }
-            }
+        if let Some(allocated_box) = self.allocated_box.as_ref() {
+            allocated_box.vec.iter().for_each(|inner_vec| {
+                inner_vec.iter().for_each(|data_point| {
+                    data_point.get_ref().update(new_ch);
+                });
+            });
         } else {
-            panic!("{}",ERROR_OBJECT_EMPTY_BOX);
+            panic!("{}", ERROR_OBJECT_EMPTY_BOX);
         }
     }
 }
-// pub struct AllocationBox {
-//     pub right: usize,
-//     pub left: usize,
-//     pub top: usize,
-//     pub bottom: usize,
-//     pub allocated_box: Option<Vec2<*mut DataPoint>>,
-// }
 impl std::fmt::Display for Object{
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-
         if let Some(allocated_box) = &self.allocated_box {
             write!(f,"{}",allocated_box)
         }
         else {
             panic!("{}",ERROR_OBJECT_EMPTY_BOX);
         }
-
-
-        // Delegate to the Display implementation for Vec2<Point>
-        // write!(f, "{}", self.allocated_box)
-        //     if let Some(allocated_box) = &self.allocated_box {
-        //         write!(f,"{}",allocated_box)
-        //     } else {
-        //         // what's the point of this?
-        //         let obj_width=self.allocated_box.unwrap_or()
-        //         write!(f,Vec2::new(self.allocated_box.))
-        //     }
-        // }
     }
 }
 // impl std::fmt::Display for Vec2<*mut DataPoint> {

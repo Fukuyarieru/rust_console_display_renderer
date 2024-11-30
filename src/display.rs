@@ -83,10 +83,7 @@ impl Display{
     pub fn pixel(&mut self, point: Point, new_val: char) {
         println!("Placing a pixel on {point} on display");
         // (self.screen.vec[point.x][point.y]).update(new_val);
-        self.screen
-            .index(point.x, point.y)
-            .unwrap_or_else(|err| err)
-            .update(new_val);
+        self.screen.index(point.x,point.y).update(new_val);
     }
 
     pub fn draw_line(&mut self, point1: Point, point2: Point, draw_val: char) {
