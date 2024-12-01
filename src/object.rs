@@ -6,11 +6,13 @@ use crate::DataPoint;
 use crate::standard::Ptr;
 
 pub const ERROR_OBJECT_EMPTY_BOX:&str="Object does not have an initialized allocated box";
+#[derive(Debug)]
 pub struct Object {
     pub center_point: Point,
     pub obj_type: ObjType,
     allocated_box: Option<Vec2<Ptr<DataPoint>>>,
 }
+#[derive(Debug)]
 pub enum ObjType {
     Free { size: (usize, usize) },
     Shape { shape: Shape },
@@ -40,6 +42,12 @@ impl Object{
     pub fn allocate_from_display(&mut self, display: &Display) {
         println!("Allocating to object from display");
         display.initialize_object(self);
+    }
+    pub fn is_not_initialized(&self) -> bool {
+        self.allocated_box.is_none()
+    }
+    pub fn is_initialized(&self) -> bool {
+        self.allocated_box.is_some()
     }
     pub fn fill_box(&mut self, new_ch: char) {
         println!("Filling allocated box inside object to be {new_ch}");

@@ -16,6 +16,7 @@ use std::{env, io::Write};
 use std::path::Iter;
 use text_io::*;
 mod standard;
+mod tests;
 
 use object::*;
 use standard::*;
@@ -23,34 +24,21 @@ use standard::*;
 fn main() {
     env::set_var("RUST_BACKTRACE", "1");
 
-    let a=std::ptr::from_ref("data");
-
-    let temp_datapoint=DataPoint::new('c',3);
-    println!("{}",temp_datapoint);
+    let temp_datapoint = DataPoint::new('c', 3);
+    println!("Initial DataPoint: {}", temp_datapoint);
     temp_datapoint.update('b');
-    // println!("{}", temp_datapoint);
-    // println!("{temp_datapoint}"); // this works
+    println!("Updated DataPoint: {}", temp_datapoint);
 
-    let mut obj=Object::new(Point{x:3,y:4},ObjType::Free{size:(3,3)});
+    let obj = Object::new(Point { x: 3, y: 4 }, ObjType::Free { size: (3, 3) });
+    println!("Created Object: {:?}", obj);
 
     let mut display: Display = Display::new(30, 30);
     display.fill_screen('a');
-
-    println!("{}",display);
+    println!("Filled Display:\n{}", display);
 
     // display.initialize_object(&mut obj);
-    // obj.allocated_box.unwrap().vec.iter().for_each(|inner_vec|inner_vec.iter().for_each(|datapoint|unsafe {
-    //     // Dereference the raw pointer to access `val`
-    //     let data_ref: &DataPoint = &**datapoint;
-    //     println!("{}", data_ref.val.get());
-    // }));
-    // obj.fill_box('c');
-    display.initialize_object(&mut obj);
-    // println!("{}",obj);
-
     display.add_object(obj);
-
-    // println!("{}",display);
+    println!("Display after adding object:\n{}", display);
 
 }
 // pub fn main() {

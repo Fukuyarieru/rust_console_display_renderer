@@ -1,4 +1,4 @@
-#[derive(Clone)]
+#[derive(Clone,Debug)]
 pub struct Vec2<T> {
     pub vec: Vec<Vec<T>>,
     pub max_x: usize,
@@ -42,6 +42,7 @@ impl<T> std::fmt::Display for Vec2<T> where T: std::fmt::Display {
 }
 
 // making this here, I learned, there is std::ptr::*, check it out later, TODO
+#[derive(Clone,Debug)]
 pub struct Ptr<T> {
     ptr: *mut T,
 }
@@ -111,7 +112,7 @@ between the generic implementation of
 //         Ok(())
 //     }
 // }
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub struct Point {
     pub x: usize,
     pub y: usize,

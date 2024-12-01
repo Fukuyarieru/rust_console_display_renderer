@@ -1,5 +1,5 @@
 // use crate::Display::*;
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum Shape {
     Circle {
         radius: f64,

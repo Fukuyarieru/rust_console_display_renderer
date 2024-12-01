@@ -1,4 +1,4 @@
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Menu {
     pub title_bar: String,
     pub title: String,

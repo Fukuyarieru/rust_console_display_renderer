@@ -1,4 +1,4 @@
-use std::cell::Cell;
+use std::cell::{Cell,RefCell};
 use crate::functions::calc_distance;
 use crate::object;
 use crate::object::Object;
@@ -8,50 +8,50 @@ use rand::Rng;
 
 pub const DEFAULT_DATAPOINT_HISTORY_SIZE: usize = 3;
 
+#[derive(Debug)]
 pub struct DataPoint {
-    // CELLLLLLL
     pub val: Cell<char>,
-    pub vals_history: Cell<Vec<char>>,
+    pub vals_history: RefCell<Vec<char>>,
 }
+
 impl DataPoint {
-    // NOTE TO THIS ENTIRE STRUCT: I should remake this later to be more readable
     pub fn new(ch: char, history_size: usize) -> Self {
+        if history_size == 0 {
+            panic!("History size must be greater than 0!");
+        }
         println!("Creating new datapoint with {ch}");
         DataPoint {
             val: Cell::new(ch),
-            vals_history: Cell::new(Vec::with_capacity(history_size)),
+            vals_history: RefCell::new(Vec::with_capacity(history_size)),
         }
     }
+
     pub fn update(&self, new_ch: char) {
-
-        let mut history = self.vals_history.take();
+        println!("Updating DataPoint: Current: {}, New: {}", self.val.get(), new_ch);
+        let current_val = self.val.get();
+        let mut history = self.vals_history.borrow_mut();
+        println!("History before update: {:?}", history);
         if history.len() == history.capacity() {
-            history.remove(0); // Remove the oldest element if at capacity
+            history.remove(0);
         }
-        history.push(self.val.get());
+        history.push(current_val);
         self.val.set(new_ch);
-        self.vals_history.set(history);
-        // println!("Updating datapoint to {new_ch}");
-        // self.vals_history.take().push(self.val.get());
-        // self.val.set(new_ch);
-        // self.vals_history.take().pop();
-
-        // let mut history = self.vals_history.take(); // Take ownership of the Vec
-        // history.remove(0); // Remove the oldest value
-        // history.push(self.val.get()); // Add current value to history
-        // self.val.set(new_ch); // Update the value
-        // self.vals_history.set(history); // Set the modified Vec back
+        println!("History after update: {:?}", history);
     }
+
     pub fn reverse(&self) {
-        let mut history = self.vals_history.take(); // Take ownership of the Vec
+        println!("Reversing DataPoint: Current: {}", self.val.get());
+        let mut history = self.vals_history.borrow_mut();
+        println!("History before reverse: {:?}", history);
         if !history.is_empty() {
-            self.val.set(history[0]); // Update value to the first history entry
-            history.remove(0); // Remove the oldest value
-            history.push(' '); // Add a placeholder
+            let oldest = history.remove(0);
+            self.val.set(oldest);
+            history.push(' ');
         }
-        self.vals_history.set(history); // Set the modified Vec back
+        println!("History after reverse: {:?}", history);
     }
 }
+
 impl std::fmt::Display for DataPoint {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.val.get())
@@ -200,8 +200,9 @@ impl Display{
         }
         reference_vec2
     }
-    pub fn add_object(&mut self,object: Object) {
+    pub fn add_object(&mut self,mut object: Object) {
         println!("Adding object to display");
+        object.allocate_from_display(self);
         self.boxer.push(object);
     }
     pub fn initialize_object(&self, obj_ref: &mut Object)  {
