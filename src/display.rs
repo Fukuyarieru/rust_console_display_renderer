@@ -4,7 +4,7 @@ use crate::object;
 use crate::object::Object;
 use crate::object::ObjType;
 use crate::standard::*;
-use rand::*;
+use rand::Rng;
 
 pub const DEFAULT_DATAPOINT_HISTORY_SIZE: usize = 3;
 
@@ -160,7 +160,6 @@ impl Display{
     }
     pub fn fill_screen(&mut self, new_ch:char) {
         println!("Filling screen with {}", new_ch);
-        // self.screen.vec.iter_mut().for_each(|inner_vec| inner_vec.iter_mut().for_each(|datapoint| datapoint.update(draw_val)));
         for inner_vec in &self.screen.vec {
             for datapoint in inner_vec {
                 datapoint.update(new_ch);
@@ -176,8 +175,7 @@ impl Display{
     ) -> Vec2<Ptr<DataPoint>> {
         println!("Allocating box for object from display");
         // no need to check for bottom and left as we use usizes and they cant be negative
-
-
+        
         // CHECK FOR BOUNDARIES, THIS IS MADE LIKE THIS SO I WON'T NEED TO GET MUTABLE USIZES ON ENTERING
         let right = if right >= self.width { self.screen.vec.len() - 1 } else { right };
         let top = if top >= self.height { self.screen.vec[0].len() - 1 } else { top };
@@ -188,9 +186,7 @@ impl Display{
         if top < bottom {
             panic!("Invalid allocation region: top < bottom");
         }
-
-
-        // let default_datapoint = &mut self.screen.vec[0][0];
+        
         let width = right - left + 1; // Add 1 to include the last column
         let height = top-bottom + 1; // Add 1 to include the last row
 
@@ -202,19 +198,6 @@ impl Display{
                 // reference_vec2.vec[line][row] = raw_pointer;
             }
         }
-        
-        // for each_line in &self.screen.vec {
-        //     for datapoint in each_line {
-        //         let raw_pointer:*mut DataPoint = datapoint as *const DataPoint as *mut DataPoint;
-        //         reference_vec2.vec[
-        //     }
-        // }
-        
-        // for (line_idx, line) in (top..=bottom).enumerate() {
-        //     for (row_idx, row) in (left..=right).enumerate() {
-        //         reference_vec2.vec[line_idx][row_idx] = &mut self.screen.vec[line][row];
-        //     }
-        // }
         reference_vec2
     }
     pub fn add_object(&mut self,object: Object) {
@@ -226,33 +209,10 @@ impl Display{
         obj_ref.set_allocated_box(self.allocate(2,10,10,2));
         // obj_ref.allocate_box(self.allocate(2,10,2,10));
     }
-    // pub fn initialize_boxer(&mut self) {
-    //     for object in &mut self.boxer {
-    //         let ptr=&mut object as *mut &mut Object;
-    //         self.initialize_object(unsafe{*ptr});
-    //     }
-    // }
 }
-// pub fn initialize_display(display: &mut Display) {
-//     for object in display.boxer.iter_mut() {
-//         display.initialize_object(object)
-//     }
-// }
-// Implement Display for the Display struct
 impl std::fmt::Display for Display{
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         // Delegate to the Display implementation for Vec2<Point>
         write!(f, "{}", self.screen)
     }
 }
-// impl std::fmt::Display for Vec2<DataPoint> {
-//     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-//         for inenr_vec in &self.vec {
-//             for datapoint in inenr_vec {
-//                 write!(f, "{}", datapoint)?;
-//             }
-//             writeln!(f)?;
-//         }
-//         Ok(())
-//     }
-// }
