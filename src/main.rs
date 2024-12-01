@@ -17,6 +17,7 @@ use std::path::Iter;
 use text_io::*;
 mod standard;
 mod tests;
+mod chatgptsuggestioncheck;
 
 use object::*;
 use standard::*;
@@ -24,21 +25,25 @@ use standard::*;
 fn main() {
     env::set_var("RUST_BACKTRACE", "1");
 
-    let temp_datapoint = DataPoint::new('c', 3);
-    println!("Initial DataPoint: {}", temp_datapoint);
-    temp_datapoint.update('b');
-    println!("Updated DataPoint: {}", temp_datapoint);
-
-    let obj = Object::new(Point { x: 3, y: 4 }, ObjType::Free { size: (3, 3) });
-    println!("Created Object: {:?}", obj);
-
-    let mut display: Display = Display::new(30, 30);
+    let mut display=Display::new(10,5);
     display.fill_screen('a');
-    println!("Filled Display:\n{}", display);
+    println!("{display}");
 
-    // display.initialize_object(&mut obj);
-    display.add_object(obj);
-    println!("Display after adding object:\n{}", display);
+    // let temp_datapoint = DataPoint::new('c', 3);
+    // println!("Initial DataPoint: {}", temp_datapoint);
+    // temp_datapoint.update('b');
+    // println!("Updated DataPoint: {}", temp_datapoint);
+    //
+    // let obj = Object::new(Point { x: 3, y: 4 }, ObjType::Free { size: (3, 3) });
+    // println!("Created Object: {:?}", obj);
+    //
+    // let mut display: Display = Display::new(30, 30);
+    // display.fill_screen('a');
+    // println!("Filled Display:\n{}", display);
+    //
+    // // display.initialize_object(&mut obj);
+    // display.add_object(obj);
+    // println!("Display after adding object:\n{}", display);
 
 }
 // pub fn main() {
