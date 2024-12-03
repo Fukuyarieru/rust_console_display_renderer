@@ -66,9 +66,8 @@ pub struct Display{
 }
 
 impl Display{
-    // Let's limit for now the use of individual pixels inside the Display struct
     pub fn new(width: usize, height: usize) -> Self {
-        println!("Created new display with the height of {height} and the width of {width}");
+        println!("Creating new display with the height of {height} and the width of {width}");
         Display {
             screen: Vec2::new(
                 width, height,
@@ -83,7 +82,7 @@ impl Display{
     pub fn pixel(&mut self, point: Point, new_val: char) {
         println!("Placing a pixel on {point} on display");
         // (self.screen.vec[point.x][point.y]).update(new_val);
-        self.screen.index(point.x,point.y).update(new_val);
+        self.screen.index_mut_ref(point.x, point.y).update(new_val);
     }
 
     pub fn draw_line(&mut self, point1: Point, point2: Point, draw_val: char) {
@@ -175,10 +174,6 @@ impl Display{
     ) -> Vec2<Ptr<DataPoint>> {
         println!("Allocating box for object from display");
         // no need to check for bottom and left as we use usizes and they cant be negative
-        
-        // CHECK FOR BOUNDARIES, THIS IS MADE LIKE THIS SO I WON'T NEED TO GET MUTABLE USIZES ON ENTERING
-        let right = if right >= self.width { self.screen.vec.len() - 1 } else { right };
-        let top = if top >= self.height { self.screen.vec[0].len() - 1 } else { top };
 
         if right < left  {
             panic!("Invalid allocation region: right < left");
@@ -186,15 +181,22 @@ impl Display{
         if top < bottom {
             panic!("Invalid allocation region: top < bottom");
         }
+
+        // CHECK FOR BOUNDARIES, no mut vars when function gets
+        let right = if right >= self.width { self.screen.vec.len() - 1 } else { right };
+        let top = if top >= self.height { self.screen.vec[0].len() - 1 } else { top };
         
         let width = right - left + 1; // Add 1 to include the last column
         let height = top - bottom + 1; // Add 1 to include the last row
 
         let mut reference_vec2: Vec2<Ptr<DataPoint>> = Vec2::new(width, height);
-        for line in top..=bottom {
-            for row in left..=right {
+
+        for row in top..=bottom {
+            for column in left..=right {
                 // TODO: need to recheck this code here, Ptr::new_from_var
-                reference_vec2.vec[line][row] = Ptr::new_from_ptr(&self.screen.vec[line][row] as *const DataPoint as *mut DataPoint)
+                let datapoint_ref = self.screen.index_ref(column, row);
+                reference_vec2.index_mut_ref(column,row).set_ptr_to_ptr(datapoint_ref as *const DataPoint as *mut DataPoint);
+                // reference_vec2.index(line, column) = Ptr::new_from_ptr(&self.screen.vec[line][column] as *const DataPoint as *mut DataPoint)
                 // let raw_pointer: *mut DataPoint = &self.screen.vec[line][row] as *const DataPoint as *mut DataPoint;
                 // reference_vec2.vec[line][row] = raw_pointer;
             }

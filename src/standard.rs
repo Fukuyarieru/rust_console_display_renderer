@@ -18,14 +18,15 @@ impl<T> Vec2<T> {
             max_y: y_size,
         }
     }
-    pub fn index(&mut self, x: usize, y: usize) -> &mut T {
-        if x>self.max_x{
-            let x=self.max_x;
-        };
-        if y>self.max_y{
-            let y=self.max_y;
-        };
+    pub fn index_mut_ref(&mut self, x: usize, y: usize) -> &mut T {
+        let x= if x > self.max_x { self.max_x } else { x };
+        let y = if y > self.max_y { self.max_y } else { y };
         &mut self.vec[y][x]
+    }
+    pub fn index_ref(&self, x: usize, y: usize) -> &T {
+        let x= if x > self.max_x { self.max_x } else { x };
+        let y = if y > self.max_y { self.max_y } else { y };
+        &self.vec[y][x]
     }
 }
 
