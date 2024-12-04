@@ -5,13 +5,18 @@ pub struct Vec2<T> {
     pub max_y: usize,
 }
 impl<T> Vec2<T> {
-    pub fn new(x_size: usize, y_size: usize) -> Self {
+    pub fn new(x_size: usize, y_size: usize) -> Self where T: Default {
         Self {
             vec: {
                 let mut vec2= Vec::<Vec<T>>::with_capacity(x_size);
                 for _ in 0..x_size {
                     vec2.push(Vec::with_capacity(y_size));
-                };
+                }
+                vec2.iter_mut().for_each(|inner_vec| {
+                    for _ in 0..y_size {
+                        inner_vec.push(Default::default());
+                    }
+                });
                 vec2
             },
             max_x: x_size,
@@ -72,6 +77,16 @@ impl<T> Ptr<T> {
     }
     pub fn make_ptr_from_var(var: T) -> *mut T {
         &var as *const T as  *mut T
+    }
+}
+impl<T> Default for Ptr<T>
+where
+    T: Default,
+{
+    fn default() -> Self {
+        Self {
+            ptr: std::ptr::null_mut(),
+        }
     }
 }
 impl<T> std::fmt::Display for Ptr<T> where T: std::fmt::Display {

@@ -9,6 +9,7 @@ use rand::Rng;
 pub const DEFAULT_DATAPOINT_HISTORY_SIZE: usize = 3;
 
 #[derive(Debug)]
+#[derive(Default)]
 pub struct DataPoint {
     pub val: Cell<char>,
     pub vals_history: RefCell<Vec<char>>,
@@ -27,15 +28,32 @@ impl DataPoint {
     }
 
     pub fn update(&self, new_ch: char) {
-        println!("Updating DataPoint: Current: {}, New: {}", self.val.get(), new_ch);
-        let current_val = self.val.get();
-        let mut history = self.vals_history.borrow_mut();
+
+        std::io::Write::flush(&mut std::io::stdout()).unwrap();
+        
+        let current_val=self.val.get();
+        let mut history =self.vals_history.borrow_mut();
+        println!("Updating DataPoint: Current: {}, New: {}", current_val, new_ch);
         println!("History before update: {:?}", history);
-        if history.len() == history.capacity() {
+        println!("History Capacity: {}, History Length: {}", history.capacity(), history.len());
+        
+        // TODO, do this better
+        if history.capacity() == 0 {
+            history.push(' ');
+        }
+        
+        
+        // push() adds to the end of an array
+        // pop() removes the end of the array (and returns it)
+        // remove(index) removes the index and returns it
+        
+        if history.capacity() == history.len() {
             history.remove(0);
         }
+
         history.push(current_val);
         self.val.set(new_ch);
+        println!("Datapoint updated to have {}",self.val.get());
         println!("History after update: {:?}", history);
     }
 
@@ -69,7 +87,7 @@ impl Display{
     pub fn new(width: usize, height: usize) -> Self {
         println!("Creating new display with the height of {height} and the width of {width}");
         Display {
-            screen: Vec2::new(
+            screen: Vec2::<DataPoint>::new(
                 width, height,
                 // DataPoint::create('#', DEFAULT_DATAPOINT_HISTORY_SIZE),
             ),
@@ -159,11 +177,13 @@ impl Display{
     }
     pub fn fill_screen(&mut self, new_ch:char) {
         println!("Filling screen with {}", new_ch);
-        for inner_vec in &self.screen.vec {
-            for datapoint in inner_vec {
-                datapoint.update(new_ch);
-            }
-        }
+        // for inner_vec in &self.screen.vec {
+        //     for datapoint in inner_vec {
+        //         datapoint.update(new_ch);
+        //     }
+        // }
+        // TODO, PROBLEM IN THIS FUNCTION, PROBABLY
+        self.screen.vec.iter().for_each(|inner_vec| {inner_vec.iter().for_each(|datapoint|datapoint.update(new_ch))});
     }
     pub fn allocate(
         &self,

@@ -17,7 +17,7 @@ use std::path::Iter;
 use text_io::*;
 mod standard;
 mod tests;
-mod chatgptsuggestioncheck;
+// mod chatgptsuggestioncheck;
 
 use object::*;
 use standard::*;
@@ -25,8 +25,18 @@ use standard::*;
 fn main() {
     env::set_var("RUST_BACKTRACE", "1");
 
-    let mut display=Display::new(10,5);
+    println!("DEFAULT DATAPOINT {}",DataPoint::default());
+
+    let mut display=Display::new(20,20);
     display.fill_screen('a');
+    println!("{display}");
+    
+    display.fill_screen('b');
+    println!("{display}");
+
+    let mut object=Object::new(Point{x:10,y:10},ObjType::Free {size: (4,5)});
+    object.allocate_from_display(&display);
+    object.fill_box('c');
     println!("{display}");
 
     // let temp_datapoint = DataPoint::new('c', 3);
