@@ -25,13 +25,22 @@ use standard::*;
 fn main() {
     env::set_var("RUST_BACKTRACE", "1");
 
-    println!("DEFAULT DATAPOINT {}",DataPoint::default());
+    let def_dat=DataPoint::default();
+    println!("DEFAULT DATAPOINT {}",def_dat);
+    let ptr=Ptr::new_from_val(&def_dat);
+    def_dat.update('c');
+    println!("{def_dat}");
+    ptr.get_ref().update('b');
+    println!("{def_dat}");
 
-    let mut display=Display::new(20,20);
+    let mut display=Display::new(20,40);
     display.fill_screen('a');
     println!("{display}");
     
     display.fill_screen('b');
+    println!("{display}");
+
+    display.draw_line(Point{x:3,y:4},Point{x:10,y:15},' ');
     println!("{display}");
 
     let mut object=Object::new(Point{x:10,y:10},ObjType::Free {size: (4,5)});

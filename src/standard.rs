@@ -53,8 +53,8 @@ pub struct Ptr<T> {
     ptr: *mut T,
 }
 impl<T> Ptr<T> {
-    pub fn new_from_val(var: T) -> Self {
-        Self { ptr : &var as *const T as *mut T }
+    pub fn new_from_val(var: &T) -> Self {
+        Self { ptr : var as *const T as *mut T }
     }
     pub fn new_from_ptr(ptr: *mut T) -> Self {
         Self { ptr }
@@ -74,6 +74,8 @@ impl<T> Ptr<T> {
     pub fn get_ref(&self) -> &T {
         // AAAAAAAA
             unsafe {self.ptr.as_ref().unwrap()}
+        // unsafe{&*self.ptr}
+        /* error: process didn't exit successfully: `target\debug\attempt_at_something_idk.exe` (exit code: 0xc0000005, STATUS_ACCESS_VIOLATION) */
     }
     pub fn make_ptr_from_var(var: T) -> *mut T {
         &var as *const T as  *mut T

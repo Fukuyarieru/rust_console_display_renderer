@@ -32,12 +32,12 @@ impl DataPoint {
 
         let current_val = self.val.get();
         let mut history = self.vals_history.borrow_mut();
-        println!("[DEBUG] Updating DataPoint: Current: {}, New: {}", current_val, new_ch);
-        println!("[DEBUG] History before update: {:?}", history);
-        println!("[DEBUG] History Capacity: {}, History Length: {}", history.capacity(), history.len());
+        // println!("[DEBUG] Updating DataPoint: Current: {}, New: {}", current_val, new_ch);
+        // println!("[DEBUG] History before update: {:?}", history);
+        // println!("[DEBUG] History Capacity: {}, History Length: {}", history.capacity(), history.len());
 
         if history.capacity() == 0 {
-            println!("[DEBUG] History capacity is 0. Adding a placeholder.");
+            // println!("[DEBUG] History capacity is 0. Adding a placeholder.");
             history.push(' ');
         }
 
@@ -53,8 +53,8 @@ impl DataPoint {
 
         history.push(current_val);
         self.val.set(new_ch);
-        println!("[DEBUG] DataPoint updated to {}", self.val.get());
-        println!("[DEBUG] History after update: {:?}", history);
+        // println!("[DEBUG] DataPoint updated to {}", self.val.get());
+        // println!("[DEBUG] History after update: {:?}", history);
     }
 
     pub fn reverse(&self) {
