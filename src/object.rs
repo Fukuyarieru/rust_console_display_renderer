@@ -29,7 +29,7 @@ impl std::fmt::Display for ObjType {
 }
 impl Object{
     pub fn new(center_point: Point, obj_type: ObjType) -> Self {
-        println!("Creating new object of type {obj_type} and center of {center_point}");
+        println!("[DEBUG] Creating new object of type {obj_type} and center of {center_point}");
         Self {
             center_point,
             obj_type,
@@ -40,17 +40,21 @@ impl Object{
     //     self.allocated_box=Some(allocated_box);
     // }
     pub fn allocate_from_display(&mut self, display: &Display) {
-        println!("Allocating to object from display");
+        println!("[DEBUG] Allocating to object from display");
         display.initialize_object(self);
     }
     pub fn is_not_initialized(&self) -> bool {
-        self.allocated_box.is_none()
+        let result = self.allocated_box.is_none();
+        println!("[DEBUG] Checking if object is not initialized: {result}");
+        result
     }
     pub fn is_initialized(&self) -> bool {
-        self.allocated_box.is_some()
+        let result = self.allocated_box.is_some();
+        println!("[DEBUG] Checking if object is initialized: {result}");
+        result
     }
     pub fn fill_box(&mut self, new_ch: char) {
-        println!("Filling allocated box inside object to be {new_ch}");
+        println!("[DEBUG] Filling allocated box inside object to be {new_ch}");
         self.get_allocated_box().vec.iter().for_each(|inner_vec| {
             inner_vec.iter().for_each(|data_point| {
                 data_point.get_ref().update(new_ch);
@@ -59,13 +63,16 @@ impl Object{
     }
     pub fn get_allocated_box(&self) -> &Vec2<Ptr<DataPoint>> {
         if let Some(allocated_box) = &self.allocated_box {
+            println!("[DEBUG] Accessing allocated box");
             allocated_box
         }
         else {
+            println!("[DEBUG] Attempt to access uninitialized allocated box");
             panic!("{}", ERROR_OBJECT_EMPTY_BOX);
         }
     }
     pub fn set_allocated_box(&mut self, new_box: Vec2<Ptr<DataPoint>>) {
+        println!("[DEBUG] Setting allocated box for object");
         self.allocated_box = Some(new_box);
     }
 }

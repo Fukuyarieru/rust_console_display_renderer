@@ -18,9 +18,9 @@ pub struct DataPoint {
 impl DataPoint {
     pub fn new(ch: char, history_size: usize) -> Self {
         if history_size == 0 {
-            panic!("History size must be greater than 0!");
+            panic!("[ERROR] History size must be greater than 0!");
         }
-        println!("Creating new datapoint with {ch}");
+        println!("[DEBUG] Creating new DataPoint with character: {ch}");
         DataPoint {
             val: Cell::new(ch),
             vals_history: RefCell::new(Vec::with_capacity(history_size)),
@@ -28,45 +28,46 @@ impl DataPoint {
     }
 
     pub fn update(&self, new_ch: char) {
-
         std::io::Write::flush(&mut std::io::stdout()).unwrap();
-        
-        let current_val=self.val.get();
-        let mut history =self.vals_history.borrow_mut();
-        println!("Updating DataPoint: Current: {}, New: {}", current_val, new_ch);
-        println!("History before update: {:?}", history);
-        println!("History Capacity: {}, History Length: {}", history.capacity(), history.len());
-        
-        // TODO, do this better
+
+        let current_val = self.val.get();
+        let mut history = self.vals_history.borrow_mut();
+        println!("[DEBUG] Updating DataPoint: Current: {}, New: {}", current_val, new_ch);
+        println!("[DEBUG] History before update: {:?}", history);
+        println!("[DEBUG] History Capacity: {}, History Length: {}", history.capacity(), history.len());
+
         if history.capacity() == 0 {
+            println!("[DEBUG] History capacity is 0. Adding a placeholder.");
             history.push(' ');
+        }
+
+        if history.capacity() == history.len() {
+            println!("[DEBUG] History is full. Removing oldest entry: {:?}", history[0]);
+            history.remove(0);
         }
         
         
         // push() adds to the end of an array
         // pop() removes the end of the array (and returns it)
         // remove(index) removes the index and returns it
-        
-        if history.capacity() == history.len() {
-            history.remove(0);
-        }
 
         history.push(current_val);
         self.val.set(new_ch);
-        println!("Datapoint updated to have {}",self.val.get());
-        println!("History after update: {:?}", history);
+        println!("[DEBUG] DataPoint updated to {}", self.val.get());
+        println!("[DEBUG] History after update: {:?}", history);
     }
 
     pub fn reverse(&self) {
-        println!("Reversing DataPoint: Current: {}", self.val.get());
+        println!("[DEBUG] Reversing DataPoint: Current: {}", self.val.get());
         let mut history = self.vals_history.borrow_mut();
-        println!("History before reverse: {:?}", history);
+        println!("[DEBUG] History before reverse: {:?}", history);
         if !history.is_empty() {
             let oldest = history.remove(0);
+            println!("[DEBUG] Oldest value removed: {oldest}");
             self.val.set(oldest);
             history.push(' ');
         }
-        println!("History after reverse: {:?}", history);
+        println!("[DEBUG] History after reverse: {:?}", history);
     }
 }
 
@@ -85,7 +86,7 @@ pub struct Display{
 
 impl Display{
     pub fn new(width: usize, height: usize) -> Self {
-        println!("Creating new display with the height of {height} and the width of {width}");
+        println!("[DEBUG] Creating new display with width: {}, height: {}", width, height);
         Display {
             screen: Vec2::<DataPoint>::new(
                 width, height,
@@ -98,13 +99,13 @@ impl Display{
     }
     // in the case that the index point is outside the screen, no action would happen
     pub fn pixel(&mut self, point: Point, new_val: char) {
-        println!("Placing a pixel on {point} on display");
+        println!("[DEBUG] Placing a pixel at {:?} with value '{}'", point, new_val);
         // (self.screen.vec[point.x][point.y]).update(new_val);
         self.screen.index_mut_ref(point.x, point.y).update(new_val);
     }
 
     pub fn draw_line(&mut self, point1: Point, point2: Point, draw_val: char) {
-        println!("Drawing a line from {point1} to {point2} on display");
+        println!("[DEBUG] Drawing line from {:?} to {:?} with value '{}'", point1, point2, draw_val);
         // redeclaration
         let x1 = point1.x;
         let x2 = point2.x;
@@ -144,14 +145,14 @@ impl Display{
         }
     }
     pub fn get_center(&self) -> Point {
-        println!("Getting the center point of display");
+        println!("[DEBUG] Getting center of display");
         Point {
             x: self.width / 2,
             y: self.height / 2,
         }
     }
     pub fn total_area(&self) -> usize {
-        println!("Getting total area of display");
+        println!("[DEBUG] Getting total area of display");
         self.width * self.height
     }
     // TODO, need to implement newly using Point s
@@ -165,7 +166,7 @@ impl Display{
     //    
     // }
     pub fn random_line(&mut self, draw_val: char) -> (Point, Point) {
-        println!("Drawing a random line on screen");
+        println!("[DEBUG] Generating random line on display");
         // function returns the random line that was made
         let mut rng = rand::thread_rng();
         let rx1 = rng.gen_range(0..self.screen.max_x);
@@ -176,7 +177,7 @@ impl Display{
         (Point { x: rx1, y: ry1 }, Point { x: rx2, y: ry2 })
     }
     pub fn fill_screen(&mut self, new_ch:char) {
-        println!("Filling screen with {}", new_ch);
+        println!("[DEBUG] Filling screen with '{}'", new_ch);
         // for inner_vec in &self.screen.vec {
         //     for datapoint in inner_vec {
         //         datapoint.update(new_ch);
@@ -192,14 +193,14 @@ impl Display{
         top: usize,
         bottom: usize,
     ) -> Vec2<Ptr<DataPoint>> {
-        println!("Allocating box for object from display");
+        println!("[DEBUG] Allocating box from display");
         // no need to check for bottom and left as we use usizes and they cant be negative
 
         if right < left  {
-            panic!("Invalid allocation region: right < left");
+            panic!("[ERROR] Invalid allocation region: right < left");
         }
         if top < bottom {
-            panic!("Invalid allocation region: top < bottom");
+            panic!("[ERROR] Invalid allocation region: top < bottom");
         }
 
         // CHECK FOR BOUNDARIES, no mut vars when function gets
@@ -221,15 +222,16 @@ impl Display{
                 // reference_vec2.vec[line][row] = raw_pointer;
             }
         }
+        println!("[DEBUG] Allocation complete. Width: {}, Height: {}", width, height);
         reference_vec2
     }
     pub fn add_object(&mut self,mut object: Object) {
-        println!("Adding object to display");
+        println!("[DEBUG] Adding object to display");
         object.allocate_from_display(self);
         self.boxer.push(object);
     }
     pub fn initialize_object(&self, obj_ref: &mut Object)  {
-        println!("Initializing object from display");
+        println!("[DEBUG] Initializing object from display");
         obj_ref.set_allocated_box(self.allocate(2,10,10,2));
         // obj_ref.allocate_box(self.allocate(2,10,2,10));
     }
