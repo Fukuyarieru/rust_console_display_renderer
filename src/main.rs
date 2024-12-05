@@ -33,7 +33,7 @@ fn main() {
     ptr.get_ref().update('b');
     println!("{def_dat}");
 
-    let mut display=Display::new(20,40);
+    let mut display=Display::new(10,40);
     display.fill_screen('a');
     println!("{display}");
     
