@@ -1,4 +1,5 @@
 use std::cell::{Cell,RefCell};
+use std::ops::Index;
 use crate::functions::calc_distance;
 use crate::object;
 use crate::object::Object;
@@ -234,6 +235,11 @@ impl Display{
         println!("[DEBUG] Initializing object from display");
         obj_ref.set_allocated_box(self.allocate(2,10,10,2));
         // obj_ref.allocate_box(self.allocate(2,10,2,10));
+    }
+    pub fn initialize_boxer(&mut self) {
+        // self.boxer.iter().for_each(|object|object.allocate_from_display(self));
+        // self.boxer.iter_mut().for_each(|object|self.initialize_object(object));
+        todo!()
     }
 }
 impl std::fmt::Display for Display{
