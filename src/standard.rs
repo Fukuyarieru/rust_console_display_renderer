@@ -8,9 +8,9 @@ impl<T> Vec2<T> {
     pub fn new(x_size: usize, y_size: usize) -> Self where T: Default {
         Self {
             vec: {
-                let mut vec2= Vec::<Vec<T>>::with_capacity(x_size);
+                let mut vec2= Vec::<Vec<T>>::with_capacity(y_size);
                 for _ in 0..x_size {
-                    vec2.push(Vec::with_capacity(y_size));
+                    vec2.push(Vec::with_capacity(x_size));
                 }
                 vec2.iter_mut().for_each(|inner_vec| {
                     for _ in 0..y_size {
@@ -26,12 +26,12 @@ impl<T> Vec2<T> {
     pub fn index_mut_ref(&mut self, x: usize, y: usize) -> &mut T {
         let x= if x > self.max_x { self.max_x } else { x };
         let y = if y > self.max_y { self.max_y } else { y };
-        &mut self.vec[y][x]
+        &mut self.vec[x][y]
     }
     pub fn index_ref(&self, x: usize, y: usize) -> &T {
         let x= if x > self.max_x { self.max_x } else { x };
         let y = if y > self.max_y { self.max_y } else { y };
-        &self.vec[y][x]
+        &self.vec[x][y]
     }
 }
 
