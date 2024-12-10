@@ -23,7 +23,9 @@ use object::*;
 use standard::*;
 
 fn main() {
+    // env::
     env::set_var("RUST_BACKTRACE", "1");
+    // env::set_var("RUST_BACKTRACE", "full");
 
     let def_dat=DataPoint::default();
     println!("DEFAULT DATAPOINT {}",def_dat);

@@ -56,8 +56,8 @@ impl Object{
     pub fn fill_box(&mut self, new_ch: char) {
         println!("[DEBUG] Filling allocated box inside object to be {new_ch}");
         self.get_allocated_box().vec.iter().for_each(|inner_vec| {
-            inner_vec.iter().for_each(|datapoint| {
-                datapoint.get_ref().update(new_ch);
+            inner_vec.iter().for_each(|dat_ptr| {
+                dat_ptr.get_ref().update(new_ch);
                 //TODO, the Ptr does not point to the correct place, check how Ptr are craeted on arrays, and check their mutations throughout the code
             });
         });

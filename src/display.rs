@@ -217,7 +217,7 @@ impl Display{
             for column in left..=right {
                 // TODO: need to recheck this code here, Ptr::new_from_var
                 let datapoint_ref = self.screen.index_ref(column, row);
-                reference_vec2.index_mut_ref(column,row).set_ptr_to_ptr(datapoint_ref as *const DataPoint as *mut DataPoint);
+                reference_vec2.index_mut_ref(column,row).set_ptr_to_var(datapoint_ref);
                 // reference_vec2.index(line, column) = Ptr::new_from_ptr(&self.screen.vec[line][column] as *const DataPoint as *mut DataPoint)
                 // let raw_pointer: *mut DataPoint = &self.screen.vec[line][row] as *const DataPoint as *mut DataPoint;
                 // reference_vec2.vec[line][row] = raw_pointer;

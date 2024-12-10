@@ -9,14 +9,27 @@ impl<T> Vec2<T> {
         Self {
             vec: {
                 let mut vec2= Vec::<Vec<T>>::with_capacity(x_size);
-                for _ in 0..x_size {
-                    vec2.push(Vec::with_capacity(y_size));
-                }
-                vec2.iter_mut().for_each(|inner_vec| {
-                    for _ in 0..y_size {
-                        inner_vec.push(Default::default());
-                    }
+
+                vec2.resize_with(x_size, || {
+                    let mut inner_vec = Vec::new();
+                    inner_vec.resize_with(y_size, T::default);
+                    inner_vec
                 });
+
+                // vec2.resize_with(x_size, Vec::resize_with(&mut Vec::new(), y_size,  T::default) );
+
+                // vec2.fill_with(||Vec::with_capacity(y_size));
+                // vec2.iter_mut().for_each(|inner_vec|inner_vec.fill_with(T::default));
+
+                // for _ in 0..x_size {
+                //     vec2.push(Vec::with_capacity(y_size));
+                // }
+                // vec2.iter_mut().for_each(|inner_vec| {
+                //     for _ in 0..y_size {
+                //         inner_vec.push(Default::default());
+                //     }
+                // });
+                // vec2
                 vec2
             },
             max_x: x_size,
@@ -24,8 +37,8 @@ impl<T> Vec2<T> {
         }
     }
     pub fn index_mut_ref(&mut self, x: usize, y: usize) -> &mut T {
-        let x= if x > self.max_x { self.max_x } else { x };
-        let y = if y > self.max_y { self.max_y } else { y };
+        let x= if x >= self.max_x { self.max_x - 1 } else { x };
+        let y = if y >= self.max_y { self.max_y - 1 } else { y };
         &mut self.vec[x][y]
     }
     pub fn index_ref(&self, x: usize, y: usize) -> &T {
@@ -59,8 +72,8 @@ impl<T> Ptr<T> {
     pub fn new_from_ptr(ptr: *mut T) -> Self {
         Self { ptr }
     }
-    pub fn set_ptr_to_var(&mut self, var: T) {
-        self.ptr = &var as *const T as *mut T;
+    pub fn set_ptr_to_var(&mut self, var: &T) {
+        self.ptr = var as *const T as *mut T;
     }
     pub fn set_ptr_to_ptr(&mut self,ptr: *mut T) {
         self.ptr = ptr;
