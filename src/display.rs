@@ -33,7 +33,7 @@ impl DataPoint {
 
         let current_val = self.val.get();
         let mut history = self.vals_history.borrow_mut();
-        // println!("[DEBUG] Updating DataPoint: Current: {}, New: {}", current_val, new_ch);
+        println!("[DEBUG] Updating DataPoint: Current: {}, New: {}", current_val, new_ch);
         // println!("[DEBUG] History before update: {:?}", history);
         // println!("[DEBUG] History Capacity: {}, History Length: {}", history.capacity(), history.len());
 
@@ -43,7 +43,7 @@ impl DataPoint {
         }
 
         if history.capacity() == history.len() {
-            println!("[DEBUG] History is full. Removing oldest entry: {:?}", history[0]);
+            // println!("[DEBUG] History is full. Removing oldest entry: {:?}", history[0]);
             history.remove(0);
         }
         
@@ -61,14 +61,14 @@ impl DataPoint {
     pub fn reverse(&self) {
         println!("[DEBUG] Reversing DataPoint: Current: {}", self.val.get());
         let mut history = self.vals_history.borrow_mut();
-        println!("[DEBUG] History before reverse: {:?}", history);
+        // println!("[DEBUG] History before reverse: {:?}", history);
         if !history.is_empty() {
             let oldest = history.remove(0);
-            println!("[DEBUG] Oldest value removed: {oldest}");
+            // println!("[DEBUG] Oldest value removed: {oldest}");
             self.val.set(oldest);
             history.push(' ');
         }
-        println!("[DEBUG] History after reverse: {:?}", history);
+        // println!("[DEBUG] History after reverse: {:?}", history);
     }
 }
 
