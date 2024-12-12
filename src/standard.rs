@@ -1,14 +1,17 @@
-#[derive(Clone,Debug)]
+#[derive(Clone, Debug)]
 pub struct Vec2<T> {
     pub vec: Vec<Vec<T>>,
     pub max_x: usize,
     pub max_y: usize,
 }
 impl<T> Vec2<T> {
-    pub fn new(x_size: usize, y_size: usize) -> Self where T: Default {
+    pub fn new(x_size: usize, y_size: usize) -> Self
+    where
+        T: Default,
+    {
         Self {
             vec: {
-                let mut vec2= Vec::<Vec<T>>::with_capacity(x_size);
+                let mut vec2 = Vec::<Vec<T>>::with_capacity(x_size);
 
                 vec2.resize_with(x_size, || {
                     let mut inner_vec = Vec::new();
@@ -37,18 +40,21 @@ impl<T> Vec2<T> {
         }
     }
     pub fn index_mut_ref(&mut self, x: usize, y: usize) -> &mut T {
-        let x= if x >= self.max_x { self.max_x - 1 } else { x };
+        let x = if x >= self.max_x { self.max_x - 1 } else { x };
         let y = if y >= self.max_y { self.max_y - 1 } else { y };
         &mut self.vec[x][y]
     }
     pub fn index_ref(&self, x: usize, y: usize) -> &T {
-        let x= if x > self.max_x { self.max_x } else { x };
+        let x = if x > self.max_x { self.max_x } else { x };
         let y = if y > self.max_y { self.max_y } else { y };
         &self.vec[x][y]
     }
 }
 
-impl<T> std::fmt::Display for Vec2<T> where T: std::fmt::Display {
+impl<T> std::fmt::Display for Vec2<T>
+where
+    T: std::fmt::Display,
+{
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         for inner_vec in &self.vec {
             for var in inner_vec {
@@ -62,13 +68,12 @@ impl<T> std::fmt::Display for Vec2<T> where T: std::fmt::Display {
 
 // making this here, I learned, there is std::ptr::*, check it out later, TODO
 
-
 // reimplementation of Ptr using Rc<RefCell<T>>
 
-use std::rc::Rc;
 use std::cell::RefCell;
+use std::rc::Rc;
 
-#[derive(Clone,Debug)]
+#[derive(Clone, Debug)]
 pub struct Ptr<T> {
     ptr: Rc<RefCell<T>>, // Shared, mutable reference to T
 }
@@ -81,22 +86,24 @@ impl<T> Ptr<T> {
         }
     }
 
-    // Create a new Ptr from an Rc<RefCell<T>>
-    // probably useful
-    pub fn new_from_ptr(ptr: Rc<RefCell<T>>) -> Self {
-        Self { ptr }
-    }
+    // // Create a new Ptr from an Rc<RefCell<T>>
+    // // probably useful
+    // // unuseful
+    // pub fn new_from_ptr(ptr: Rc<RefCell<T>>) -> Self {
+    //     Self { ptr }
+    // }
 
     // Set the value of the Ptr to a new value
-    pub fn set_ptr_to_var(&self, var: T) {
+    pub fn set_ptr_to_var(&self, var: &T) {
         let mut value = self.ptr.borrow_mut();
-        *value = var;
+        *value = *var;
     }
 
-    // Clone an existing Rc<RefCell<T>> and set it as the pointer
-    pub fn set_ptr_to_ptr(&mut self, ptr: Rc<RefCell<T>>) {
-        self.ptr = ptr;
-    }
+    // // Clone an existing Rc<RefCell<T>> and set it as the pointer
+    // // unuseful
+    // pub fn set_ptr_to_ptr(&mut self, ptr: Rc<RefCell<T>>) {
+    //     self.ptr = ptr;
+    // }
 
     // Get a cloned Rc<RefCell<T>> for shared ownership
     // forget about implementation using &T for now, it's probably a flawed idea
@@ -123,12 +130,12 @@ impl<T> Ptr<T> {
         self.ptr.borrow_mut()
     }
 
-    // Helper to create an Rc<RefCell<T>> from a value
-    pub fn make_ptr_from_var(var: T) -> Rc<RefCell<T>> {
-        Rc::new(RefCell::new(var))
-    }
+    // // Helper to create an Rc<RefCell<T>> from a value
+    // // unuseful
+    // pub fn make_ptr_from_var(var: T) -> Rc<RefCell<T>> {
+    //     Rc::new(RefCell::new(var))
+    // }
 }
-
 
 // pub struct Ptr<T> {
 //     ptr: *mut T,
@@ -157,7 +164,7 @@ impl<T> Ptr<T> {
 //         if self.ptr.is_null() {
 //             panic!("Attempting to dereference a null pointer");
 //         }
-//         
+//
 //             unsafe {self.ptr.as_ref().unwrap()}
 //         // unsafe{&*self.ptr}
 //         /* error: process didn't exit successfully: `target\debug\attempt_at_something_idk.exe` (exit code: 0xc0000005, STATUS_ACCESS_VIOLATION) */
@@ -166,30 +173,33 @@ impl<T> Ptr<T> {
 //         &var as *const T as  *mut T
 //     }
 // }
+//
+//
+// Why the fuck do i need this?
 impl<T> Default for Ptr<T>
 where
     T: Default,
 {
     fn default() -> Self {
         Self {
-            ptr: std::ptr::null_mut(),
+            ptr: Rc::new(RefCell::new(T::default())),
         }
     }
 }
-impl<T> std::fmt::Display for Ptr<T> where T: std::fmt::Display {
+impl<T> std::fmt::Display for Ptr<T>
+where
+    T: std::fmt::Display,
+{
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{}", self.get_var())
+        write!(f, "{}", self.get_ref())
     }
 }
 
-
-
-pub trait NotAPtr{}
-/* a trait to make sure to distinguish 
+pub trait NotAPtr {}
+/* a trait to make sure to distinguish
 between the generic implementation of
  fmt of Vec2 to its other implementation
   inside the Object code */
-
 
 // TODO: play around here to fix these trait rules
 
