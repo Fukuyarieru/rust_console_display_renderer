@@ -11,6 +11,7 @@ pub struct Menu {
 }
 
 impl Menu {
+    #[allow(unused_variables)]
     pub fn new(border_ch: char) -> Self {
         todo!();
     }

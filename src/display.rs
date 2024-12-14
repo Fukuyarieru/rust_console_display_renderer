@@ -32,10 +32,10 @@ impl DataPoint {
 
         let current_val = self.val.get();
         let mut history = self.vals_history.borrow_mut();
-        println!(
-            "[DEBUG] Updating DataPoint: Current: {}, New: {}",
-            current_val, new_ch
-        );
+        // println!(
+        //     "[DEBUG] Updating DataPoint: Current: {}, New: {}",
+        //     current_val, new_ch
+        // );
         // println!("[DEBUG] History before update: {:?}", history);
         // println!("[DEBUG] History Capacity: {}, History Length: {}", history.capacity(), history.len());
 
@@ -241,7 +241,7 @@ impl Display {
                 let datapoint_ref = self.screen.index_ref(column, row);
                 reference_vec2
                     .index_mut_ref(column, row)
-                    .set_ptr_to_var(*datapoint_ref);
+                    .set_ptr_to_var(datapoint_ref);
                 // reference_vec2.index(line, column) = Ptr::new_from_ptr(&self.screen.vec[line][column] as *const DataPoint as *mut DataPoint)
                 // let raw_pointer: *mut DataPoint = &self.screen.vec[line][row] as *const DataPoint as *mut DataPoint;
                 // reference_vec2.vec[line][row] = raw_pointer;

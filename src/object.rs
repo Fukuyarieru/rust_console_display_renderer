@@ -1,11 +1,11 @@
 use crate::display::Display;
 use crate::menu::Menu;
 use crate::shape::Shape;
+use crate::standard::Ptr;
 use crate::standard::*;
 use crate::DataPoint;
-use crate::standard::Ptr;
 
-pub const ERROR_OBJECT_EMPTY_BOX:&str="Object does not have an initialized allocated box";
+pub const ERROR_OBJECT_EMPTY_BOX: &str = "Object does not have an initialized allocated box";
 #[derive(Debug)]
 pub struct Object {
     pub center_point: Point,
@@ -20,14 +20,16 @@ pub enum ObjType {
 }
 impl std::fmt::Display for ObjType {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        match self{
-            ObjType::Free{size: (_width,_height) } => write!(f, "Free"),
-            ObjType::Shape{ shape: _shape } => write!(f, "Shape"),
-            ObjType::Menu{ menu: _menu } => write!(f, "Menu") ,
+        match self {
+            ObjType::Free {
+                size: (_width, _height),
+            } => write!(f, "Free"),
+            ObjType::Shape { shape: _shape } => write!(f, "Shape"),
+            ObjType::Menu { menu: _menu } => write!(f, "Menu"),
         }
     }
 }
-impl Object{
+impl Object {
     pub fn new(center_point: Point, obj_type: ObjType) -> Self {
         println!("[DEBUG] Creating new object of type {obj_type} and center of {center_point}");
         Self {
@@ -54,7 +56,7 @@ impl Object{
         result
     }
     pub fn fill_box(&mut self, new_ch: char) {
-        println!("[DEBUG] Filling allocated box inside object to be {new_ch}");
+        // println!("[DEBUG] Filling allocated box inside object to be {new_ch}");
         self.get_allocated_box().vec.iter().for_each(|inner_vec| {
             inner_vec.iter().for_each(|dat_ptr| {
                 dat_ptr.get_ref().update(new_ch);
@@ -66,8 +68,7 @@ impl Object{
         if let Some(allocated_box) = &self.allocated_box {
             println!("[DEBUG] Accessing allocated box");
             allocated_box
-        }
-        else {
+        } else {
             println!("[DEBUG] Attempt to access uninitialized allocated box");
             panic!("{}", ERROR_OBJECT_EMPTY_BOX);
         }
@@ -77,9 +78,9 @@ impl Object{
         self.allocated_box = Some(new_box);
     }
 }
-impl std::fmt::Display for Object{
+impl std::fmt::Display for Object {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}",self.get_allocated_box())
+        write!(f, "{}", self.get_allocated_box())
     }
 }
 // impl std::fmt::Display for Vec2<*mut DataPoint> {

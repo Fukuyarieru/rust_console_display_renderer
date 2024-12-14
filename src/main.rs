@@ -38,7 +38,7 @@ fn main() {
     let mut display=Display::new(10,40);
     display.fill_screen('a');
     println!("{display}");
-    
+
     display.fill_screen('b');
     println!("{display}");
 
