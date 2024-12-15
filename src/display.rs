@@ -8,6 +8,7 @@ use std::cell::{Cell, RefCell};
 use std::ops::Index;
 
 pub const DEFAULT_DATAPOINT_HISTORY_SIZE: usize = 3;
+pub const DEFAULT_RENDERER_ACTION_HISTORY_SIZE: usize = 50;
 
 #[derive(Debug, Default)]
 pub struct DataPoint {
@@ -28,6 +29,7 @@ impl DataPoint {
     }
 
     pub fn update(&self, new_ch: char) {
+       // TODO consider removing the debug lines in this function and the similiar
         std::io::Write::flush(&mut std::io::stdout()).unwrap();
 
         let current_val = self.val.get();
@@ -60,7 +62,7 @@ impl DataPoint {
     }
 
     pub fn reverse(&self) {
-        println!("[DEBUG] Reversing DataPoint: Current: {}", self.val.get());
+        // println!("[DEBUG] Reversing DataPoint: Current: {}", self.val.get());
         let mut history = self.vals_history.borrow_mut();
         // println!("[DEBUG] History before reverse: {:?}", history);
         if !history.is_empty() {
@@ -79,27 +81,27 @@ impl std::fmt::Display for DataPoint {
     }
 }
 
-pub struct Display {
+pub struct Screen {
     pub screen: Vec2<DataPoint>,
     pub width: usize,
     pub height: usize,
-    pub boxer: Vec<Object>,
+    // pub boxer: Vec<Object>,
 }
 
-impl Display {
+impl Screen {
     pub fn new(width: usize, height: usize) -> Self {
-        println!(
-            "[DEBUG] Creating new display with width: {}, height: {}",
-            width, height
-        );
-        Display {
+        // println!(
+        //     "[DEBUG] Creating new display with width: {}, height: {}",
+        //     width, height
+        // );
+        Screen {
             screen: Vec2::<DataPoint>::new(
                 width, height,
                 // DataPoint::create('#', DEFAULT_DATAPOINT_HISTORY_SIZE),
             ),
             width,
             height,
-            boxer: Vec::new(),
+            // boxer: Vec::new(),
         }
     }
     // in the case that the index point is outside the screen, no action would happen
@@ -187,7 +189,7 @@ impl Display {
         self.draw_line(Point { x: rx1, y: ry1 }, Point { x: rx2, y: ry2 }, draw_val);
         (Point { x: rx1, y: ry1 }, Point { x: rx2, y: ry2 })
     }
-    pub fn fill_screen(&mut self, new_ch: char) {
+    pub fn fill(&mut self, new_ch: char) {
         println!("[DEBUG] Filling screen with '{}'", new_ch);
         // for inner_vec in &self.screen.vec {
         //     for datapoint in inner_vec {
@@ -201,7 +203,7 @@ impl Display {
                 .for_each(|datapoint| datapoint.update(new_ch))
         });
     }
-    pub fn allocate(
+    pub fn region(
         &self,
         left: usize,
         right: usize,
@@ -233,6 +235,8 @@ impl Display {
         let width = right - left + 1; // Add 1 to include the last column
         let height = top - bottom + 1; // Add 1 to include the last row
 
+
+        // TODO, HERE IS THE LOGIC WHERE PTR BREAKS, SINCE THIS VEC2 GETS LATER RETURNED, IT DOES NOT STAY HERE AND INSTEAD TRANSFERED TO THE ALLOCATOR, fix this somehow, maybe some helping function to run
         let mut reference_vec2: Vec2<Ptr<DataPoint>> = Vec2::new(width, height);
 
         for row in top..=bottom {
@@ -247,31 +251,43 @@ impl Display {
                 // reference_vec2.vec[line][row] = raw_pointer;
             }
         }
-        println!(
-            "[DEBUG] Allocation complete. Width: {}, Height: {}",
-            width, height
-        );
+        // println!(
+        //     "[DEBUG] Allocation complete. Width: {}, Height: {}",
+        //     width, height
+        // );
         reference_vec2
     }
-    pub fn add_object(&mut self, mut object: Object) {
-        println!("[DEBUG] Adding object to display");
-        object.allocate_from_display(self);
-        self.boxer.push(object);
-    }
-    pub fn initialize_object(&self, obj_ref: &mut Object) {
-        println!("[DEBUG] Initializing object from display");
-        obj_ref.set_allocated_box(self.allocate(2, 10, 10, 2));
-        // obj_ref.allocate_box(self.allocate(2,10,2,10));
-    }
-    pub fn initialize_boxer(&mut self) {
-        // self.boxer.iter().for_each(|object|object.allocate_from_display(self));
-        // self.boxer.iter_mut().for_each(|object|self.initialize_object(object));
-        todo!()
-    }
+    // TODO, REDO THESE FUNCTIONS IN THE NEW STRUCTURE
+    //
+    // pub fn add_object(&mut self, mut object: Object) {
+    //     // println!("[DEBUG] Adding object to display");
+    //     object.allocate_from_display(self);
+    //     self.boxer.push(object);
+    // }
+    // pub fn initialize_object(&self, obj_ref: &mut Object) {
+    //     // println!("[DEBUG] Initializing object from display");
+    //     obj_ref.set_allocated_box(self.allocate(2, 10, 10, 2));
+    //     // obj_ref.allocate_box(self.allocate(2,10,2,10));
+    // }
+    // pub fn initialize_boxer(&mut self) {
+    //     // self.boxer.iter().for_each(|object|object.allocate_from_display(self));
+    //     // self.boxer.iter_mut().for_each(|object|self.initialize_object(object));
+    //     todo!()
+    // }
 }
-impl std::fmt::Display for Display {
+impl std::fmt::Display for Screen {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         // Delegate to the Display implementation for Vec2<Point>
         write!(f, "{}", self.screen)
     }
+}
+
+pub struct Renderer{
+   objects: Vec<Object>,
+   action_history: Vec<String>
+}
+
+pub struct Display {
+   screen: Screen,
+   renderer: Renderer
 }

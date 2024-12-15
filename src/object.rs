@@ -1,4 +1,4 @@
-use crate::display::Display;
+use crate::display::Screen;
 use crate::menu::Menu;
 use crate::shape::Shape;
 use crate::standard::Ptr;
@@ -41,10 +41,12 @@ impl Object {
     // pub fn allocate_box(&mut self,allocated_box: Vec2<&'a DataPoint>) {
     //     self.allocated_box=Some(allocated_box);
     // }
-    pub fn allocate_from_display(&mut self, display: &Display) {
-        println!("[DEBUG] Allocating to object from display");
-        display.initialize_object(self);
-    }
+    //
+    // TODO, remake this function
+    // pub fn allocate_from_display(&mut self, display: &Screen) {
+    //     println!("[DEBUG] Allocating to object from display");
+    //     display.initialize_object(self);
+    // }
     pub fn is_not_initialized(&self) -> bool {
         let result = self.allocated_box.is_none();
         println!("[DEBUG] Checking if object is not initialized: {result}");

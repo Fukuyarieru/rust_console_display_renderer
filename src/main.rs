@@ -35,18 +35,18 @@ fn main() {
     ptr.get_ref().update('b');
     println!("{def_dat}");
 
-    let mut display=Display::new(10,40);
-    display.fill_screen('a');
+    let mut display=Screen::new(10,40);
+    display.fill('a');
     println!("{display}");
 
-    display.fill_screen('b');
+    display.fill('b');
     println!("{display}");
 
     display.draw_line(Point{x:3,y:4},Point{x:10,y:15},' ');
     println!("{display}");
 
     let mut object=Object::new(Point{x:10,y:10},ObjType::Free {size: (4,5)});
-    object.allocate_from_display(&display);
+    // object.allocate_from_display(&display);
     object.fill_box('c');
     println!("{display}");
 
