@@ -31,7 +31,7 @@ impl std::fmt::Display for ObjType {
 }
 impl Object {
     pub fn new(center_point: Point, obj_type: ObjType) -> Self {
-        println!("[DEBUG] Creating new object of type {obj_type} and center of {center_point}");
+        // println!("[DEBUG] Creating new object of type {obj_type} and center of {center_point}");
         Self {
             center_point,
             obj_type,
@@ -48,14 +48,16 @@ impl Object {
     //     display.initialize_object(self);
     // }
     pub fn is_not_initialized(&self) -> bool {
-        let result = self.allocated_box.is_none();
-        println!("[DEBUG] Checking if object is not initialized: {result}");
-        result
+        // let result = self.allocated_box.is_none();
+        // println!("[DEBUG] Checking if object is not initialized: {result}");
+        // result
+        self.allocated_box.is_none()
     }
     pub fn is_initialized(&self) -> bool {
-        let result = self.allocated_box.is_some();
-        println!("[DEBUG] Checking if object is initialized: {result}");
-        result
+        // let result = self.allocated_box.is_some();
+        // println!("[DEBUG] Checking if object is initialized: {result}");
+        // result
+        self.allocated_box.is_some()
     }
     pub fn fill_box(&mut self, new_ch: char) {
         // println!("[DEBUG] Filling allocated box inside object to be {new_ch}");
