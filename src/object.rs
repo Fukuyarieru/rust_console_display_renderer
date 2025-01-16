@@ -1,9 +1,9 @@
+use crate::display::DataPoint;
 use crate::display::Screen;
 use crate::menu::Menu;
 use crate::shape::Shape;
 use crate::standard::Ptr;
 use crate::standard::*;
-use crate::DataPoint;
 
 pub const ERROR_OBJECT_EMPTY_BOX: &str = "Object does not have an initialized allocated box";
 #[derive(Debug)]
